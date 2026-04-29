@@ -43,10 +43,19 @@
             border-bottom: 3px solid var(--ochre);
         }
         
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+        
         .logo {
-            max-width: 200px;
+            max-width: 280px;
             height: auto;
-            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(47, 49, 47, 0.1);
         }
         
         .urgency-bar {
@@ -447,7 +456,9 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <img src="lifecharter-logo.jpg" alt="LifeCharter Logo" class="logo">
+            <div class="logo-container">
+                <img src="lifecharter-logo.jpg" alt="LifeCharter Logo" class="logo">
+            </div>
             <div class="urgency-bar">⏳ Next Incubator Session — Limited Spots Available</div>
             
             <p class="pre-headline">Your Next Faithful Step</p>
