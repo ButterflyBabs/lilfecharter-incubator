@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for Life by Design Summit | July 23-25, 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --cream: #F5F1E8;
+            --ivory: #FAF8F3;
+            --terracotta: #C4A589;
+            --sage: #A8B5A0;
+            --beige: #DAD2B9;
+            --peach: #E8D4C4;
+            --charcoal: #2F312F;
+            --gray-green: #8F9A8A;
+            --linework: #8F8875;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .header {
+            background: linear-gradient(180deg, var(--ivory) 0%, var(--cream) 100%);
+            padding: 60px 20px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 42px;
+            color: var(--charcoal);
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 18px;
+            color: var(--linework);
+        }
+        
+        .registration-section {
+            padding: 60px 20px;
+        }
+        
+        .option-cards {
+            display: grid;
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .option-card {
+            background: white;
+            border: 2px solid var(--beige);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .option-card:hover {
+            border-color: var(--terracotta);
+            box-shadow: 0 4px 20px rgba(196, 165, 137, 0.2);
+        }
+        
+        .option-card.selected {
+            border-color: var(--terracotta);
+            background: linear-gradient(135deg, var(--peach) 0%, white 100%);
+            box-shadow: 0 4px 20px rgba(196, 165, 137, 0.3);
+        }
+        
+        .option-card.featured {
+            border-color: var(--terracotta);
+        }
+        
+        .option-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -12px;
+            right: 20px;
+            background: var(--terracotta);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .radio-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+        
+        .radio-wrapper input[type="radio"] {
+            width: 24px;
+            height: 24px;
+            margin-top: 3px;
+            accent-color: var(--terracotta);
+            cursor: pointer;
+        }
+        
+        .option-content {
+            flex: 1;
+        }
+        
+        .option-content h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+        }
+        
+        .option-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--terracotta);
+            margin-bottom: 5px;
+        }
+        
+        .option-price span {
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--linework);
+        }
+        
+        .option-note {
+            font-size: 14px;
+            color: var(--gray-green);
+            margin-bottom: 15px;
+        }
+        
+        .option-features {
+            list-style: none;
+        }
+        
+        .option-features li {
+            padding: 5px 0;
+            font-size: 14px;
+            color: var(--charcoal);
+        }
+        
+        .option-features li::before {
+            content: '✓';
+            color: var(--sage);
+            margin-right: 8px;
+            font-weight: bold;
+        }
+        
+        .form-section {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .form-section h2 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 28px;
+            color: var(--charcoal);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 24px;
+        }
+        
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+        
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--beige);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--terracotta);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn-primary {
+            display: block;
+            width: 100%;
+            background: var(--terracotta);
+            color: white;
+            padding: 18px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--sage);
+            transform: translateY(-2px);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--beige);
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .secure-note {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--linework);
+        }
+        
+        .secure-note::before {
+            content: '🔒 ';
+        }
+        
+        .footer {
+            background: var(--charcoal);
+            color: var(--beige);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .header { padding: 40px 16px 30px; }
+            .header h1 { font-size: 28px; }
+            .header img { max-height: 200px; }
+            .registration-section { padding: 40px 16px; }
+            .option-card { padding: 20px; }
+            .option-content h3 { font-size: 20px; }
+            .option-price { font-size: 28px; }
+            .radio-wrapper { gap: 10px; }
+            .radio-wrapper input[type="radio"] { width: 20px; height: 20px; }
+            .form-section { padding: 30px 20px; }
+            .form-section h2 { font-size: 24px; }
+            .form-row { grid-template-columns: 1fr; gap: 16px; }
+            .btn-primary { padding: 16px; font-size: 16px; }
+        }
+        @media (max-width: 480px) {
+            .header h1 { font-size: 24px; }
+            .option-features li { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <img src="https://ik.imagekit.io/amilynne/LifeCharter%20Summit%20-%20July%202026/ChatGPT%20Image%20May%205,%202026,%2003_20_20%20PM.png" alt="Life by Design Summit" style="max-width: 100%; width: 100%; max-height: 300px; object-fit: cover; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 8px 40px rgba(0,0,0,0.1);">
+            <h1>Register for Life by Design Summit</h1>
+            <p>July 23-25, 2026 | 9am - 2pm MT Daily</p>
+        </div>
+    </header>
+
+    <!-- Registration Section -->
+    <section class="registration-section">
+        <div class="container">
+            <form id="registrationForm">
+                <!-- Registration Options -->
+                <div class="option-cards">
+                    <!-- Free Registration -->
+                    <div class="option-card" onclick="selectOption('free')">
+                        <div class="radio-wrapper">
+                            <input type="radio" name="registrationType" value="free" id="optionFree" required>
+                            <div class="option-content">
+                                <h3>Free Summit Registration</h3>
+                                <div class="option-price">Free</div>
+                                <p class="option-note">Best for those who want to attend live</p>
+                                <ul class="option-features">
+                                    <li>Live access to all summit sessions</li>
+                                    <li>Participate in the three-day summit experience</li>
+                                    <li>Access to speaker conversations while live</li>
+                                    <li>Opportunity to win live session giveaways</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Next Chapter Pass -->
+                    <div class="option-card" onclick="selectOption('nextchapter')">
+                        <div class="radio-wrapper">
+                            <input type="radio" name="registrationType" value="nextchapter" id="optionNextChapter">
+                            <div class="option-content">
+                                <h3>Next Chapter Pass</h3>
+                                <div class="option-price">Free <span>Upgrade</span></div>
+                                <p class="option-note">Best for those who want to stay connected</p>
+                                <ul class="option-features">
+                                    <li>Everything in Free Registration, plus:</li>
+                                    <li>Limited-time replay access</li>
+                                    <li>Daily morning alignment sessions with Babs</li>
+                                    <li>LifeCharter 12 Dimensions Reflection Guide</li>
+                                    <li>VIP reminder emails and reflection prompts</li>
+                                    <li>Early access to the summit schedule</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Integration Pass -->
+                    <div class="option-card featured" onclick="selectOption('integration')">
+                        <div class="radio-wrapper">
+                            <input type="radio" name="registrationType" value="integration" id="optionIntegration">
+                            <div class="option-content">
+                                <h3>Integration Pass</h3>
+                                <div class="option-price">$197 <span>Fast Action MVP</span></div>
+                                <p class="option-note">($297 to add after summit begins)</p>
+                                <ul class="option-features">
+                                    <li>Everything in Next Chapter Pass, plus:</li>
+                                    <li>Extended access to all summit recordings</li>
+                                    <li>Full speaker resource library</li>
+                                    <li>Integration Pass Life by Design workbook for each session</li>
+                                    <li>Daily evening Sip and Soul integration conversations</li>
+                                    <li>Post-summit integration session</li>
+                                    <li>Guided LifeCharter Alignment Snapshot pathway</li>
+                                    <li>60-day access to Soul Session Community (a $55 value)</li>
+                                    <li>Speaker bonus bundle</li>
+                                    <li>VIP-only giveaway opportunities</li>
+                                    <li>$495 credit toward LifeCharter Circle when enrolling within 7 days after the summit</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Registration Form -->
+                <div class="form-section">
+                    <h2>Your Information</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="timezone">Time Zone *</label>
+                        <select id="timezone" name="timezone" required>
+                            <option value="">Select your time zone</option>
+                            <option value="PT">Pacific Time (PT)</option>
+                            <option value="MT" selected>Mountain Time (MT)</option>
+                            <option value="CT">Central Time (CT)</option>
+                            <option value="ET">Eastern Time (ET)</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn">Complete Registration</button>
+                    <p class="secure-note">Your information is secure and will never be shared.</p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Sacred Kaleidoscope Community LLC. All rights reserved. | Life by Design Summit</p>
+        </div>
+    </footer>
+
+    <script>
+        // Handle option selection
+        function selectOption(value) {
+            // Update radio button
+            document.getElementById('option' + value.charAt(0).toUpperCase() + value.slice(1)).checked = true;
+            
+            // Update visual selection
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            document.querySelector('.option-card:has(input[value="' + value + '"])').classList.add('selected');
+        }
+
+        // Handle radio button clicks
+        document.querySelectorAll('input[name="registrationType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                selectOption(this.value);
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const registrationType = formData.get('registrationType');
+            
+            if (!registrationType) {
+                alert('Please select a registration option.');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+
+            const data = {
+                firstName: formData.get('firstName'),
+                lastName: formData.get('lastName'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                timezone: formData.get('timezone'),
+                registrationType: registrationType
+            };
+
+            try {
+                if (registrationType === 'integration') {
+                    // First save registration data, then redirect to Stripe
+                    await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    // Redirect to Stripe payment link
+                    window.location.href = 'https://buy.stripe.com/cNidR8aAudIbgQvdeP5sA03';
+                } else {
+                    // Free registration - submit to CRM and redirect to thank you
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+                    
+                    if (response.ok) {
+                        window.location.href = '/thank-you.html?type=' + registrationType;
+                    } else {
+                        throw new Error('Registration failed');
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Something went wrong. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Complete Registration';
+            }
+        });
+    </script>
+</body>
+</html>

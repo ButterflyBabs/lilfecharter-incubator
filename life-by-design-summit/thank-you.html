@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thank You for Registering | Life by Design Summit</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F1E8;
+            --ivory: #FAF8F3;
+            --terracotta: #C4A589;
+            --sage: #A8B5A0;
+            --beige: #DAD2B9;
+            --peach: #E8D4C4;
+            --charcoal: #2F312F;
+            --gray-green: #8F9A8A;
+            --linework: #8F8875;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--cream);
+            color: var(--charcoal);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        
+        .thank-you-section {
+            flex: 1;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            background: var(--sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: white;
+        }
+        
+        h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 42px;
+            color: var(--charcoal);
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            color: var(--terracotta);
+            margin-bottom: 40px;
+        }
+        
+        .confirmation-box {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: left;
+            margin-bottom: 30px;
+        }
+        
+        .confirmation-box h2 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            color: var(--charcoal);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .detail-row {
+            display: flex;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--beige);
+        }
+        
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--charcoal);
+            width: 140px;
+            flex-shrink: 0;
+        }
+        
+        .detail-value {
+            color: var(--linework);
+        }
+        
+        .what-next {
+            background: linear-gradient(135deg, var(--peach) 0%, var(--beige) 100%);
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .what-next h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            color: var(--charcoal);
+            margin-bottom: 20px;
+        }
+        
+        .what-next ul {
+            text-align: left;
+            list-style: none;
+        }
+        
+        .what-next li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .what-next li::before {
+            content: '✦';
+            position: absolute;
+            left: 0;
+            color: var(--terracotta);
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            background: var(--terracotta);
+            color: white;
+            padding: 18px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--sage);
+            transform: translateY(-2px);
+        }
+        
+        .calendar-btn {
+            display: inline-block;
+            background: transparent;
+            color: var(--terracotta);
+            padding: 18px 48px;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid var(--terracotta);
+            margin: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .calendar-btn:hover {
+            background: var(--terracotta);
+            color: white;
+        }
+        
+        .footer {
+            background: var(--charcoal);
+            color: var(--beige);
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 32px; }
+            .detail-row { flex-direction: column; }
+            .detail-label { width: 100%; margin-bottom: 5px; }
+        }
+    </style>
+</head>
+<body>
+    <section class="thank-you-section">
+        <div class="container">
+            <div class="checkmark">✓</div>
+            <h1>You're Registered!</h1>
+            <p class="subtitle" id="registrationType">Welcome to Life by Design Summit</p>
+            
+            <div class="confirmation-box">
+                <h2>Your Registration Details</h2>
+                <div class="detail-row">
+                    <span class="detail-label">Event:</span>
+                    <span class="detail-value">Life by Design Summit</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Dates:</span>
+                    <span class="detail-value">July 23, 24, and 25, 2026</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time:</span>
+                    <span class="detail-value">9am - 2pm MT Daily</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Format:</span>
+                    <span class="detail-value">Free Online Summit</span>
+                </div>
+                <div class="detail-row" id="passTypeRow">
+                    <span class="detail-label">Your Pass:</span>
+                    <span class="detail-value" id="passType">Free Summit Registration</span>
+                </div>
+            </div>
+            
+            <div class="what-next">
+                <h3>What Happens Next?</h3>
+                <ul id="nextSteps">
+                    <li>Check your inbox for your confirmation email with all the details</li>
+                    <li>Add the summit to your calendar so you don't miss it</li>
+                    <li>Watch for reminder emails as the summit approaches</li>
+                    <li>Join us July 23-25 for three days of transformation</li>
+                </ul>
+            </div>
+            
+            <a href="#" class="calendar-btn" onclick="addToCalendar()">Add to Calendar</a>
+            <a href="/" class="btn-primary">Return to Summit Page</a>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Sacred Kaleidoscope Community LLC. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Get registration type from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+        
+        // Update content based on registration type
+        if (type === 'nextchapter') {
+            document.getElementById('registrationType').textContent = 'Welcome to Life by Design Summit - Next Chapter Pass';
+            document.getElementById('passType').textContent = 'Next Chapter Pass (Free Upgrade)';
+            document.getElementById('nextSteps').innerHTML = `
+                <li>Check your inbox for your confirmation email with all the details</li>
+                <li>Look for your Next Chapter Pass welcome email with your reflection guide</li>
+                <li>Add the summit to your calendar so you don't miss it</li>
+                <li>Watch for daily morning alignment session invitations</li>
+                <li>Join us July 23-25 for three days of transformation</li>
+            `;
+        } else if (type === 'integration') {
+            document.getElementById('registrationType').textContent = 'Welcome to Life by Design Summit - Integration Pass';
+            document.getElementById('passType').textContent = 'Integration Pass ($197)';
+            document.getElementById('nextSteps').innerHTML = `
+                <li>Check your inbox for your payment confirmation and registration details</li>
+                <li>Look for your Integration Pass welcome email with your workbook</li>
+                <li>Add the summit to your calendar so you don't miss it</li>
+                <li>Watch for invitations to daily Sip and Soul integration sessions</li>
+                <li>Access your 60-day Soul Session Community membership</li>
+                <li>Join us July 23-25 for three days of transformation</li>
+            `;
+        }
+        
+        function addToCalendar() {
+            // Create calendar event
+            const event = {
+                title: 'Life by Design Summit',
+                start: '2026-07-23T09:00:00',
+                end: '2026-07-25T14:00:00',
+                description: 'A free three-day online summit to help you move from overwhelm and uncertainty into clarity, purpose, and aligned action.',
+                location: 'Online'
+            };
+            
+            // For now, just alert - in production this would generate an .ics file
+            alert('Calendar download coming soon! The summit is July 23-25, 2026 from 9am-2pm MT.');
+        }
+    </script>
+</body>
+</html>
