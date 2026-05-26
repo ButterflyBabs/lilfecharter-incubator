@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeCharter Summit 2026: Clarity, Purpose & Aligned Action</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--fog) 0%, var(--paper) 100%);
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, var(--ochre) 0%, transparent 70%);
+            opacity: 0.1;
+            border-radius: 50%;
+        }
+
+        .hero-image {
+            max-width: 400px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+            margin-bottom: 40px;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: var(--clay);
+            color: white;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+        }
+        
+        .hero h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 56px;
+            font-weight: 500;
+            color: var(--ink);
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero h1 span {
+            color: var(--clay);
+        }
+        
+        .hero-tagline {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 28px;
+            color: var(--linework);
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .hero-date {
+            font-size: 20px;
+            color: var(--ink);
+            margin-bottom: 40px;
+            font-weight: 500;
+        }
+        
+        .hero-date span {
+            display: inline-block;
+            margin: 0 15px;
+            color: var(--clay);
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            background: var(--clay);
+            color: white;
+            padding: 20px 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background: var(--ochre);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(203, 164, 136, 0.3);
+        }
+        
+        .hero-note {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--linework);
+        }
+        
+        /* Section Styles */
+        .section {
+            padding: 80px 20px;
+        }
+        
+        .section-alt {
+            background: linear-gradient(135deg, var(--fog) 0%, var(--paper) 100%);
+        }
+        
+        .section h2 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 42px;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--ink);
+        }
+        
+        /* About Section */
+        .about-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .about-content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--linework);
+            margin-bottom: 20px;
+        }
+        
+        .about-content .lead {
+            font-size: 22px;
+            color: var(--ink);
+            font-weight: 500;
+        }
+        
+        /* What's Included */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--ochre);
+        }
+        
+        .feature-card h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: var(--ink);
+        }
+        
+        .feature-card p {
+            color: var(--linework);
+            font-size: 16px;
+        }
+        
+        /* Speakers Section */
+        .speakers-placeholder {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px dashed var(--ochre);
+        }
+        
+        .speakers-placeholder h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            color: var(--ink);
+            margin-bottom: 20px;
+        }
+        
+        .speakers-placeholder p {
+            font-size: 18px;
+            color: var(--linework);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Social Proof */
+        .social-proof {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .social-proof h2 {
+            color: var(--paper);
+            margin-bottom: 30px;
+        }
+        
+        .social-proof p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.8;
+        }
+        
+        .social-proof .author {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--ochre);
+        }
+
+        /* Testimonial Card */
+        .testimonial-card {
+            background: white;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--clay);
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testimonial-text {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 28px;
+            color: var(--ink);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-size: 18px;
+            color: var(--clay);
+            font-weight: 600;
+        }
+
+        /* Credibility Points */
+        .credibility-points {
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .credibility-points span {
+            background: rgba(203, 164, 136, 0.2);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 14px;
+            color: var(--paper);
+        }
+        
+        /* Registration Section */
+        .registration {
+            text-align: center;
+        }
+        
+        .registration-box {
+            background: white;
+            padding: 60px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border: 2px solid var(--ochre);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .registration-box h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            margin-bottom: 20px;
+            color: var(--ink);
+        }
+        
+        .registration-box p {
+            font-size: 18px;
+            color: var(--linework);
+            margin-bottom: 30px;
+        }
+        
+        .price-tag {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--clay);
+            margin-bottom: 30px;
+        }
+        
+        .price-tag span {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--linework);
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .footer p {
+            font-size: 14px;
+            color: var(--linework);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero-tagline {
+                font-size: 20px;
+            }
+            
+            .section h2 {
+                font-size: 32px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <img src="https://ik.imagekit.io/amilynne/LifeCharter%20Summit%20-%20July%202026/ChatGPT%20Image%20May%204,%202026,%2012_51_38%20PM.png" alt="LifeCharter Summit 2026" class="hero-image">
+                <div class="hero-badge">Free Virtual Summit</div>
+                <h1>LifeCharter Summit 2026</h1>
+                <p class="hero-tagline">A free two-day virtual summit for clarity, purpose, and aligned action.</p>
+                <p class="hero-date">July 24–25, 2026 <span>|</span> Virtual <span>|</span> Free Registration</p>
+                <a href="#register" class="btn-primary">Save My Free Seat</a>
+                <p class="hero-note">Step into two days of soulful teaching, practical tools, and transformational conversations designed to help you return to alignment across the life you are here to live.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section">
+        <div class="container">
+            <h2>About the Summit</h2>
+            <div class="about-content">
+                <p class="lead">LifeCharter Summit 2026: Clarity, Purpose & Aligned Action is a free two-day virtual experience created for those who are ready to stop circling the same mountain and begin living with deeper alignment.</p>
+                <p>Through soul-rooted conversations, practical teaching, and guided reflection, participants will explore the LifeCharter approach to personal transformation across the dimensions of life that shape who they are, how they show up, and what they are here to create.</p>
+                <p>This summit is not about adding more pressure, more performance, or another plan to abandon. It is an invitation to pause, listen, realign, and begin again with intention.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What's Included -->
+    <section class="section section-alt">
+        <div class="container">
+            <h2>What You'll Experience</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>✦ Live Virtual Sessions</h3>
+                    <p>Two days of transformational presentations and soulful conversations designed to help you return to clarity and aligned action.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✦ LifeCharter Framework</h3>
+                    <p>Discover the 12 dimensions of life and how to create alignment across each area that shapes who you are.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✦ Guided Reflection</h3>
+                    <p>Practical clarity exercises and reflection prompts to help you pause, listen, and realign with intention.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✦ Speaker Resources</h3>
+                    <p>Access to freebies, tools, and resources from our featured speakers to support your continued growth.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✦ Community Connection</h3>
+                    <p>Connect with fellow travelers on the same journey from overwhelm and uncertainty into clarity and purpose.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>✦ Pathway Forward</h3>
+                    <p>Invitation to continue your journey through future LifeCharter Incubator experiences and LifeCharter Circle.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Speakers Section -->
+    <section class="section">
+        <div class="container">
+            <h2>Featured Speakers</h2>
+            <div class="speakers-placeholder">
+                <img src="https://ik.imagekit.io/amilynne/LifeCharter%20Summit%20-%20July%202026/ChatGPT%20Image%20May%204,%202026,%2012_51_47%20PM.png" alt="LifeCharter Summit Speakers" style="max-width: 300px; width: 100%; height: auto; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h3>Coming Soon</h3>
+                <p>Join AmiLynne "Babs" Carroll and a powerful lineup of transformational voices for two days of grounded wisdom, practical tools, and soulful conversation designed to help you return to clarity, purpose, and aligned action.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial Section -->
+    <section class="section section-alt">
+        <div class="container">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"I have never heard anyone talk about life design as holistically as does Babs. The way she covers all 12 different dimensions of your life in the LifeCharter program is extraordinary."</p>
+                <p class="testimonial-author">— Rachel P.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Babs / Social Proof -->
+    <section class="social-proof">
+        <div class="container">
+            <h2>Your Guide</h2>
+            <p>AmiLynne "Babs" Carroll is the Alignment Architect, creator of the LifeCharter Program, founder of Sacred Kaleidoscope Community, TEDx speaker, and author of <em>Conversations of Consequence</em> and <em>Sacred Alchemy</em>.</p>
+            <p>Through her work, Babs guides travel partners through deep personal transformation — from survival, overwhelm, and uncertainty into clarity, purpose, and aligned action.</p>
+            <div class="credibility-points">
+                <span>✦ Creator of the LifeCharter Program</span>
+                <span>✦ Founder of Sacred Kaleidoscope Community</span>
+                <span>✦ TEDx Speaker</span>
+                <span>✦ Author & Transformational Guide</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="section section-alt registration">
+        <div class="container">
+            <h2>Reserve Your Free Seat</h2>
+            <div class="registration-box">
+                <h3>Join the LifeCharter Summit 2026</h3>
+                <p>Two days of transformation, clarity, and aligned action. Completely free.</p>
+                <div class="price-tag"><span>$297</span> FREE</div>
+                <p>When you register, you'll receive access to the live virtual summit experience, speaker sessions, reflection prompts, aligned action tools, and opportunities to continue your journey through future LifeCharter experiences.</p>
+                <img src="https://ik.imagekit.io/amilynne/LifeCharter%20Summit%20-%20July%202026/ChatGPT%20Image%20May%204,%202026,%2012_51_29%20PM.png" alt="LifeCharter Summit Experience" style="max-width: 100%; width: 100%; height: auto; border-radius: 12px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <a href="#" class="btn-primary">Register Now — It's Free</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Sacred Kaleidoscope Community LLC. All rights reserved. | LifeCharter Summit</p>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeCharter Alignment Snapshot</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Open+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+            --red-light: #C4706A;
+            --yellow-light: #D4A853;
+            --green-light: #7A9E7E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Open Sans', sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, var(--paper) 0%, var(--fog) 100%);
+            border-bottom: 2px solid var(--ochre);
+        }
+
+        .logo-container {
+            margin-bottom: 15px;
+            background-color: var(--paper);
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        .logo-img {
+            max-width: 280px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            background-color: var(--paper);
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: var(--linework);
+            font-style: italic;
+        }
+
+        /* Landing Page */
+        .landing-page {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .landing-page h1 {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+            color: var(--ink);
+        }
+
+        .landing-page .subtitle {
+            font-size: 1.3rem;
+            color: var(--linework);
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .benefits {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: 40px 0;
+            text-align: left;
+        }
+
+        .benefits h3 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--ink);
+        }
+
+        .benefits ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefits li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+
+        .benefits li:before {
+            content: "🦋";
+            position: absolute;
+            left: 0;
+        }
+
+        .btn-primary {
+            background: var(--clay);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Open Sans', sans-serif;
+            margin: 20px 10px;
+        }
+
+        .btn-primary:hover {
+            background: var(--ochre);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(203, 164, 136, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--clay);
+            border: 2px solid var(--clay);
+            padding: 16px 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Open Sans', sans-serif;
+            margin: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--clay);
+            color: white;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .welcome-screen h2 {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.2rem;
+            margin-bottom: 30px;
+        }
+
+        .welcome-message {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .welcome-message p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+
+        /* Assessment */
+        .assessment-container {
+            display: none;
+            padding: 40px 20px;
+        }
+
+        .progress-bar {
+            background: var(--fog);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--clay);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .dimension-section {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .dimension-section.active {
+            display: block;
+        }
+
+        .dimension-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--fog);
+        }
+
+        .dimension-number {
+            font-size: 0.9rem;
+            color: var(--linework);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .dimension-title {
+            font-family: 'EB Garamond', serif;
+            font-size: 2rem;
+            color: var(--ink);
+            margin-bottom: 10px;
+        }
+
+        .dimension-description {
+            color: var(--linework);
+            font-style: italic;
+        }
+
+        .question {
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--paper);
+            border-radius: 8px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .scale-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .scale-option {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .scale-option input[type="radio"] {
+            display: none;
+        }
+
+        .scale-option label {
+            display: block;
+            padding: 15px 10px;
+            background: white;
+            border: 2px solid var(--fog);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .scale-option input[type="radio"]:checked + label {
+            background: var(--clay);
+            color: white;
+            border-color: var(--clay);
+        }
+
+        .scale-option label:hover {
+            border-color: var(--clay);
+        }
+
+        .scale-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--linework);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+
+        /* Email Capture */
+        .email-capture {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .email-capture h2 {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+        }
+
+        .email-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            max-width: 500px;
+            margin: 30px auto;
+            text-align: left;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--fog);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Open Sans', sans-serif;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--clay);
+        }
+
+        .checkbox-group {
+            margin: 20px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-top: 4px;
+        }
+
+        .privacy-note {
+            font-size: 0.85rem;
+            color: var(--linework);
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--fog);
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            display: none;
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--fog);
+            border-top-color: var(--clay);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 30px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-message {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.5rem;
+            color: var(--ink);
+            margin-bottom: 20px;
+        }
+
+        .loading-subtext {
+            color: var(--linework);
+            font-style: italic;
+        }
+
+        /* Results Page */
+        .results-page {
+            display: none;
+            padding: 40px 20px;
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .results-header h2 {
+            font-family: 'EB Garamond', serif;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .overall-score {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 8px solid var(--fog);
+        }
+
+        .score-circle.red { border-color: var(--red-light); }
+        .score-circle.yellow { border-color: var(--yellow-light); }
+        .score-circle.green { border-color: var(--green-light); }
+
+        .score-number {
+            font-family: 'EB Garamond', serif;
+            font-size: 3.5rem;
+            font-weight: 600;
+        }
+
+        .score-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .alignment-level {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 20px 0;
+        }
+
+        .alignment-level.red { color: var(--red-light); }
+        .alignment-level.yellow { color: var(--yellow-light); }
+        .alignment-level.green { color: var(--green-light); }
+
+        .dimension-chart {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .dimension-chart h3 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .dimension-bar {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .dimension-name {
+            width: 150px;
+            font-size: 0.9rem;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .bar-container {
+            flex: 1;
+            height: 24px;
+            background: var(--fog);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            height: 100%;
+            border-radius: 12px;
+            transition: width 1s ease;
+        }
+
+        .bar-fill.red { background: var(--red-light); }
+        .bar-fill.yellow { background: var(--yellow-light); }
+        .bar-fill.green { background: var(--green-light); }
+
+        .bar-score {
+            width: 50px;
+            padding-left: 10px;
+            font-weight: 600;
+        }
+
+        .insights {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+
+        .insights h3 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .insight-section {
+            margin-bottom: 30px;
+        }
+
+        .insight-section h4 {
+            color: var(--clay);
+            margin-bottom: 10px;
+        }
+
+        .dimension-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .dimension-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .dimension-list li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--clay);
+        }
+
+        .next-step {
+            background: var(--paper);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 4px solid var(--clay);
+        }
+
+        .next-step h4 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .cta-section h3 {
+            font-family: 'EB Garamond', serif;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .disclaimer {
+            text-align: center;
+            padding: 30px;
+            font-size: 0.85rem;
+            color: var(--linework);
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .landing-page h1 {
+                font-size: 2rem;
+            }
+
+            .dimension-title {
+                font-size: 1.5rem;
+            }
+
+            .scale-container {
+                flex-direction: column;
+            }
+
+            .scale-option {
+                width: 100%;
+            }
+
+            .dimension-name {
+                width: 100px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container">
+            <img src="lifecharter-logo.jpg" alt="LifeCharter" class="logo-img">
+        </div>
+        <div class="tagline">Alignment over overwhelm. Purpose, clarity, and aligned action.</div>
+    </div>
+
+    <div class="container">
+        <!-- Landing Page -->
+        <div class="landing-page" id="landingPage">
+            <h1>Where Is Your Life Asking for Alignment?</h1>
+            <p class="subtitle">Take the free LifeCharter Alignment Snapshot and discover where overwhelm, drift, or disconnection may be showing up across the 12 Dimensions of your life.</p>
+            
+            <div class="benefits">
+                <h3>What You Will Discover</h3>
+                <ul>
+                    <li>Your personalized alignment score across all 12 LifeCharter Dimensions</li>
+                    <li>Where your life feels clear, aligned, and supported</li>
+                    <li>Where your life may be asking for deeper attention and care</li>
+                    <li>Your primary alignment pattern and what it reveals</li>
+                    <li>One faithful next step to begin realignment</li>
+                    <li>A personalized pathway into the LifeCharter ecosystem</li>
+                </ul>
+            </div>
+
+            <p style="color: var(--linework); margin: 30px 0;">⏱️ Takes approximately 5-7 minutes</p>
+
+            <button class="btn-primary" onclick="showWelcome()">Begin My Free Alignment Snapshot</button>
+            <br>
+            <button class="btn-secondary" onclick="alert('The 12 Dimensions are: Quality of Life, Character, Intellectual Life, Emotional Life, Health & Fitness, Love Relationships, Parenting, Career, Spiritual Life, Social Life, Financial Life, and Life Vision.')">What are the 12 Dimensions?</button>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+            <h2>Welcome to Your Alignment Snapshot</h2>
+            
+            <div class="welcome-message">
+                <p>This is not a test. This is a sacred pause.</p>
+                
+                <p>You will be invited to reflect on the 12 Dimensions of LifeCharter and notice where your life feels aligned, where it feels strained, and where it may be asking for deeper care.</p>
+                
+                <p><strong>Answer from where you are today,</strong> not where you think you should be.</p>
+                
+                <p>There are no wrong answers. There is only honest seeing.</p>
+                
+                <p>The experience takes approximately 5 to 7 minutes.</p>
+            </div>
+
+            <button class="btn-primary" onclick="startAssessment()">Begin the Assessment</button>
+        </div>
+
+        <!-- Assessment Container -->
+        <div class="assessment-container" id="assessmentContainer">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Questions will be dynamically inserted here -->
+            <div id="dimensionsContainer"></div>
+
+            <div class="navigation">
+                <button class="btn-secondary" id="prevBtn" onclick="previousDimension()" style="visibility: hidden;">← Previous</button>
+                <button class="btn-primary" id="nextBtn" onclick="nextDimension()">Next →</button>
+            </div>
+        </div>
+
+        <!-- Email Capture -->
+        <div class="email-capture" id="emailCapture">
+            <h2>Your Alignment Snapshot is Ready</h2>
+            <p>Enter your name and email below, and we will reveal your personalized report and send a copy to your inbox so you can revisit it when you are ready to take your next aligned step.</p>
+            
+            <div class="email-form">
+                <div class="form-group">
+                    <label for="firstName">First Name *</label>
+                    <input type="text" id="firstName" placeholder="Your first name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        <input type="checkbox" id="emailConsent" checked>
+                        <span>I consent to receive my Alignment Snapshot and occasional LifeCharter reflections, invitations, and resources.</span>
+                    </label>
+                </div>
+
+                <button class="btn-primary" onclick="submitEmail()" style="width: 100%; margin: 20px 0 0 0;">Reveal My Snapshot</button>
+
+                <p class="privacy-note">Your information will never be sold. You can unsubscribe at any time.</p>
+            </div>
+        </div>
+
+        <!-- Loading Screen -->
+        <div class="loading-screen" id="loadingScreen">
+            <div class="loading-spinner"></div>
+            <p class="loading-message">Your answers are being gathered into a personalized Alignment Snapshot.</p>
+            <p class="loading-subtext">Take one slow breath.<br>This is not about what is wrong with you. This is about where your life may be asking to come back into agreement with what is true.</p>
+        </div>
+
+        <!-- Results Page -->
+        <div class="results-page" id="resultsPage">
+            <div class="results-header">
+                <h2>Your LifeCharter Alignment Snapshot</h2>
+                <p>Prepared for <span id="resultName"></span></p>
+            </div>
+
+            <div class="overall-score">
+                <div class="score-circle" id="scoreCircle">
+                    <div class="score-number" id="overallScore">0</div>
+                    <div class="score-label">Alignment Score</div>
+                </div>
+                <div class="alignment-level" id="alignmentLevel">Yellow Light Season</div>
+                <p id="alignmentDescription"></p>
+            </div>
+
+            <div class="dimension-chart">
+                <h3>Your 12-Dimension Alignment Map</h3>
+                <div id="dimensionBars"></div>
+            </div>
+
+            <div class="insights">
+                <div class="insight-section">
+                    <h4>🌟 Your Strongest Dimensions</h4>
+                    <p>These areas appear to be moving with clarity and support:</p>
+                    <ul class="dimension-list" id="topDimensions"></ul>
+                </div>
+
+                <div class="insight-section">
+                    <h4>💫 Dimensions Asking for Attention</h4>
+                    <p>These areas may be carrying strain or asking for care:</p>
+                    <ul class="dimension-list" id="bottomDimensions"></ul>
+                </div>
+
+                <div class="insight-section">
+                    <h4>🎯 Your Primary Alignment Pattern</h4>
+                    <p id="patternName" style="font-weight: 600; color: var(--clay); font-size: 1.2rem; margin-bottom: 10px;"></p>
+                    <p id="patternDescription"></p>
+                </div>
+
+                <div class="next-step">
+                    <h4>Your Next Faithful Step</h4>
+                    <p id="nextStep"></p>
+                </div>
+            </div>
+
+            <div class="cta-section">
+                <h3>Continue Your Alignment Journey</h3>
+                <p id="ctaDescription"></p>
+                <button class="btn-primary" id="ctaButton" onclick="window.open('https://amilynnecarroll.com', '_blank')">Learn More</button>
+            </div>
+
+            <div class="insights">
+                <div class="insight-section">
+                    <h4>🦋 Other Pathways to Explore</h4>
+                    <p>You may also find value in these additional LifeCharter resources:</p>
+                    <div style="margin-top: 20px;">
+                        <div style="margin: 15px 0; padding: 15px; background: var(--paper); border-radius: 8px;">
+                            <strong>LifeCharter Incubator</strong><br>
+                            A guided 90-minute workshop to begin your alignment journey.<br>
+                            <a href="https://lifecharter-incubator.vercel.app/" target="_blank" style="color: var(--clay); text-decoration: none; font-weight: 600;">Register Free →</a>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: var(--paper); border-radius: 8px;">
+                            <strong>LifeCharter Circle</strong><br>
+                            Ongoing coaching and community for deeper transformation.<br>
+                            <a href="https://life-charter.vercel.app/" target="_blank" style="color: var(--clay); text-decoration: none; font-weight: 600;">Learn More →</a>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: var(--paper); border-radius: 8px;">
+                            <strong>21 Day Challenge</strong><br>
+                            Daily alignment practices to build momentum.<br>
+                            <a href="https://amilynnecarroll.com/21-day-challenge" target="_blank" style="color: var(--clay); text-decoration: none; font-weight: 600;">Start Challenge →</a>
+                        </div>
+                        <div style="margin: 15px 0; padding: 15px; background: var(--paper); border-radius: 8px;">
+                            <strong>Conversations of Consequence</strong><br>
+                            Ongoing teachings, articles, and reflections.<br>
+                            <a href="https://amilynnecarroll.com/conversations-of-consequence" target="_blank" style="color: var(--clay); text-decoration: none; font-weight: 600;">Read Articles →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="disclaimer">This Snapshot is a reflective tool, not a diagnosis. It is designed to help you notice patterns, listen inwardly, and choose your next aligned step with greater clarity.</p>
+        </div>
+    </div>
+
+    <script>
+// LifeCharter Alignment Snapshot - Application Logic
+// Based on Soul Builder template
+
+// 12 Dimensions with 3 questions each (36 total - short version)
+const dimensions = [
+    {
+        id: 'quality_of_life',
+        name: 'My Quality of Life',
+        description: 'Daily lived experience, peace, ease, enjoyment, and whether life feels nourishing instead of only demanding.',
+        questions: [
+            { id: 'QOL-01', text: 'My daily life includes moments of peace, beauty, or genuine enjoyment.' },
+            { id: 'QOL-02', text: 'I have enough spaciousness in my life to breathe, rest, and be present.' },
+            { id: 'QOL-03', text: 'The way I spend my time reflects what truly matters to me.' }
+        ]
+    },
+    {
+        id: 'character',
+        name: 'My Character',
+        description: 'Integrity, self-honesty, responsibility, consistency, and the way you live in relationship with your own values.',
+        questions: [
+            { id: 'CHR-01', text: 'My choices generally reflect the values I say matter most to me.' },
+            { id: 'CHR-02', text: 'I am willing to tell myself the truth, even when it is uncomfortable.' },
+            { id: 'CHR-03', text: 'I take responsibility for my next faithful step without collapsing into shame.' }
+        ]
+    },
+    {
+        id: 'intellectual_life',
+        name: 'My Intellectual Life',
+        description: 'Curiosity, learning, mental stimulation, thought patterns, and whether you are feeding your mind with life-giving ideas.',
+        questions: [
+            { id: 'INT-01', text: 'I regularly engage with ideas, learning, or conversations that expand me.' },
+            { id: 'INT-02', text: 'My inner dialogue helps me grow instead of keeping me trapped in old stories.' },
+            { id: 'INT-03', text: 'I am open to seeing things differently when Truth invites me to grow.' }
+        ]
+    },
+    {
+        id: 'emotional_life',
+        name: 'My Emotional Life',
+        description: 'Emotional awareness, regulation, honesty, resilience, and the ability to stay present with feelings without being ruled by them.',
+        questions: [
+            { id: 'EMO-01', text: 'I can name what I am feeling without judging myself for feeling it.' },
+            { id: 'EMO-02', text: 'I have healthy ways to process disappointment, fear, anger, grief, or uncertainty.' },
+            { id: 'EMO-03', text: 'I do not regularly abandon myself in order to keep the peace.' }
+        ]
+    },
+    {
+        id: 'health_fitness',
+        name: 'My Health and Fitness',
+        description: 'Body stewardship, energy, rest, movement, nourishment, and the relationship between physical care and spiritual alignment.',
+        questions: [
+            { id: 'HLT-01', text: 'I treat my body as a sacred partner rather than a problem to punish, ignore, or drag behind me.' },
+            { id: 'HLT-02', text: 'My current habits support my energy, strength, rest, and overall wellbeing.' },
+            { id: 'HLT-03', text: 'I listen to my body before it has to speak through exhaustion, pain, or shutdown.' }
+        ]
+    },
+    {
+        id: 'love_relationships',
+        name: 'My Love Relationships',
+        description: 'Intimacy, partnership, connection, boundaries, truth-telling, trust, and the ability to love without losing the self.',
+        questions: [
+            { id: 'LOV-01', text: 'The love relationships closest to me feel rooted in honesty, respect, and mutual care.' },
+            { id: 'LOV-02', text: 'I can communicate my needs and boundaries without abandoning love or truth.' },
+            { id: 'LOV-03', text: 'I feel seen, valued, and emotionally safe in my closest love relationships.' }
+        ]
+    },
+    {
+        id: 'parenting',
+        name: 'My Parenting',
+        description: 'Relationship to parenting, caregiving, legacy, guidance, repair, and emotional presence. For those without children, this reflects care for those you influence or mentor.',
+        questions: [
+            { id: 'PAR-01', text: 'I show up for those in my care with presence, patience, and honest love as often as I am able.' },
+            { id: 'PAR-02', text: 'I am willing to repair, apologize, and grow when I do not show up the way I intended.' },
+            { id: 'PAR-03', text: 'My parenting or caregiving reflects the values I hope to pass forward.' }
+        ]
+    },
+    {
+        id: 'career',
+        name: 'My Career',
+        description: 'Vocation, contribution, purpose in work, right livelihood, energy exchange, leadership, and whether daily work reflects inner alignment.',
+        questions: [
+            { id: 'CAR-01', text: 'The work I do feels connected to my gifts, values, or sense of contribution.' },
+            { id: 'CAR-02', text: 'My current work life supports the kind of person I am becoming.' },
+            { id: 'CAR-03', text: 'I have clarity about the next aligned step in my work, business, calling, or contribution.' }
+        ]
+    },
+    {
+        id: 'spiritual_life',
+        name: 'My Spiritual Life',
+        description: 'Relationship with God, inner wisdom, prayer, stillness, spiritual practice, trust, surrender, and living from Truth rather than fear.',
+        questions: [
+            { id: 'SPI-01', text: 'I make space to listen for God, Truth, inner wisdom, or the still small voice.' },
+            { id: 'SPI-02', text: 'My spiritual life is something I practice, not only something I believe.' },
+            { id: 'SPI-03', text: 'When life feels uncertain, I can return to trust without needing to control everything.' }
+        ]
+    },
+    {
+        id: 'social_life',
+        name: 'My Social Life',
+        description: 'Friendship, belonging, community, mutual support, social energy, loneliness, and connection that honors authenticity.',
+        questions: [
+            { id: 'SOC-01', text: 'I have relationships where I can be honest, known, and supported.' },
+            { id: 'SOC-02', text: 'My social life nourishes me rather than consistently draining or distracting me.' },
+            { id: 'SOC-03', text: 'I make room for meaningful connection, not just obligation, performance, or scrolling.' }
+        ]
+    },
+    {
+        id: 'financial_life',
+        name: 'My Financial Life',
+        description: 'Money clarity, stewardship, sufficiency, responsibility, earning, receiving, generosity, and financial alignment with values.',
+        questions: [
+            { id: 'FIN-01', text: 'I have an honest understanding of my current financial reality.' },
+            { id: 'FIN-02', text: 'My financial choices reflect my values, responsibilities, and future vision.' },
+            { id: 'FIN-03', text: 'I am building a healthier relationship with earning, receiving, spending, saving, and giving.' }
+        ]
+    },
+    {
+        id: 'life_vision',
+        name: 'My Life Vision',
+        description: 'Purpose, direction, desire, clarity, imagination, faithful action, and whether the user is living by design rather than drift.',
+        questions: [
+            { id: 'VIS-01', text: 'I have a clear sense of the life I am being called to create, embody, or become.' },
+            { id: 'VIS-02', text: 'My daily choices are connected to a larger purpose or direction.' },
+            { id: 'VIS-03', text: 'I can name what matters most in this season of my life.' }
+        ]
+    }
+];
+
+// State management
+let currentDimension = 0;
+let responses = {};
+let userProfile = {};
+
+// Initialize
+function init() {
+    renderDimensions();
+}
+
+// Render all dimension sections
+function renderDimensions() {
+    const container = document.getElementById('dimensionsContainer');
+    container.innerHTML = '';
+
+    dimensions.forEach((dim, index) => {
+        const section = document.createElement('div');
+        section.className = 'dimension-section';
+        section.id = `dimension-${index}`;
+        
+        let questionsHtml = '';
+        dim.questions.forEach((q, qIndex) => {
+            questionsHtml += `
+                <div class="question">
+                    <p class="question-text">${qIndex + 1}. ${q.text}</p>
+                    <div class="scale-container">
+                        <div class="scale-option">
+                            <input type="radio" name="${q.id}" id="${q.id}-1" value="1" onchange="saveResponse('${q.id}', 1)">
+                            <label for="${q.id}-1">1</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="${q.id}" id="${q.id}-2" value="2" onchange="saveResponse('${q.id}', 2)">
+                            <label for="${q.id}-2">2</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="${q.id}" id="${q.id}-3" value="3" onchange="saveResponse('${q.id}', 3)">
+                            <label for="${q.id}-3">3</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="${q.id}" id="${q.id}-4" value="4" onchange="saveResponse('${q.id}', 4)">
+                            <label for="${q.id}-4">4</label>
+                        </div>
+                        <div class="scale-option">
+                            <input type="radio" name="${q.id}" id="${q.id}-5" value="5" onchange="saveResponse('${q.id}', 5)">
+                            <label for="${q.id}-5">5</label>
+                        </div>
+                    </div>
+                    <div class="scale-labels">
+                        <span>Deeply misaligned</span>
+                        <span>Deeply aligned</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        section.innerHTML = `
+            <div class="dimension-header">
+                <div class="dimension-number">Dimension ${index + 1} of 12</div>
+                <h3 class="dimension-title">${dim.name}</h3>
+                <p class="dimension-description">${dim.description}</p>
+            </div>
+            ${questionsHtml}
+        `;
+
+        container.appendChild(section);
+    });
+}
+
+// Save response
+function saveResponse(questionId, value) {
+    responses[questionId] = parseInt(value);
+}
+
+// Navigation
+function showWelcome() {
+    document.getElementById('landingPage').style.display = 'none';
+    document.getElementById('welcomeScreen').style.display = 'block';
+    window.scrollTo(0, 0);
+}
+
+function startAssessment() {
+    document.getElementById('welcomeScreen').style.display = 'none';
+    document.getElementById('assessmentContainer').style.display = 'block';
+    showDimension(0);
+    window.scrollTo(0, 0);
+}
+
+function showDimension(index) {
+    document.querySelectorAll('.dimension-section').forEach(el => {
+        el.classList.remove('active');
+    });
+    document.getElementById(`dimension-${index}`).classList.add('active');
+    const progress = ((index + 1) / dimensions.length) * 100;
+    document.getElementById('progressFill').style.width = `${progress}%`;
+    document.getElementById('prevBtn').style.visibility = index === 0 ? 'hidden' : 'visible';
+    document.getElementById('nextBtn').textContent = index === dimensions.length - 1 ? 'Complete Assessment' : 'Next →';
+    currentDimension = index;
+}
+
+function nextDimension() {
+    const dim = dimensions[currentDimension];
+    const unanswered = dim.questions.filter(q => !responses[q.id]);
+    if (unanswered.length > 0) {
+        alert('Please answer all questions in this dimension before continuing.');
+        return;
+    }
+    if (currentDimension < dimensions.length - 1) {
+        showDimension(currentDimension + 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+        document.getElementById('assessmentContainer').style.display = 'none';
+        document.getElementById('emailCapture').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function previousDimension() {
+    if (currentDimension > 0) {
+        showDimension(currentDimension - 1);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function submitEmail() {
+    const firstName = document.getElementById('firstName').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const consent = document.getElementById('emailConsent').checked;
+
+    if (!firstName || !email) {
+        alert('Please enter your first name and email address.');
+        return;
+    }
+    if (!consent) {
+        alert('Please consent to receive your Alignment Snapshot and LifeCharter resources.');
+        return;
+    }
+    userProfile = { firstName, email };
+    document.getElementById('emailCapture').style.display = 'none';
+    document.getElementById('loadingScreen').style.display = 'block';
+    window.scrollTo(0, 0);
+    setTimeout(() => {
+        generateResults();
+    }, 3000);
+}
+
+// Calculate and display results
+async function generateResults() {
+    // Calculate dimension scores
+    const dimensionScores = dimensions.map(dim => {
+        const scores = dim.questions.map(q => responses[q.id] || 3);
+        const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
+        const score = Math.round((avg / 5) * 100);
+        let level = 'Red Light';
+        if (score >= 70) level = 'Green Light';
+        else if (score >= 40) level = 'Yellow Light';
+        return { id: dim.id, name: dim.name, score, level };
+    });
+
+    // Calculate overall score
+    const overallScore = Math.round(dimensionScores.reduce((a, b) => a + b.score, 0) / dimensionScores.length);
+    let overallLevel = 'Red Light';
+    if (overallScore >= 70) overallLevel = 'Green Light';
+    else if (overallScore >= 40) overallLevel = 'Yellow Light';
+
+    // Sort dimensions
+    const sortedDimensions = [...dimensionScores].sort((a, b) => a.score - b.score);
+    const topDimensions = sortedDimensions.slice(-3).reverse();
+    const bottomDimensions = sortedDimensions.slice(0, 3);
+
+    // Get pattern
+    const pattern = determinePattern(dimensionScores, bottomDimensions);
+
+    // Prepare data for APIs - match expected API format
+    const assessmentData = {
+        user_profile: {
+            first_name: userProfile.firstName,
+            email: userProfile.email,
+            completion_date: new Date().toISOString().split('T')[0]
+        },
+        score_summary: {
+            overall_alignment_score: overallScore,
+            overall_alignment_level: overallLevel,
+            alignment_gap_score: topDimensions[0].score - bottomDimensions[0].score,
+            readiness_level: overallScore >= 70 ? 'Refine' : overallScore >= 40 ? 'Realign' : 'Stabilize'
+        },
+        dimension_scores: dimensionScores.map((dim, idx) => ({
+            dimension_id: dim.id,
+            dimension_name: dim.name,
+            score: dim.score,
+            alignment_level: dim.level,
+            rank_from_lowest: idx + 1
+        })),
+        open_reflections: {},
+        offer_routing: {
+            overall_level: overallLevel,
+            pattern: pattern.name,
+            recommended_offer: pattern.offer
+        }
+    };
+
+    // Call APIs - ALL are required (AI report, email, CRM)
+    let aiReportResult;
+    let crmResult;
+    try {
+        console.log('Starting API calls...');
+        
+        // Generate AI report (required)
+        aiReportResult = await generateAIReport(assessmentData);
+        console.log('AI Report Result:', aiReportResult);
+        
+        if (!aiReportResult.success) {
+            throw new Error('AI report generation failed: ' + (aiReportResult.error || 'Unknown error'));
+        }
+        
+        // Sync to CRM (REQUIRED) - use AI report data with correct field names
+        const report = aiReportResult.report;
+        const crmData = {
+            user_profile: {
+                first_name: report.user.first_name,
+                email: report.user.email,
+                completion_date: report.user.completion_date
+            },
+            score_summary: report.score_summary,
+            dimension_scores: report.dimension_results,
+            primary_alignment_pattern: report.primary_alignment_pattern,
+            recommended_pathway: report.recommended_pathway,
+            crm_tags: report.crm?.tags || [report.score_summary.overall_alignment_level, report.recommended_pathway.offer_name]
+        };
+        crmResult = await syncToCRM(crmData);
+        console.log('CRM Result:', crmResult);
+        
+        if (!crmResult.success) {
+            throw new Error('CRM sync failed: ' + (crmResult.error || 'Unknown error'));
+        }
+
+        // Send email with AI report to participant (REQUIRED)
+        console.log('Sending email to participant:', userProfile.email);
+        const emailResult1 = await sendEmailReport(userProfile.email, userProfile.firstName, aiReportResult.report);
+        console.log('Participant email result:', emailResult1);
+        
+        if (!emailResult1.success) {
+            throw new Error('Failed to send email to participant: ' + (emailResult1.error || 'Unknown error'));
+        }
+        
+        // Also send copy to Babs (REQUIRED)
+        console.log('Sending copy to Babs');
+        const emailResult2 = await sendEmailReport('amilynne@amilynnecarroll.com', userProfile.firstName + ' (Copy)', aiReportResult.report);
+        console.log('Babs email result:', emailResult2);
+        
+        if (!emailResult2.success) {
+            throw new Error('Failed to send copy to Babs: ' + (emailResult2.error || 'Unknown error'));
+        }
+        
+        console.log('All systems completed successfully!');
+        
+        // Display results using AI report data
+        displayResults(aiReportResult.report);
+        
+    } catch (error) {
+        console.error('Error processing results:', error);
+        alert('There was an error completing your Snapshot. Please try again or contact support. Error: ' + error.message);
+        // Hide loading screen and show email capture again so user can retry
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('emailCapture').style.display = 'block';
+        return; // Don't show results page if there was an error
+    }
+}
+
+// Display results on the page using AI report data
+function displayResults(report) {
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('resultsPage').style.display = 'block';
+    window.scrollTo(0, 0);
+    
+    // Use data from AI report
+    document.getElementById('resultName').textContent = report.user.first_name;
+    document.getElementById('overallScore').textContent = report.score_summary.overall_alignment_score;
+    
+    const scoreCircle = document.getElementById('scoreCircle');
+    const alignmentLevel = document.getElementById('alignmentLevel');
+    scoreCircle.className = 'score-circle';
+    alignmentLevel.className = 'alignment-level';
+    
+    const level = report.score_summary.overall_alignment_level;
+    if (level === 'Green Light') {
+        scoreCircle.classList.add('green');
+        alignmentLevel.classList.add('green');
+        alignmentLevel.textContent = 'Green Light Season';
+        document.getElementById('alignmentDescription').textContent = 'Your life may be ready for deeper refinement, expansion, and intentional growth.';
+    } else if (level === 'Yellow Light') {
+        scoreCircle.classList.add('yellow');
+        alignmentLevel.classList.add('yellow');
+        alignmentLevel.textContent = 'Yellow Light Season';
+        document.getElementById('alignmentDescription').textContent = 'Your life may be asking for a pause, a reset, and a more honest way forward.';
+    } else {
+        scoreCircle.classList.add('red');
+        alignmentLevel.classList.add('red');
+        alignmentLevel.textContent = 'Red Light Season';
+        document.getElementById('alignmentDescription').textContent = 'Your life may be asking for immediate care, clarity, and support.';
+    }
+
+    // Dimension bars from AI report
+    const barsContainer = document.getElementById('dimensionBars');
+    barsContainer.innerHTML = '';
+    report.dimension_results.forEach(dim => {
+        const barClass = dim.alignment_level === 'Green Light' ? 'green' : dim.alignment_level === 'Yellow Light' ? 'yellow' : 'red';
+        barsContainer.innerHTML += `
+            <div class="dimension-bar">
+                <div class="dimension-name">${dim.dimension_name.replace('My ', '')}</div>
+                <div class="bar-container">
+                    <div class="bar-fill ${barClass}" style="width: ${dim.score}%"></div>
+                </div>
+                <div class="bar-score">${dim.score}</div>
+            </div>
+        `;
+    });
+
+    // Top and bottom dimensions from AI report
+    document.getElementById('topDimensions').innerHTML = report.insights.top_aligned_dimensions.map(d => 
+        `<li>${d}</li>`
+    ).join('');
+    document.getElementById('bottomDimensions').innerHTML = report.insights.top_misaligned_dimensions.map(d => 
+        `<li>${d}</li>`
+    ).join('');
+
+    // Pattern and next step from AI report
+    document.getElementById('patternName').textContent = report.primary_alignment_pattern.pattern_name;
+    document.getElementById('patternDescription').textContent = report.primary_alignment_pattern.pattern_summary;
+    document.getElementById('nextStep').textContent = report.report_sections.next_faithful_step;
+    document.getElementById('ctaDescription').textContent = report.recommended_pathway.offer_reason;
+    document.getElementById('ctaButton').textContent = report.recommended_pathway.cta_label;
+    document.getElementById('ctaButton').onclick = () => window.open(report.recommended_pathway.cta_url, '_blank');
+}
+
+// Generate AI report
+async function generateAIReport(assessmentData) {
+    try {
+        const response = await fetch('/api/generate-report', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(assessmentData)
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error('Failed to generate report: ' + errorText);
+        }
+        
+        const data = await response.json();
+        // The API returns the report directly, not wrapped in a report property
+        return { success: true, report: data };
+    } catch (error) {
+        console.error('AI report error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Send email report
+async function sendEmailReport(email, firstName, aiReport) {
+    try {
+        const response = await fetch('/api/send-email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                to_email: email,
+                first_name: firstName,
+                ai_report: aiReport
+            })
+        });
+        
+        if (!response.ok) throw new Error('Failed to send email');
+        
+        const data = await response.json();
+        console.log('Email sent:', data);
+        return { success: true };
+    } catch (error) {
+        console.error('Email error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+// Sync to CRM
+async function syncToCRM(assessmentData) {
+    try {
+        const response = await fetch('/api/crm-sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(assessmentData)
+        });
+        
+        if (!response.ok) throw new Error('Failed to sync to CRM');
+        
+        const data = await response.json();
+        console.log('CRM sync:', data);
+        return { success: true };
+    } catch (error) {
+        console.error('CRM sync error:', error);
+        return { success: false, error: error.message };
+    }
+}
+
+function determinePattern(dimensionScores, bottomThree) {
+    const scoreMap = {};
+    dimensionScores.forEach(s => scoreMap[s.id] = s.score);
+    const bottomIds = bottomThree.map(d => d.id);
+    const overallScore = Math.round(dimensionScores.reduce((a, b) => a + b.score, 0) / dimensionScores.length);
+
+    if (bottomIds.includes('emotional_life') && bottomIds.includes('health_fitness') && scoreMap['love_relationships'] > 60) {
+        return { name: 'The Overextended Giver', description: 'You may be showing up for others while neglecting your own needs.', next_step: 'Create one non-negotiable daily pause that belongs only to you.', offer: 'LifeCharter Incubator' };
+    }
+    if (bottomIds.includes('life_vision') && scoreMap['spiritual_life'] > 60) {
+        return { name: 'The Sacred Drifter', description: 'You have deep inner longing but lack practical structure.', next_step: 'Name one decision you have been postponing and take one small aligned action.', offer: 'LifeCharter Summit' };
+    }
+    if (scoreMap['career'] > 60 && scoreMap['intellectual_life'] > 60 && scoreMap['emotional_life'] < 60) {
+        return { name: 'The Quiet Achiever', description: 'You are capable but disconnected from deeper fulfillment.', next_step: 'Ask: "What am I succeeding at that is no longer feeding my soul?"', offer: 'LifeCharter Circle' };
+    }
+    if (bottomIds.includes('quality_of_life') && bottomIds.includes('financial_life')) {
+        return { name: 'The Survival Strategist', description: 'You are operating from endurance rather than alignment.', next_step: 'Choose one stabilizing practice for the next 24 hours.', offer: 'LifeCharter Summit' };
+    }
+    if (scoreMap['life_vision'] > 70 && (bottomIds.includes('career') || bottomIds.includes('financial_life'))) {
+        return { name: 'The Disconnected Visionary', description: 'You see what is possible but struggle with practical structure.', next_step: 'Turn one vision into one calendar-based action.', offer: 'LifeCharter Incubator' };
+    }
+    if (overallScore >= 60 && scoreMap['life_vision'] > 65) {
+        return { name: 'The Purpose-Ready Butterfly', description: 'You are ready for refinement and expanded aligned action.', next_step: 'Choose a guided container to help turn clarity into consistent movement.', offer: 'LifeCharter Circle' };
+    }
+    return { name: 'The Disconnected Visionary', description: 'You see what is possible but struggle with practical structure.', next_step: 'Turn one vision into one calendar-based action.', offer: 'LifeCharter Incubator' };
+}
+
+function getOfferURL(offer) {
+    const urls = {
+        'LifeCharter Summit': 'https://amilynnecarroll.com/summit',
+        'LifeCharter Incubator': 'https://lifecharter-incubator.vercel.app/',
+        'LifeCharter Circle': 'https://life-charter.vercel.app/',
+        'Self-Directed LifeCharter': 'https://amilynnecarroll.com/self-directed',
+        'LifeCharter Conversation': 'https://amilynnecarroll.com/conversation',
+        '21 Day Challenge': 'https://amilynnecarroll.com/21-day-challenge',
+        'Conversations of Consequence': 'https://amilynnecarroll.com/conversations-of-consequence',
+        'Immediate Support': 'https://amilynnecarroll.com/support'
+    };
+    return urls[offer] || 'https://amilynnecarroll.com';
+}
+
+// Initialize on load
+window.onload = init;
+</script>
+</body>
+</html>

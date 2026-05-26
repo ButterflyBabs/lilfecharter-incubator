@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>LifeCharter Circle Email Templates - Complete Set</title>
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .email-section { margin-bottom: 50px; border: 2px solid #667eea; padding: 20px; border-radius: 8px; }
+        .email-title { background: #667eea; color: white; padding: 10px; margin: -20px -20px 20px -20px; border-radius: 6px 6px 0 0; font-weight: bold; }
+        pre { background: #f4f4f4; padding: 15px; overflow-x: auto; white-space: pre-wrap; word-wrap: break-word; }
+        .instructions { background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+    <h1>LifeCharter Circle Email Templates - Complete Set</h1>
+    
+    <div class="instructions">
+        <h2>📋 Instructions for Global Control Dashboard</h2>
+        <ol>
+            <li><strong>Delete Duplicate Email 1:</strong> Go to the workflow, find the second "Email 1 - Welcome" and delete it</li>
+            <li><strong>Email 2 - Pattern Branching:</strong> Change Flow 2 to a Conditional Split with 7 branches based on pattern tags</li>
+            <li><strong>Add Timing:</strong> Set delays between emails (Day 0, 2, 5, 9, 14)</li>
+            <li><strong>Set Trigger:</strong> Configure workflow to start when "snapshot-complete" tag is applied</li>
+            <li><strong>Copy HTML:</strong> Copy the HTML content below into each corresponding email flow</li>
+        </ol>
+    </div>
+
+    <!-- EMAIL 1 -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 1 - WELCOME (Flow 0) - Subject: Your Alignment Snapshot is ready</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Your Alignment Snapshot is ready&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hello {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;Welcome. I'm so glad you're here.&lt;/p&gt;
+    
+    &lt;p&gt;First, let me say this: it takes real courage to look honestly at one's life. To pause the doing long enough to ask, "How am I really?" — that's not small. That's the faithful step that changes everything.&lt;/p&gt;
+    
+    &lt;p&gt;Your Alignment Snapshot results are attached. As you read through them, know this: whatever pattern emerged, it's not a verdict. It's information. A compass point, not a destination.&lt;/p&gt;
+    
+    &lt;p&gt;You might see yourself clearly in these results. You might feel seen in a way that surprises you. Or you might notice a gap between where you are and where you sense you could be. All of it is welcome here.&lt;/p&gt;
+    
+    &lt;p&gt;The Snapshot gives you a map. But maps don't walk themselves.&lt;/p&gt;
+    
+    &lt;p&gt;When you're ready for the container that holds this work — the weekly practices, the living tools, the community of fellow travelers walking the same road — the LifeCharter Circle is here. No pressure, no rush. Just an open door when the time feels right.&lt;/p&gt;
+    
+    &lt;p&gt;For now, sit with what you've discovered. Let it land. And know that you're not alone on this journey.&lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;br&gt;&lt;em&gt;LifeCharter Founder&lt;/em&gt;&lt;/p&gt;
+    
+    &lt;p style="font-size: 14px; color: #666;"&gt;P.S. — If something in your results sparks a question, just hit reply. I read every email.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin-top: 30px;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;View Your Full Results&lt;/a&gt;
+    &lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Overextended Giver -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Overextended Giver - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as an &lt;strong&gt;Overextended Giver&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;You've been holding so much for so many, and somewhere along the way, your own needs became optional. The world has praised your selflessness while your spirit has been quietly depleted. You're strong in relationships and career — people know they can count on you. But your health and self-care? They've been taking a back seat for so long you barely notice the cost anymore.&lt;/p&gt;
+    
+    &lt;p&gt;You say yes when you mean no. Not because you're weak, but because you've learned that love equals availability, that worth equals usefulness.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Sacred Drifter -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Sacred Drifter - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Sacred Drifter&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;You've tasted meaning, glimpsed what matters, but the ground keeps shifting beneath your feet. You're strong in spiritual and emotional dimensions — you have insight, depth, the capacity to feel what's true. But career and financial dimensions? They feel scattered, like you're floating above your own life instead of living it.&lt;/p&gt;
+    
+    &lt;p&gt;You have so much wisdom but little direction. Lots of insight, but the path keeps dissolving into mist.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle gives you structure without sacrificing your spaciousness. It was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Quiet Achiever -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Quiet Achiever - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Quiet Achiever&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;From the outside, it looks like you have it together. Inside, you're wondering when you'll finally feel like you've arrived — or if the goalposts will keep moving forever. You're strong in intellectual and career dimensions — accomplished, capable, respected. But relationships and emotional life? They feel hidden, underdeveloped, like you're successful but lonely.&lt;/p&gt;
+    
+    &lt;p&gt;You've built something impressive, but it feels like nobody truly sees you in it.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept. This is where you finally get to be known.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Survival Strategist -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Survival Strategist - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Survival Strategist&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;You've become exceptionally good at managing, coping, getting through. You're strong in practical areas — you handle crisis with grace, you keep things running, you're the one others rely on when things get hard. But joy and purpose? They feel depleted, like you've been so focused on surviving that you forgot what thriving feels like.&lt;/p&gt;
+    
+    &lt;p&gt;"Getting through" was never meant to be a life sentence. You weren't built for mere survival.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept. This is for learning to thrive.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Disconnected Visionary -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Disconnected Visionary - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Disconnected Visionary&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;You can see the mountaintop clearly. It's the valley between here and there that keeps tripping you up. You're strong in vision and purpose — you have big dreams, you can see what's possible, you feel the call toward something meaningful. But execution and follow-through? They scatter, leaving you with dreams that never quite land in reality.&lt;/p&gt;
+    
+    &lt;p&gt;You can see where you want to go. You just can't seem to find the trail that gets you there.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept. This gives you the path and the walking companions.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Relationship-Tethered -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Relationship-Tethered Traveler - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Relationship-Tethered Traveler&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;Your connections matter deeply — but somewhere in the weaving together, the thread of your own becoming got tangled. You're strong when connected, grounded in relationships, clear about who you are with others. But when alone? You feel lost. Your identity is wrapped up in others, your boundaries unclear, your sense of self dependent on who you're with.&lt;/p&gt;
+    
+    &lt;p&gt;You've defined yourself through connection. The question is: who are you within it?&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept. This helps you find yourself within connection.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 2 - Purpose-Ready Butterfly -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 2 - PATTERN: Purpose-Ready Butterfly - Subject: What your pattern reveals about your next step</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What your pattern reveals about your next step&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I've been thinking about your Snapshot results.&lt;/p&gt;
+    
+    &lt;p&gt;You showed up as a &lt;strong&gt;Purpose-Ready Butterfly&lt;/strong&gt; — and I want you to know: I see you. I know this terrain intimately.&lt;/p&gt;
+    
+    &lt;p&gt;Green lights across most dimensions. You've done the work. You know transformation is coming — you can feel it in your bones. You're ready for integration, seeking community and depth, standing at the edge of something new. The cocoon is uncomfortable, and you're not quite sure what waits on the other side, but you know you're ready.&lt;/p&gt;
+    
+    &lt;p&gt;You've done the preparation. Now you need the container that holds your becoming.&lt;/p&gt;
+    
+    &lt;p&gt;Here's what I want you to hear: Your pattern shows you where you've been. It doesn't determine where you can go.&lt;/p&gt;
+    
+    &lt;p&gt;The Circle was built for travelers exactly like you — people who've done the inner work, who know the territory, who are ready for the container that makes alignment a lived reality, not just a concept. This is your next faithful step.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Learn more about the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 3 -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 3 - THE GAP (Flow 3) - Subject: The gap between knowing and living</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;The gap between knowing and living&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;The Incubator gave you something real.&lt;/p&gt;
+    
+    &lt;p&gt;Identity First. Yellow Light. Aligned Action.&lt;/p&gt;
+    
+    &lt;p&gt;These aren't just concepts — they're doorways. And I know you've walked through at least one of them, because you're still here.&lt;/p&gt;
+    
+    &lt;p&gt;But let me ask you something honest: Where does awareness go when life gets loud?&lt;/p&gt;
+    
+    &lt;p&gt;You know the feeling. You have the insight, the clarity, the "aha" moment. And then the emails pile up, the demands stack, the old patterns creep back in. Not because you're failing — because awareness without container often fades.&lt;/p&gt;
+    
+    &lt;p&gt;This is the gap I kept falling into myself.&lt;/p&gt;
+    
+    &lt;p&gt;I'd have the breakthrough in the journal, the clarity on the walk, the resolve at the retreat. Then I'd come home to the same life with the same triggers, and wonder why the transformation didn't stick.&lt;/p&gt;
+    
+    &lt;p&gt;The LifeCharter Circle exists to bridge that gap.&lt;/p&gt;
+    
+    &lt;p&gt;This isn't more information. It's not another course to complete or book to read. It's a way of being — held in a container designed for exactly that.&lt;/p&gt;
+    
+    &lt;p&gt;Weekly Alignment Anchors. The 12 dimensions as lived practice, not theory. A community of fellow travelers who get it. Tools that meet you where you are, not where you "should" be.&lt;/p&gt;
+    
+    &lt;p&gt;You already know what you need to do differently. The Circle is where you get to actually do it.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;Step Into the Circle →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 4 -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 4 - CONTAINER STORY (Flow 4) - Subject: What changes when you have a container</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;What changes when you have a container&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I want to tell you a story.&lt;/p&gt;
+    
+    &lt;p&gt;Not the polished version — the real one.&lt;/p&gt;
+    
+    &lt;p&gt;For years, I was the person who had it all together on the outside and was quietly falling apart on the inside. Corporate success. Check. External validation. Check. Spiritual bankruptcy. Also check.&lt;/p&gt;
+    
+    &lt;p&gt;I collected modalities like some people collect stamps. Therapy. Meditation. Yoga. Coaching. Books upon books upon books. I could talk about alignment all day. I just couldn't seem to live it.&lt;/p&gt;
+    
+    &lt;p&gt;Then came the dark night. The moment when all the doing finally stopped working. When the strategies that had carried me through simply... collapsed.&lt;/p&gt;
+    
+    &lt;p&gt;I had to rebuild. Not from theory — from necessity. I took the 12 dimensions and I lived them. One by one. Not as concepts, as practice. Identity First when I wanted to people-please. Yellow Light when I wanted to push through. Aligned Action when fear told me to wait.&lt;/p&gt;
+    
+    &lt;p&gt;LifeCharter wasn't born from ambition. It was born from survival. From the desperate need to stop collecting information and start living from alignment.&lt;/p&gt;
+    
+    &lt;p&gt;&lt;strong&gt;Here's what changed when I finally had a container:&lt;/strong&gt;&lt;/p&gt;
+    
+    &lt;ul&gt;
+        &lt;li&gt;I stopped looking for the "right" answer and started trusting my own knowing&lt;/li&gt;
+        &lt;li&gt;I stopped performing wellness and started practicing it, even when it was messy&lt;/li&gt;
+        &lt;li&gt;I stopped waiting for permission to become who I already was&lt;/li&gt;
+    &lt;/ul&gt;
+    
+    &lt;p&gt;A woman in our Circle said something that stopped me in my tracks:&lt;/p&gt;
+    
+    &lt;blockquote style="border-left: 3px solid #667eea; padding-left: 15px; font-style: italic; color: #555;"&gt;
+        "I had the journals, the vision boards, the courses... but no container. Circle changed that. For the first time, I stopped collecting information and started living from alignment."
+    &lt;/blockquote&gt;
+    
+    &lt;p&gt;That's what the Circle exists to give you. Not more to do. A different way to be.&lt;/p&gt;
+    
+    &lt;p&gt;If you're tired of doing this alone — if you're ready for the container that holds the work — the door is open.&lt;/p&gt;
+    
+    &lt;p style="text-align: center; margin: 30px 0;"&gt;
+        &lt;a href="https://life-charter.vercel.app/" style="background-color: #667eea; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px;"&gt;This Is What Circle Exists to Give You →&lt;/a&gt;
+    &lt;/p&gt;
+    
+    &lt;p&gt;Head up, wings out,&lt;/p&gt;
+    
+    &lt;p&gt;Babs&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    </div>
+
+    <!-- EMAIL 5 -->
+    <div class="email-section">
+        <div class="email-title">EMAIL 5 - INVITATION (Flow 5) - Subject: This invitation closes in two weeks</div>
+        <pre>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;This invitation closes in two weeks&lt;/title&gt;
+&lt;/head&gt;
+&lt;body style="font-family: Georgia, serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;"&gt;
+    &lt;p&gt;Hi {{contact.first_name | default: "there"}},&lt;/p&gt;
+    
+    &lt;p&gt;I want to be straight with you.&lt;/p&gt;
+    
+    &lt;p&gt;When you receive this email, the door to LifeCharter Circle is open. &lt;strong&gt;Two weeks from today, it closes.&lt;/strong&gt;&lt;/p&gt;
+    
+    &lt;p&gt;This isn't a countdown timer trick. No fake scarcity. No "only 3 spots left" theater. Just an honest truth: I open the Circle for two-week windows, then close to focus on the members inside.&lt;/p&gt;
+    
+    &lt;p&gt;The work is intimate, and intimacy has limits. When the door is open, I'm fully present for enrollment conversations, onboarding, welcoming new travelers. When it closes, I turn my full attention to the container and the people within it.&lt;/p&gt;
+    
+    &lt;p&gt;This creates evergreen urgency without manipulation. The automation sends based on your Snapshot completion date — your two weeks start when you're ready, not on some arbitrary calendar.&lt;/p&gt;
+    
+    &lt;p&gt;&lt;strong&gt;What this means for you:&lt;/strong&gt;&lt;/p&gt;
+    
+    &lt;p&gt;You have two weeks from the moment you read this to decide. Not to pressure you — to invite a real decision. Yes or no, both are valid. What's costly is the limbo of "maybe later."&lt;/p&gt;
+    
+    &lt;p&gt;&lt;strong&gt;Two ways to join:&lt;/strong&gt;&lt;/p&gt;
+    &lt;ul&gt;
+        &lt;li&gt;&lt;strong&gt;$2,497&lt;/strong&gt; pay-in-full&lt;/li&gt;
+        &lt;li&gt;&lt;strong&gt;3 payments of $850&lt;/strong&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+    

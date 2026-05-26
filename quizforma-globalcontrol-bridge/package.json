@@ -1,0 +1,6 @@
+{
+  "name": "quizforma-globalcontrol-bridge",
+  "version": "1.0.0",
+  "description": "Sync QuizForma registrations to Global Control CRM",
+  "type": "commonjs"
+}

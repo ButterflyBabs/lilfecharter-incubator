@@ -1,0 +1,254 @@
+private function buildPrompt(array $input): string
+{
+    $fontList = implode(', ', $this->getAvailableFonts());
+    $patternList = implode(', ', $this->getAvailablePatterns());
+    
+    return <<<PROMPT
+You are an elite landing page designer who creates visually stunning, high-converting opt-in pages. Generate 12 completely unique design variations that each feel like they came from a different world-class design agency.
+
+CRITICAL RULE: Style only — colors, fonts, gradients, spacing, effects. NEVER include text content fields (headline, sub_headline, cta_statement, button_text, privacy_statement). Existing content stays unchanged.
+
+DESIGN MANDATE: BE UNPREDICTABLE AND BOLD
+
+Each variation must have a completely different visual identity. Think:
+- A minimalist Japanese studio vs. a bold Brazilian agency vs. a luxury Parisian house
+- Dark mode SaaS vs. warm editorial vs. neon cyberpunk vs. soft organic
+- Corporate authority vs. playful startup vs. exclusive VIP
+
+For EACH of the 12 variations, invent:
+1. A creative theme name (e.g., "Tokyo Midnight", "Desert Oasis", "Nordic Frost", "Cyber Miami")
+2. A unique color philosophy (dark, light, vibrant, muted, monochrome, complementary clash, analogous flow)
+3. Font pairing that creates visual hierarchy (bold display + clean body, elegant serif + modern sans, etc.)
+4. Visual effects that enhance the mood (gradients, shadows, patterns, or clean minimalism)
+
+TECHNICAL CONSTRAINTS (follow exactly):
+
+Colors: Valid 7-char hex codes (#RRGGBB) only
+Available fonts: {$fontList}
+Available patterns: {$patternList}
+
+Output format: JSON with "variations" array. Each object includes ONLY these style fields:
+
+Required fields per variation:
+- theme_name: string (creative name)
+- page_background_color: hex
+- outside_background_color: hex (slightly different tone from page)
+- page_bg_type: "color" or "gradient"
+- full_background_type: "color", "gradient", or "image"
+- orientation_type: 1 or 2
+- template_size: 1 (full), 2 (medium), or 3 (compact) — vary across the 12
+- box_radius: 0-30
+
+Headline styling:
+- headline_font_family: from available fonts
+- headline_font_size: 32-48
+- headline_mobile_font_size: ~60-75% of desktop
+- headline_text_color: hex
+- headline_bold_color: hex (vibrant accent for <b> tags)
+- headline_bg_color: hex or null
+- headline_spacing_before: 0-50
+- headline_spacing_after: 0-50
+- headline_line_height: 0
+- headline_text_transformation: "none", "uppercase", "lowercase", or "capitalize"
+- headline_text_shadow: "none", "sm", "md", or "lg"
+
+Sub-headline styling:
+- sub_headline_font_family: from available fonts (contrast with headline)
+- sub_headline_font_size: 15-22
+- sub_headline_mobile_font_size: ~60-75% of desktop
+- sub_headline_text_color: hex
+- sub_headline_bold_color: hex
+- sub_headline_bg_color: hex or null
+- sub_headline_spacing_before: 0-50
+- sub_headline_spacing_after: 0-50
+- sub_headline_line_height: 0
+- sub_headline_text_transformation: "none", "uppercase", "lowercase", or "capitalize"
+- sub_headline_text_shadow: "none", "sm", "md", or "lg"
+
+CTA statement styling:
+- cta_font_family: from available fonts
+- cta_font_size: 14-18
+- cta_mobile_font_size: ~60-75% of desktop
+- cta_text_color: hex
+- cta_bold_color: hex
+- cta_bg_color: hex or null
+- cta_spacing_before: 0-50
+- cta_spacing_after: 0-50
+- cta_line_height: 0
+- cta_text_transformation: "none", "uppercase", "lowercase", or "capitalize"
+- cta_text_shadow: "none", "sm", "md", or "lg"
+
+Privacy text styling:
+- privacy_font_family: from available fonts
+- privacy_font_size: 10-13
+- privacy_mobile_font_size: ~60-75% of desktop
+- privacy_text_color: hex (muted/subtle)
+- privacy_bold_color: hex
+- privacy_bg_color: hex or null
+- privacy_spacing_before: 0-30
+- privacy_spacing_after: 0-30
+- privacy_line_height: 0
+- privacy_text_transformation: "none", "uppercase", "lowercase", or "capitalize"
+- privacy_text_shadow: "none", "sm", "md", or "lg"
+
+Button styling:
+- button_font_family: from available fonts
+- button_font_size: 17-24
+- button_mobile_font_size: ~60-75% of desktop
+- button_text_color: hex
+- button_bold_color: hex
+- button_border_color: hex
+- button_bg_color: hex
+- button_style: "pointed", "round", "rounded", "pill", or "solid"
+- button_width: "full" or "auto"
+- button_height: "sm", "md", or "lg"
+- button_animation: "none", "pulse", "bounce", or "shake"
+- button_spacing_before: 0-50
+- button_spacing_after: 0-50
+- button_line_height: 0
+- button_text_transformation: "none", "uppercase", "lowercase", or "capitalize"
+- button_text_shadow: "none", "sm", "md", or "lg"
+
+Page spacing:
+- page_spacing_before: 0-60
+- page_spacing_after: 0-60
+
+Input field styling:
+- input_border_color: hex
+- input_border_style: "solid", "dashed", "dotted", or "none"
+- input_border_size: 0-5
+
+GRADIENTS (set to null when not used):
+
+Page gradient (when page_bg_type is "gradient"):
+page_gradient: {"gradient_color_1":"#hex1","gradient_color_2":"#hex2","gradient_color_stop_1":0,"gradient_color_stop_2":100,"gradient_angle":180}
+
+Button gradient (button must have button_style:"solid"):
+button_gradient: {"is_gradeint_enabled":true,"gradient_color_2":"#hex2","gradient_color_stop_1":0,"gradient_color_stop_2":100,"gradient_angle":180}
+Note: color_1 comes from button_bg_color. "is_gradeint_enabled" has intentional typo — keep exactly.
+
+Text gradients (subheadline_gradient, mainhealine_gradient, cta_gradient, privacystatement_gradient):
+{"color_type":"gradient","gradient_color_1":"#hex1","gradient_color_2":"#hex2","gradient_color_stop_1":0,"gradient_color_stop_2":100,"gradient_angle":90}
+Note: "mainhealine_gradient" has intentional typo — keep exactly.
+
+PATTERN (set to null when not used):
+page_pattern: {"pattern_type":"grid-square","pattern_color":"#hex","page_background_thickness":1,"page_background_size":50}
+- pattern_color: EXTREMELY SUBTLE — barely visible, very close to page_background_color
+- page_background_thickness: always 1
+- page_background_size: 40-70
+
+DESIGN PRINCIPLES TO FOLLOW:
+
+1. CONTRAST IS KING: Text must be crystal clear against background. Dark bg = white/light text. Light bg = dark text.
+
+2. VISUAL HIERARCHY: Use dramatically different font sizes. Headline should dominate. Button should demand attention.
+
+3. BUTTONS THAT CONVERT: Use vivid, saturated colors for buttons. They should pop against the page. Gradient buttons often outperform solid.
+
+4. PREMIUM FEEL: 
+   - At least 7 of 12 should use page gradients
+   - At least 5 should use button gradients
+   - At least 5 should use subtle page patterns
+   - At least 6 should use text shadows on headlines
+
+5. VARIETY ACROSS ALL 12:
+   - Mix of dark and light themes (don't default to all dark)
+   - Different layout densities (some airy, some compact)
+   - Vary template_size: ~8 full, 2 medium, 2 compact
+   - Mix button styles: pointed, round, rounded, pill, solid
+   - Use animations on ~4 templates
+
+6. FONT PAIRING: Always contrast styles. Bold/display headline + clean/simple body. Never use the same font family for everything.
+
+7. BOLD ACCENTS: headline_bold_color and sub_headline_bold_color should make <b> tagged words POP. Use vibrant, contrasting accent colors.
+
+Return ONLY valid JSON with key "variations" containing exactly 12 objects. No markdown, no code blocks, no explanation — just the JSON.
+
+Example structure for ONE variation:
+{
+  "theme_name": "Tokyo Midnight",
+  "page_background_color": "#0A0A1A",
+  "outside_background_color": "#050510",
+  "page_bg_type": "gradient",
+  "full_background_type": "gradient",
+  "orientation_type": 1,
+  "template_size": 1,
+  "box_radius": 10,
+  "headline_font_family": "Montserrat",
+  "headline_font_size": 42,
+  "headline_mobile_font_size": 26,
+  "headline_text_color": "#FFFFFF",
+  "headline_bold_color": "#00D4FF",
+  "headline_bg_color": null,
+  "headline_spacing_before": 25,
+  "headline_spacing_after": 15,
+  "headline_line_height": 0,
+  "headline_text_transformation": "none",
+  "headline_text_shadow": "lg",
+  "sub_headline_font_family": "Open Sans",
+  "sub_headline_font_size": 18,
+  "sub_headline_mobile_font_size": 14,
+  "sub_headline_text_color": "#B0B8C8",
+  "sub_headline_bold_color": "#E0E8F8",
+  "sub_headline_bg_color": null,
+  "sub_headline_spacing_before": 10,
+  "sub_headline_spacing_after": 12,
+  "sub_headline_line_height": 0,
+  "sub_headline_text_transformation": "none",
+  "sub_headline_text_shadow": "sm",
+  "cta_font_family": "Open Sans",
+  "cta_font_size": 16,
+  "cta_mobile_font_size": 13,
+  "cta_text_color": "#8899BB",
+  "cta_bold_color": "#AABBDD",
+  "cta_bg_color": null,
+  "cta_spacing_before": 8,
+  "cta_spacing_after": 15,
+  "cta_line_height": 0,
+  "cta_text_transformation": "none",
+  "cta_text_shadow": "none",
+  "privacy_font_family": "Open Sans",
+  "privacy_font_size": 11,
+  "privacy_mobile_font_size": 9,
+  "privacy_text_color": "#556688",
+  "privacy_bold_color": "#6677AA",
+  "privacy_bg_color": null,
+  "privacy_spacing_before": 5,
+  "privacy_spacing_after": 10,
+  "privacy_line_height": 0,
+  "privacy_text_transformation": "none",
+  "privacy_text_shadow": "none",
+  "button_font_family": "Montserrat",
+  "button_font_size": 20,
+  "button_mobile_font_size": 16,
+  "button_text_color": "#FFFFFF",
+  "button_bold_color": "#FFFFFF",
+  "button_border_color": "#00D4FF",
+  "button_bg_color": "#00D4FF",
+  "button_style": "solid",
+  "button_width": "full",
+  "button_height": "lg",
+  "button_animation": "pulse",
+  "button_spacing_before": 12,
+  "button_spacing_after": 10,
+  "button_line_height": 0,
+  "button_text_transformation": "uppercase",
+  "button_text_shadow": "sm",
+  "page_spacing_before": 35,
+  "page_spacing_after": 35,
+  "input_border_color": "#2A2A4A",
+  "input_border_style": "solid",
+  "input_border_size": 1,
+  "page_gradient": {"gradient_color_1":"#0A0A1A","gradient_color_2":"#1A1A3A","gradient_color_stop_1":0,"gradient_color_stop_2":100,"gradient_angle":180},
+  "orientation_gradient": null,
+  "button_gradient": {"is_gradeint_enabled":true,"gradient_color_2":"#0099CC","gradient_color_stop_1":0,"gradient_color_stop_2":100,"gradient_angle":180},
+  "subheadline_gradient": null,
+  "mainhealine_gradient": null,
+  "cta_gradient": null,
+  "privacystatement_gradient": null,
+  "page_pattern": null
+}
+
+Now generate all 12 variations with completely different creative directions. Surprise me with unexpected combinations.
+PROMPT;
+}

@@ -1,0 +1,24 @@
+{
+  "commands": [
+    {
+      "command": "/archive",
+      "description": "Create or extract ZIP archives depending on action.",
+      "action_field": "action",
+      "supported_actions": ["zip", "unzip"]
+    },
+    {
+      "command": "/zipfiles",
+      "description": "Create a ZIP archive from a file or folder.",
+      "defaults": {
+        "action": "zip"
+      }
+    },
+    {
+      "command": "/unzipfiles",
+      "description": "Extract a ZIP archive into a target directory.",
+      "defaults": {
+        "action": "unzip"
+      }
+    }
+  ]
+}

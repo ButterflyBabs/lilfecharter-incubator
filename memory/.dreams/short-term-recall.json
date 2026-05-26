@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "updatedAt": "2026-05-26T20:12:35.907Z",
+  "entries": {
+    "memory:memory/2026-05-05.md:1:42": {
+      "key": "memory:memory/2026-05-05.md:1:42",
+      "path": "memory/2026-05-05.md",
+      "startLine": 1,
+      "endLine": 42,
+      "source": "memory",
+      "snippet": "# Memory Log - May 5, 2026 ## Life by Design Summit - Completed Work ### Landing Page Created - URL: https://life-by-design-summit.vercel.app - 14 sections with LifeCharter branding - Mobile responsive design - 3 confirmed speakers: Babs (Host), Turiya (Co-Host), John Carter - 11 placeholder speaker spots ### Registration System - Registration Page: https://life-by-design-summit.vercel.app/register.html - Thank You Page: https://life-by-design-summit.vercel.app/thank-you.html - Payment Success Page: https://life-by-design-summit.vercel.app/payment-success.html - 3 registration tiers: Free, Next Chapter Pass, Integration Pass ($197) - Stripe payment link integrated: https://buy.stripe.com/",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.3542352020740509,
+      "maxScore": 0.3542352020740509,
+      "firstRecalledAt": "2026-05-26T20:12:35.907Z",
+      "lastRecalledAt": "2026-05-26T20:12:35.907Z",
+      "queryHashes": [
+        "85ba634e96a2"
+      ],
+      "recallDays": [
+        "2026-05-26"
+      ],
+      "conceptTags": [
+        "life-by-design-summit.vercel.app",
+        "co-host",
+        "buy.stripe.com",
+        "log",
+        "may",
+        "life",
+        "design",
+        "summit"
+      ]
+    }
+  }
+}

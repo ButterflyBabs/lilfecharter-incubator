@@ -1,0 +1,6 @@
+# Environment variables with secrets
+.env
+
+# Do not commit user credentials
+*.key
+*.secret

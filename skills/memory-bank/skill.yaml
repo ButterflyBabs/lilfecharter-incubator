@@ -1,0 +1,16 @@
+---
+id: memory-bank
+name: Memory Bank
+version: 1.0.0
+author: "Pacino / Titanium Software"
+entrypoint: SKILL.md
+commands:
+ - "/memory bank"
+ - "/memory bank workshop"
+requires_tools:
+ - web_fetch
+ - read
+ - write
+ - pdf
+storage_root: "memory/banks/{bank_name}/"
+---

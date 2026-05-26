@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LifeCharter Incubator — Your Next Faithful Step</title>
+    <title>LifeCharter Incubator — The Ultimate Virtual Event</title>
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -38,91 +38,103 @@
         /* Hero Section */
         .hero {
             background: linear-gradient(135deg, var(--paper) 0%, var(--fog) 100%);
-            padding: 80px 0 60px;
+            padding: 40px 0 60px;
             text-align: center;
             border-bottom: 3px solid var(--ochre);
+            position: relative;
+            overflow: hidden;
         }
         
-        .urgency-bar {
-            background-color: var(--clay);
-            color: var(--paper);
-            padding: 12px 24px;
-            display: inline-block;
-            border-radius: 4px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            margin-bottom: 40px;
+        .hero-decoration {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 150px;
+            height: 150px;
+            opacity: 0.15;
         }
         
-        .pre-headline {
+        .hero-decoration-left {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            width: 120px;
+            height: 120px;
+            opacity: 0.1;
+        }
+        
+        .event-label {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 24px;
-            color: var(--linework);
-            font-style: italic;
-            margin-bottom: 16px;
+            font-size: 18px;
+            color: var(--clay);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+        
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        
+        .logo {
+            max-width: 250px;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(47, 49, 47, 0.1);
         }
         
         h1 {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 56px;
+            font-size: 48px;
             font-weight: 600;
             color: var(--ink);
             line-height: 1.2;
             margin-bottom: 24px;
         }
         
-        h1 span {
-            display: block;
-            font-size: 32px;
-            font-weight: 400;
-            color: var(--linework);
-            margin-top: 8px;
-        }
-        
-        .hero-subheadline {
+        .hero-subtitle {
             font-size: 20px;
             color: var(--linework);
-            max-width: 600px;
-            margin: 0 auto 40px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
         }
         
-        /* Pricing Section */
-        .pricing-section {
+        .event-details {
             background-color: var(--fog);
-            padding: 40px;
+            padding: 30px;
             border-radius: 8px;
-            margin: 40px auto;
-            max-width: 500px;
-            text-align: center;
+            margin: 30px auto;
+            max-width: 600px;
             border: 2px solid var(--ochre);
         }
         
-        .pricing-label {
-            background-color: var(--sage);
-            color: var(--paper);
-            padding: 8px 16px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            display: inline-block;
+        .event-details h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            color: var(--ink);
             margin-bottom: 20px;
         }
         
-        .price {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 72px;
-            font-weight: 700;
-            color: var(--ink);
-            line-height: 1;
-        }
-        
-        .price-detail {
+        .event-info {
+            text-align: left;
             font-size: 16px;
             color: var(--linework);
-            margin: 8px 0 24px;
+        }
+        
+        .event-info p {
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .event-info p:before {
+            position: absolute;
+            left: 0;
         }
         
         .cta-button {
@@ -139,11 +151,19 @@
             cursor: pointer;
             text-transform: uppercase;
             letter-spacing: 1px;
+            margin: 20px 0;
         }
         
         .cta-button:hover {
             background-color: var(--ochre);
             transform: translateY(-2px);
+        }
+        
+        .bonus-note {
+            font-size: 14px;
+            color: var(--sage);
+            font-style: italic;
+            margin-top: 15px;
         }
         
         /* Content Sections */
@@ -187,7 +207,123 @@
             margin: 0 auto 40px;
         }
         
-        /* Three Secrets Section */
+        /* Problem Section */
+        .problem-list {
+            list-style: none;
+            max-width: 600px;
+            margin: 30px auto;
+        }
+        
+        .problem-list li {
+            padding: 12px 0 12px 40px;
+            position: relative;
+            font-size: 18px;
+            color: var(--linework);
+        }
+        
+        .problem-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--ochre);
+            font-size: 24px;
+            line-height: 1;
+        }
+        
+        /* Quote */
+        .quote {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            font-style: italic;
+            color: var(--ink);
+            text-align: center;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px;
+            border-left: 4px solid var(--ochre);
+            border-right: 4px solid var(--ochre);
+        }
+        
+        /* Traffic Light */
+        .traffic-light {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+        
+        .light {
+            text-align: center;
+            padding: 24px;
+            flex: 1;
+            min-width: 200px;
+            max-width: 250px;
+        }
+        
+        .light-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--paper);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .light-red { background: linear-gradient(135deg, #C45B4A 0%, #A04435 100%); }
+        .light-yellow { background: linear-gradient(135deg, var(--ochre) 0%, #A8986E 100%); }
+        .light-green { background: linear-gradient(135deg, var(--sage) 0%, #8A9A7D 100%); }
+        
+        .light h4 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--ink);
+        }
+        
+        .light p {
+            font-size: 15px;
+            color: var(--linework);
+            line-height: 1.5;
+        }
+        
+        /* Section Dividers */
+        .section-divider {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+        
+        .section-divider svg {
+            width: 60px;
+            height: 60px;
+            opacity: 0.3;
+        }
+        
+        /* Decorative Elements */
+        .butterfly-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 30px;
+            opacity: 0.8;
+        }
+        
+        .kaleidoscope-pattern {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            opacity: 0.08;
+            pointer-events: none;
+        }
+        
+        /* Three Secrets */
         .secrets-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -199,90 +335,44 @@
             background-color: var(--paper);
             padding: 32px;
             border-radius: 8px;
-            border-left: 4px solid var(--ochre);
-        }
-        
-        .secret-number {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--ochre);
-            line-height: 1;
-            margin-bottom: 16px;
+            border-top: 4px solid var(--ochre);
         }
         
         .secret-card h4 {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 600;
             color: var(--ink);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
         }
         
-        .secret-card p {
-            font-size: 16px;
-            color: var(--linework);
-        }
-        
-        /* Traffic Light Section */
-        .traffic-light {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin: 40px 0;
-            flex-wrap: wrap;
-        }
-        
-        .light {
-            text-align: center;
-            padding: 24px;
-        }
-        
-        .light-circle {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            margin: 0 auto 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--paper);
-        }
-        
-        .light-red { background-color: #C45B4A; }
-        .light-yellow { background-color: var(--ochre); }
-        .light-green { background-color: var(--sage); }
-        
-        .light h4 {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 20px;
+        .secret-card .what-it-is {
             font-weight: 600;
+            color: var(--clay);
             margin-bottom: 8px;
         }
         
-        .light p {
-            font-size: 14px;
+        .secret-card p {
+            font-size: 15px;
             color: var(--linework);
+            margin-bottom: 12px;
         }
         
-        /* What You'll Learn */
-        .learn-list {
+        /* What You'll Get */
+        .benefits-list {
             list-style: none;
-            max-width: 600px;
-            margin: 32px auto;
+            max-width: 700px;
+            margin: 30px auto;
         }
         
-        .learn-list li {
+        .benefits-list li {
             padding: 16px 0 16px 40px;
             position: relative;
             font-size: 18px;
             border-bottom: 1px solid var(--fog);
         }
         
-        .learn-list li:before {
+        .benefits-list li:before {
             content: "✦";
             position: absolute;
             left: 0;
@@ -290,35 +380,31 @@
             font-size: 20px;
         }
         
-        /* Testimonial */
+        /* Testimonials */
         .testimonial {
             background-color: var(--paper);
             padding: 40px;
             border-radius: 8px;
-            margin: 40px 0;
-            position: relative;
+            margin: 30px 0;
+            border-left: 4px solid var(--sage);
         }
         
-        .testimonial:before {
-            content: """;
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 120px;
-            color: var(--ochre);
-            opacity: 0.3;
-            position: absolute;
-            top: -20px;
-            left: 20px;
-            line-height: 1;
+        .testimonial-type {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--sage);
+            margin-bottom: 16px;
         }
         
         .testimonial-text {
             font-family: 'EB Garamond', Georgia, serif;
-            font-size: 24px;
+            font-size: 20px;
             font-style: italic;
             color: var(--ink);
             margin-bottom: 20px;
-            position: relative;
-            z-index: 1;
+            line-height: 1.6;
         }
         
         .testimonial-author {
@@ -327,7 +413,7 @@
             color: var(--linework);
         }
         
-        /* About Babs */
+        /* About Section */
         .about-section {
             background: linear-gradient(135deg, var(--fog) 0%, var(--paper) 100%);
             padding: 60px 0;
@@ -337,43 +423,38 @@
             display: grid;
             grid-template-columns: 1fr 2fr;
             gap: 40px;
-            align-items: center;
+            align-items: start;
         }
         
         .about-image {
             background-color: var(--ochre);
-            height: 300px;
+            height: 350px;
             border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--paper);
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(47, 49, 47, 0.15);
         }
         
-        /* FAQ Section */
-        .faq-item {
-            margin-bottom: 32px;
-            padding-bottom: 32px;
+        /* Differentiators */
+        .differentiators {
+            list-style: none;
+            max-width: 800px;
+            margin: 30px auto;
+        }
+        
+        .differentiators li {
+            padding: 20px 0 20px 50px;
+            position: relative;
+            font-size: 17px;
             border-bottom: 1px solid var(--fog);
         }
         
-        .faq-item:last-child {
-            border-bottom: none;
-        }
-        
-        .faq-question {
-            font-family: 'EB Garamond', Georgia, serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: var(--ink);
-            margin-bottom: 12px;
-        }
-        
-        .faq-answer {
-            font-size: 16px;
-            color: var(--linework);
+        .differentiators li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--sage);
+            font-size: 24px;
+            font-weight: bold;
         }
         
         /* Final CTA */
@@ -392,7 +473,16 @@
         .final-cta p {
             color: var(--fog);
             max-width: 600px;
-            margin: 0 auto 40px;
+            margin: 0 auto 30px;
+        }
+        
+        .final-cta .event-date {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 28px;
+            color: var(--ochre);
+            margin: 30px auto;
+            text-align: center;
+            display: block;
         }
         
         .final-cta .cta-button {
@@ -415,24 +505,24 @@
         /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 36px;
-            }
-            
-            h1 span {
-                font-size: 24px;
+                font-size: 32px;
             }
             
             h2 {
-                font-size: 32px;
+                font-size: 28px;
+            }
+            
+            .quote {
+                font-size: 24px;
+                padding: 20px;
             }
             
             .about-content {
                 grid-template-columns: 1fr;
             }
             
-            .traffic-light {
-                flex-direction: column;
-                gap: 20px;
+            .secrets-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -440,76 +530,144 @@
 <body>
     <!-- Hero Section -->
     <section class="hero">
+        <!-- Decorative SVG -->
+        <svg class="hero-decoration" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--ochre)" stroke-width="0.5"/>
+            <circle cx="50" cy="50" r="30" fill="none" stroke="var(--clay)" stroke-width="0.5"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="var(--sage)" stroke-width="0.5"/>
+            <path d="M50 10 L50 90 M10 50 L90 50" stroke="var(--ochre)" stroke-width="0.3" opacity="0.5"/>
+            <path d="M25 25 L75 75 M75 25 L25 75" stroke="var(--clay)" stroke-width="0.3" opacity="0.5"/>
+        </svg>
+        <svg class="hero-decoration-left" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 20 Q80 50 50 80 Q20 50 50 20" fill="none" stroke="var(--sage)" stroke-width="0.5"/>
+            <circle cx="50" cy="50" r="15" fill="var(--ochre)" opacity="0.2"/>
+        </svg>
+        
         <div class="container">
-            <div class="urgency-bar">⏳ Next Incubator Session — Limited Spots Available</div>
+            <p class="event-label">The Ultimate Virtual Event</p>
             
-            <p class="pre-headline">Your Next Faithful Step</p>
+            <div class="logo-container">
+                <img src="lifecharter-logo.jpg" alt="LifeCharter Logo" class="logo">
+            </div>
             
-            <h1>
-                Stop Living By Reaction.
-                <span>Start Living By Alignment.</span>
-            </h1>
+            <h1>The LifeCharter Method:<br>3 Secrets to Breaking Free From the Overwhelm Loop</h1>
             
-            <p class="hero-subheadline">
-                A free 90-minute workshop that will change how you make decisions forever.
+            <p class="hero-subtitle">
+                Join AmiLynne Carroll for a free 90-minute workshop revealing the exact 3-part alignment framework that helps growth-minded individuals move from confusion, inner conflict, and emotional overwhelm into genuine clarity, purposeful direction, and aligned next steps.
             </p>
             
-            <div class="pricing-section">
-                <div class="pricing-label">Free Workshop</div>
-                <div class="price">$0</div>
-                <p class="price-detail">90 minutes that could change everything</p>
-                <a href="#register" class="cta-button">Reserve My Spot</a>
+            <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" class="cta-button">Save My Seat in the Incubator!</a>
+            
+            <p class="bonus-note">Limited seats available. Live attendees receive Clarity Kickstart Guide ($97 value)</p>
+            
+            <div class="event-details">
+                <h3>📅 Event Details</h3>
+                <div class="event-info">
+                    <p>📅 <strong>Date:</strong> Thursday, May 14, 2026</p>
+                    <p>⏰ <strong>Time:</strong> 5:00 PM MT (America/Denver)</p>
+                    <p>⏱️ <strong>Duration:</strong> 90 minutes</p>
+                    <p>🎁 <strong>Bonus:</strong> Live attendees receive Clarity Kickstart Guide ($97 value)</p>
+                    <p>👥 <strong>Format:</strong> Live interactive Zoom workshop with Q&A</p>
+                    <p>🔒 <strong>Seats:</strong> Limited to ensure quality interaction</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- The Problem Section -->
+    <!-- Problem Section -->
     <section class="section">
         <div class="container">
-            <h2>You've Tried Everything Else</h2>
+            <h2>Are You Tired of Figuring It Out Alone?</h2>
             
             <p class="lead">
-                The planners. The vision boards. The morning routines. The productivity hacks.
-                And still — you wake up feeling like you're living someone else's life.
+                If you're here, you're probably thoughtful and growth-minded. You've read the books, done the journaling, and prayed without ceasing. Still feel something unresolved? Doing a lot but not fully living from clarity?
             </p>
             
-            <p>
-                You are not lazy. You are not broken. You are not lacking willpower.
+            <p style="text-align: center; font-size: 24px; font-family: 'EB Garamond', Georgia, serif; font-style: italic; color: var(--ink); max-width: 800px; margin: 40px auto;">
+                What if the issue isn't that you need more effort, but that your inner premise is still shaping your life in ways you've never fully named?
             </p>
             
-            <p>
-                You have been trying to <strong>think</strong> your way into a new life when what you actually need is a way of <strong>being</strong> that matches the person you are becoming.
-            </p>
+            <div class="quote">
+                "The best 90 minutes you'll ever invest in yourself."
+            </div>
             
-            <p>
-                The LifeCharter Incubator is not another course. It is a doorway. And on the other side is a way of living rooted in who you truly are — not who you were told to be.
-            </p>
+
         </div>
     </section>
 
     <!-- Three Secrets Section -->
     <section class="section section-alt">
         <div class="container">
-            <h2>The Three Secrets You'll Discover</h2>
+            <h2>What You'll Learn in This Workshop</h2>
             
             <div class="secrets-grid">
                 <div class="secret-card">
-                    <div class="secret-number">01</div>
-                    <h4>Identity First</h4>
-                    <p>Why more information never creates lasting change — and why who you believe you are determines every decision you make.</p>
+                    <h4>Secret #1: Identify First</h4>
+                    <p class="what-it-is">Clarity begins with who you are, not what you do.</p>
+                    <p><strong>What it is:</strong> Clarity begins with Premise, not with more information. It begins by understanding the beliefs, assumptions, and inner narratives shaping your life.</p>
+                    <p><strong>Why it's different:</strong> Most self-help starts with "What do you want to do?" before asking "What do you actually believe, and who are you when you're most fully yourself?"</p>
+                    <p><strong>The shift:</strong> When your inner foundation becomes clear, everything else begins to organize around what is real.</p>
                 </div>
                 
                 <div class="secret-card">
-                    <div class="secret-number">02</div>
-                    <h4>The Yellow Light</h4>
-                    <p>The sacred pause between stimulus and response. How to stop reacting and start choosing from alignment.</p>
+                    <h4>Secret #2: The Yellow Light</h4>
+                    <p class="what-it-is">Stop reacting. Start deciding who you want to be.</p>
+                    <p><strong>What it is:</strong> The Traffic Light framework, specifically the Yellow Light — the sacred pause where you stop living on autopilot and decide who you want to be.</p>
+                    <p><strong>Why it's different:</strong> Most people bounce between Green (reacting, pushing) and Red (freezing, overwhelmed). The Yellow Light is the third option that changes everything.</p>
+                    <p><strong>The shift:</strong> You stop building a life of clarity on a foundation of reaction. The Yellow Light is where the work actually happens.</p>
                 </div>
                 
                 <div class="secret-card">
-                    <div class="secret-number">03</div>
-                    <h4>Aligned Action</h4>
-                    <p>Why willpower fails and discipline crumbles — and how to move forward rooted in truth instead of fear.</p>
+                    <h4>Secret #3: Aligned Action</h4>
+                    <p class="what-it-is">Move from busy exhaustion to purposeful momentum.</p>
+                    <p><strong>What it is:</strong> The difference between motion and movement. Activity disconnected from truth creates exhaustion instead of real momentum.</p>
+                    <p><strong>Why it's different:</strong> You can be the most organized, disciplined person — and still feel completely lost. Effort without alignment is just more exhausting.</p>
+                    <p><strong>The shift:</strong> Action stops feeling like a struggle and starts feeling like an expression of who you are and where you're meant to go.</p>
                 </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 50px;">
+                <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" class="cta-button">Save My Seat in the Incubator Now!</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registration Section -->
+    <section id="register" class="section section-alt" style="background: linear-gradient(135deg, var(--fog) 0%, var(--paper) 100%);">
+        <div class="container">
+            <h2>Register for the LifeCharter Incubator</h2>
+            <p class="lead">
+                Join us for this transformative 90-minute workshop. Click the button below to complete your registration.
+            </p>
+            
+            <div style="max-width: 600px; margin: 40px auto; background: white; padding: 50px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border: 2px solid var(--ochre); text-align: center;">
+                <div style="margin-bottom: 30px;">
+                    <svg width="80" height="80" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.8;">
+                        <path d="M50 10 Q80 30 80 50 Q80 70 50 90 Q20 70 20 50 Q20 30 50 10" fill="none" stroke="var(--clay)" stroke-width="2"/>
+                        <path d="M50 20 Q70 35 70 50 Q70 65 50 80 Q30 65 30 50 Q30 35 50 20" fill="var(--ochre)" opacity="0.3"/>
+                        <circle cx="50" cy="50" r="15" fill="var(--clay)" opacity="0.5"/>
+                    </svg>
+                </div>
+                
+                <h3 style="font-family: 'EB Garamond', Georgia, serif; font-size: 28px; color: var(--ink); margin-bottom: 20px;">
+                    Secure Your Seat
+                </h3>
+                
+                <p style="color: var(--linework); margin-bottom: 30px; font-size: 16px;">
+                    Complete a brief registration form to join the LifeCharter Incubator. We'll ask about your journey, what areas of life feel out of alignment, and what you hope to gain from the workshop.
+                </p>
+                
+                <p style="color: var(--linework); margin-bottom: 30px; font-size: 14px;">
+                    ⏱️ Takes about 2 minutes to complete
+                </p>
+                
+                <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" target="_blank" class="cta-button" style="display: inline-block; text-decoration: none;">
+                    Complete Registration Form →
+                </a>
+                
+                <p style="text-align: center; color: var(--linework); font-size: 13px; margin-top: 30px;">
+                    Your information is secure and will never be shared. By registering, you'll also receive occasional LifeCharter insights and invitations.
+                </p>
             </div>
         </div>
     </section>
@@ -542,37 +700,73 @@
                     <p>Aligned action.<br>Move from who you are.</p>
                 </div>
             </div>
+            
+            <p style="text-align: center; max-width: 700px; margin: 40px auto; font-size: 18px; color: var(--linework);">
+                Most people bounce between Red (overwhelmed, frozen) and Green (reacting, pushing). The Yellow Light is the third option — the sacred pause where transformation actually happens.
+            </p>
         </div>
     </section>
 
-    <!-- What You'll Learn -->
-    <section class="section section-alt">
-        <div class="container">
-            <h2>In 90 Minutes, You Will:</h2>
-            
-            <ul class="learn-list">
-                <li>Identify the invisible belief system running your life</li>
-                <li>Discover why you've been circling the same mountain</li>
-                <li>Learn the Traffic Light framework for instant clarity</li>
-                <li>Experience a live alignment practice you can use immediately</li>
-                <li>Understand the 12 dimensions of a fully-lived life</li>
-                <li>Know exactly what your next faithful step is</li>
-            </ul>
-            
-            <div style="text-align: center; margin-top: 40px;">
-                <a href="#register" class="cta-button">Save My Seat — It's Free</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial -->
+    <!-- What You'll Walk Away With -->
     <section class="section">
         <div class="container">
+            <!-- Compass Rose SVG -->
+            <div style="text-align: center; margin-bottom: 30px;">
+                <svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" style="opacity: 0.7;">
+                    <!-- Outer circle -->
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="var(--ochre)" stroke-width="1"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="var(--fog)" stroke-width="0.5"/>
+                    <!-- Compass points -->
+                    <path d="M50 10 L55 40 L50 50 L45 40 Z" fill="var(--clay)"/>
+                    <path d="M90 50 L60 55 L50 50 L60 45 Z" fill="var(--sage)"/>
+                    <path d="M50 90 L45 60 L50 50 L55 60 Z" fill="var(--clay)"/>
+                    <path d="M10 50 L40 45 L50 50 L40 55 Z" fill="var(--sage)"/>
+                    <!-- Center -->
+                    <circle cx="50" cy="50" r="8" fill="var(--ink)"/>
+                    <circle cx="50" cy="50" r="4" fill="var(--paper)"/>
+                    <!-- Decorative lines -->
+                    <path d="M50 5 L50 15 M50 85 L50 95 M5 50 L15 50 M85 50 L95 50" stroke="var(--linework)" stroke-width="0.5" opacity="0.5"/>
+                </svg>
+            </div>
+            
+            <h2>What You'll Walk Away With</h2>
+            
+            <ul class="benefits-list">
+                <li>The complete 3-part LifeCharter Method framework</li>
+                <li>Clear understanding of why you've felt stuck and what needs to shift first</li>
+                <li>Practical tools to begin moving from overwhelm to aligned action</li>
+                <li>Next steps for continuing your alignment journey</li>
+                <li>Access to the LifeCharter community of growth-minded individuals</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="section section-alt">
+        <div class="container">
+            <h2>What Clients are Saying About the<br>LifeCharter Method</h2>
+            <p style="text-align: center; color: var(--linework); margin-bottom: 40px;">Real Transformation From Real People</p>
+            
             <div class="testimonial">
-                <p class="testimonial-text">
-                    "I have never heard anyone talk about life design as holistically as Babs. The way she covers all 12 different dimensions of your life in the LifeCharter program is extraordinary. This isn't just theory — it's a way of being that actually works."
-                </p>
-                <p class="testimonial-author">— Rachel P., LifeCharter Travel Partner</p>
+                <p class="testimonial-type">Identity Shift</p>
+                <p class="testimonial-text">"Before LifeCharter, I was constantly trying to figure out what I should do next. After working with Amilynne, I realized the question wasn't 'what' but 'who.' When I got clear on who I am, the direction became obvious. I've since launched my own coaching practice aligned with my true values."</p>
+                <p class="testimonial-author">— Sarah, LifeCharter Client</p>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-type">Yellow Light Practice</p>
+                <p class="testimonial-text">"The Traffic Light framework changed everything for me. I used to bounce between frantic activity and complete overwhelm. The Yellow Light practice taught me to pause and decide who I want to be in each moment. Now I make decisions from alignment, not reaction."</p>
+                <p class="testimonial-author">— Michael, Entrepreneur</p>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-type">Aligned Action Results</p>
+                <p class="testimonial-text">"I was the most productive person I knew — and the most exhausted. LifeCharter showed me the difference between busy-ness and aligned action. I cut my work hours by 20% and doubled my impact by focusing only on what truly matters to me."</p>
+                <p class="testimonial-author">— Jessica, Corporate Executive</p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" class="cta-button">Save My Seat in the Incubator Now!</a>
             </div>
         </div>
     </section>
@@ -581,67 +775,91 @@
     <section class="about-section">
         <div class="container">
             <div class="about-content">
-                <div class="about-image">
-                    [Babs Photo]
+                <div>
+                    <div class="about-image">
+                        <img src="babs-beau.jpg" alt="AmiLynne Carroll with Beau" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                    </div>
+                    <p style="text-align: center; margin-top: 12px; font-size: 14px; color: var(--linework); font-style: italic;">Babs and Beau</p>
+                    <div style="margin-top: 20px; text-align: center;">
+                        <img src="babs-portrait.jpg" alt="AmiLynne Carroll" style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 3px solid var(--ochre); box-shadow: 0 4px 15px rgba(47, 49, 47, 0.15);">
+                    </div>
                 </div>
                 <div>
-                    <h2>Meet Your Alignment Architect</h2>
+                    <h2>Meet Your Guide:<br>AmiLynne Carroll</h2>
                     <p>
-                        Babs created LifeCharter from the inside out. After years of feeling trapped by fear, self-doubt, and the pressure to have it all figured out, she discovered something radical:
+                        TEDx speaker, author, and founder of LifeCharter Coaching, AmiLynne is not a conventional life coach — she is an <strong>Alignment Architect</strong> who guides people back into alignment with who they truly are.
                     </p>
                     <p>
-                        <strong>You don't need more information. You need a return to who you truly are.</strong>
+                        After a spinal stroke in 2022 left her quadriplegic, AmiLynne deepened her understanding of what it means to build a life of purpose from the inside out. She discovered that clarity doesn't come from adding more, but from getting honest about what you believe and who you are at your core.
                     </p>
                     <p>
-                        She designed the LifeCharter Incubator to offer others what she longed for on her own path: structure without pressure, clarity without rigidity, and sacred space to remember who you have always been beneath the noise, the fear, and the old stories.
+                        As the creator of the LifeCharter Method and the Traffic Light framework, she has helped 100+ clients move from autopilot to authentic, purpose-driven living. Her work combines spiritual depth with practical application — never one without the other.
                     </p>
-                    <p style="font-family: 'EB Garamond', Georgia, serif; font-size: 20px; font-style: italic; color: var(--linework); margin-top: 24px;">
-                        "Head up, wings out."
+                    <p>
+                        Host of the "Conversations of Consequence DAILY" podcast and author of "Sacred Alchemy" and "Conversations of Consequence," and a TEDx Speaker with more than 100,000 views, AmiLynne brings both wisdom and real-world experience to every interaction.
                     </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
+    <!-- What Makes It Different -->
     <section class="section">
         <div class="container">
-            <h2>Questions You Might Have</h2>
+            <h2>What Makes LifeCharter Incubator Different?</h2>
             
-            <div class="faq-item">
-                <h4 class="faq-question">Is this really free? What's the catch?</h4>
-                <p class="faq-answer">No catch. The Incubator is a genuine gift. At the end, you'll have the opportunity to join LifeCharter Circle for deeper work — but there's no pressure, no hard sell, and no obligation. The Incubator stands on its own.</p>
-            </div>
+            <p class="lead">
+                This isn't your typical "self-help" activity. You will walk away not only with the tools that will transform your life — but with an action plan in place to begin the work of transformation that begins DURING the training.
+            </p>
             
-            <div class="faq-item">
-                <h4 class="faq-question">I've been to workshops before. How is this different?</h4>
-                <p class="faq-answer">Most workshops give you information to remember. The Incubator gives you a framework to live. You'll leave with the Traffic Light tool you can use in every decision — not just inspiration that fades by Monday.</p>
-            </div>
+            <ul class="differentiators">
+                <li>We deliver clear, powerful strategies designed to give you unwavering direction in creating and living a life that truly aligns with who you are.</li>
+                <li>We cultivate a space for genuine connection where you'll grow alongside like-minded souls who are committed to their own personal and spiritual evolution.</li>
+                <li>We provide you with powerful, personalized blueprints—tools that don't just inspire but serve as your go-to guides for lasting transformation.</li>
+                <li>Our focus is on practical principles that bring you real, measurable results, aligning every area of your life with your highest purpose.</li>
+            </ul>
             
-            <div class="faq-item">
-                <h4 class="faq-question">What if I can't make it live?</h4>
-                <p class="faq-answer">Register anyway. While the live experience is richest, we do send a limited-time replay to all registrants. But fair warning: the replay doesn't include the live Q&A or the breakout practice sessions.</p>
-            </div>
-            
-            <div class="faq-item">
-                <h4 class="faq-question">I'm not sure I'm ready for this work.</h4>
-                <p class="faq-answer">Feeling uncertain is exactly the right place to begin. The Incubator meets you where you are — whether you're just beginning to question your path or you've been doing inner work for years. There is no "ready." There is only willing.</p>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" class="cta-button">Save My Seat in the Incubator Now!</a>
             </div>
         </div>
     </section>
 
     <!-- Final CTA -->
-    <section class="final-cta" id="register">
-        <div class="container">
-            <h2>Your Next Faithful Step Starts Here</h2>
+    <section class="final-cta">
+        <!-- Decorative Kaleidoscope -->
+        <svg style="position: absolute; top: 20px; right: 20px; width: 120px; height: 120px; opacity: 0.1;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 10 L60 40 L90 50 L60 60 L50 90 L40 60 L10 50 L40 40 Z" fill="none" stroke="var(--ochre)" stroke-width="0.5"/>
+            <circle cx="50" cy="50" r="20" fill="none" stroke="var(--clay)" stroke-width="0.5"/>
+            <path d="M50 30 L50 70 M30 50 L70 50" stroke="var(--sage)" stroke-width="0.5"/>
+        </svg>
+        <svg style="position: absolute; bottom: 20px; left: 20px; width: 100px; height: 100px; opacity: 0.08;" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--paper)" stroke-width="0.5"/>
+            <circle cx="50" cy="50" r="25" fill="none" stroke="var(--ochre)" stroke-width="0.5"/>
+            <path d="M50 10 L50 90 M10 50 L90 50 M25 25 L75 75 M75 25 L25 75" stroke="var(--paper)" stroke-width="0.3"/>
+        </svg>
+        
+        <div class="container" style="position: relative; z-index: 1;">
+            <h2>If you're ready to stop second-guessing yourself and start making bold, clear decisions every day that lead to real progress and purpose...</h2>
+            
+            <p style="font-size: 24px; font-family: 'EB Garamond', Georgia, serif; margin: 30px auto; text-align: center; max-width: 600px;">
+                Then register for this FREE 90-Minute Online Incubator
+            </p>
+            
             <p>
-                90 minutes. Zero cost. A framework that could change everything.<br>
-                The only question is: are you willing to show up for yourself?
+                We're now accepting registrations for this 90-minute incubator.<br>
+                If you're ready to show up & do the work,<br>
+                If you're ready to create lasting transformation<br>
+                and align your life with purpose…<br>
+                And if you're ready to take the first step toward a life-changing journey…
             </p>
-            <a href="#" class="cta-button">Reserve My Free Spot</a>
-            <p style="margin-top: 24px; font-size: 14px; color: var(--linework);">
-                Limited spots available. Registration closes soon.
+            
+            <p class="event-date" style="text-align: center;">
+                May 14, 2026<br>
+                4pm PT / 5pm MT / 6pm CT / 7pm ET
             </p>
+            
+            <a href="https://api.quizforma.com/page/quiz/OnIHaPZl381DWhz" class="cta-button">Save My Seat in the Incubator Now!</a>
         </div>
     </section>
 

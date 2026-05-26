@@ -1,0 +1,25 @@
+{
+  "name": "zip_unzip_file_utility",
+  "display_name": "Zip + Unzip File Utility",
+  "version": "1.0.0",
+  "description": "Create ZIP archives and extract ZIP files from a single OpenClaw-native utility skill.",
+  "entrypoint": "executor.py",
+  "command_family": ["/archive", "/zipfiles", "/unzipfiles"],
+  "default_command": "/archive",
+  "schema": "input.schema.json",
+  "permissions": {
+    "filesystem": {
+      "read": true,
+      "write": true
+    }
+  },
+  "capabilities": [
+    "zip_file",
+    "zip_folder",
+    "unzip_archive",
+    "exclude_patterns",
+    "timestamp_output",
+    "safe_extract"
+  ],
+  "tags": ["files", "zip", "unzip", "archives", "utility"]
+}

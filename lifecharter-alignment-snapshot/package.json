@@ -1,0 +1,23 @@
+{
+  "name": "lifecharter-alignment-snapshot",
+  "version": "1.0.0",
+  "description": "LifeCharter Alignment Snapshot - A web-based diagnostic assessment and AI-generated personalized report",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "lifecharter",
+    "alignment",
+    "assessment",
+    "personal-development",
+    "spiritual-growth"
+  ],
+  "author": "AmiLynne 'Babs' Carroll - Sacred Kaleidoscope Community",
+  "license": "Proprietary",
+  "devDependencies": {
+    "vercel": "^33.0.0"
+  }
+}

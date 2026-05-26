@@ -1,0 +1,495 @@
+[
+  {
+    "name": "/profile",
+    "description": "Get your Control Board user profile",
+    "long_description": "Step 1: Call GET /api/user/me with Bearer token\nStep 2: Format and display name, email, roles, and access level\nStep 3: Show account status and last login info",
+    "category": "Resources",
+    "tags": []
+  },
+  {
+    "name": "/update-profile",
+    "description": "Update your user profile",
+    "long_description": "Step 1: Ask user which fields to update (name, company, phone)\nStep 2: Validate provided fields\nStep 3: PATCH /api/user/profile with updated fields\nStep 4: Confirm update and show new profile",
+    "category": "Resources",
+    "tags": []
+  },
+  {
+    "name": "/settings",
+    "description": "Get all workspace settings",
+    "long_description": "Step 1: Read CONTROLBOARD_API_TOKEN from .env.personal\nStep 2: GET /api/settings with Bearer token and X-Workspace-Id header\nStep 3: Display all settings as key/value pairs",
+    "category": "Resources",
+    "tags": ["settings", "workspace"]
+  },
+  {
+    "name": "/save-setting",
+    "description": "Save a workspace setting key/value",
+    "long_description": "Step 1: Ask user for setting key and value\nStep 2: POST /api/settings with X-Workspace-Id header and { key, value }\nStep 3: Confirm setting saved",
+    "category": "Resources",
+    "tags": ["settings", "workspace"]
+  },
+  {
+    "name": "/control",
+    "description": "Get current Control Center state",
+    "long_description": "Step 1: GET /api/control with Bearer token\nStep 2: Format results showing apiKeys, models, cronJobs, tasks, channels, integrations, features\nStep 3: Display to user with counts per section",
+    "category": "Resources",
+    "tags": ["control", "config"]
+  },
+  {
+    "name": "/sync-control-full",
+    "description": "Full sync of bot config to dashboard (replaces all sections)",
+    "long_description": "Step 1: Read ~/.openclaw/openclaw.json for current config\nStep 2: Extract apiKeys, models, channels; use cron list tool for cronJobs\nStep 3: POST /api/control with full payload (api_key_raw field for keys)\nStep 4: Confirm sync — X API keys, Y models, Z channels now visible",
+    "category": "Resources",
+    "tags": ["control", "config"]
+  },
+  {
+    "name": "/update-control",
+    "description": "Partial update of Control Center (one section only)",
+    "long_description": "Step 1: Ask user which section to update (apiKeys/models/cronJobs/tasks/channels/integrations/features)\nStep 2: Validate the JSON data for that section\nStep 3: PATCH /api/control with only the changed section\nStep 4: Confirm update successful",
+    "category": "Resources",
+    "tags": ["control", "config"]
+  },
+  {
+    "name": "/sync-spend",
+    "description": "Sync API spend from provider billing APIs",
+    "long_description": "Step 1: POST /api/control/sync-spend with Bearer token\nStep 2: Wait for response (fetches from openai/anthropic/mistral billing APIs; groq is skipped)\nStep 3: Report updated spend amounts per provider",
+    "category": "Resources",
+    "tags": ["control", "config"]
+  },
+  {
+    "name": "/workspaces",
+    "description": "List all your workspaces",
+    "long_description": "Step 1: GET /api/workspaces with Bearer token\nStep 2: Format results showing workspace id, name, slug\nStep 3: Display list with count — note the active workspace ID needed for X-Workspace-Id header",
+    "category": "Resources",
+    "tags": ["workspace"]
+  },
+  {
+    "name": "/create-workspace",
+    "description": "Create a new workspace",
+    "long_description": "Step 1: Ask user for workspace name\nStep 2: POST /api/workspaces with { name }\nStep 3: Note: first workspace creation migrates all existing data\nStep 4: Confirm creation and show new workspace id — use this as X-Workspace-Id",
+    "category": "Resources",
+    "tags": ["workspace"]
+  },
+  {
+    "name": "/rename-workspace",
+    "description": "Rename an existing workspace",
+    "long_description": "Step 1: Ask for workspace id and new name (or list workspaces first)\nStep 2: PUT /api/workspaces with { id, name }\nStep 3: Confirm workspace renamed",
+    "category": "Resources",
+    "tags": ["workspace"]
+  },
+  {
+    "name": "/delete-workspace",
+    "description": "Delete a workspace (cannot delete last one)",
+    "long_description": "Step 1: Fetch and display workspace details to user\nStep 2: Warn: this deletes all workspace-scoped data; cannot delete last workspace\nStep 3: Ask for explicit yes confirmation\nStep 4: DELETE /api/workspaces with { id }\nStep 5: Confirm deletion",
+    "category": "Resources",
+    "tags": ["workspace"]
+  },
+  {
+    "name": "/workspace-keys",
+    "description": "View which API keys are configured per workspace",
+    "long_description": "Step 1: GET /api/workspace-keys with Bearer token\nStep 2: Format boolean flags per workspace (vizard_api_key, letterman_api_key, etc.)\nStep 3: Display which keys are connected vs missing per workspace",
+    "category": "Resources",
+    "tags": ["workspace", "keys"]
+  },
+  {
+    "name": "/clips",
+    "description": "List video clips with filtering and sorting",
+    "long_description": "Step 1: GET /api/clips with X-Workspace-Id header; optional params: filter, category, sortBy\nStep 2: Format results showing clip_id, title, status, viral_score, category\nStep 3: Display stats (total, pending, approved, published, rejected) and categories",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/clips-approved",
+    "description": "Get all approved clips ready for publishing",
+    "long_description": "Step 1: GET /api/clips/approved with X-Workspace-Id header\nStep 2: Format results showing clip_id, title, viral_score, clip_url\nStep 3: Display count and suggest /publish workflow via PostStream",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/poll-clips",
+    "description": "Poll Vizard API for new clips",
+    "long_description": "Step 1: Verify vizard_api_key and vizard_project_id are saved in settings\nStep 2: POST /api/clips/poll with Bearer token and X-Workspace-Id header\nStep 3: Report how many new clips were added and total count",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/approve-clip",
+    "description": "Approve a clip for publishing",
+    "long_description": "Step 1: Ask for clip_id (or show pending clips list first)\nStep 2: PATCH /api/clips/status with X-Workspace-Id header: { clip_id, status: 'approved' }\nStep 3: Confirm clip approved and ready for publishing",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/reject-clip",
+    "description": "Reject a clip",
+    "long_description": "Step 1: Ask for clip_id (or show pending clips list first)\nStep 2: PATCH /api/clips/status with X-Workspace-Id header: { clip_id, status: 'rejected' }\nStep 3: Confirm clip rejected",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/update-clip-status",
+    "description": "Update clip status (pending_review, approved, rejected)",
+    "long_description": "Step 1: Ask for clip_id and target status (pending_review | approved | rejected)\nStep 2: PATCH /api/clips/status with X-Workspace-Id header: { clip_id, status }\nStep 3: Confirm status updated",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/delete-clip",
+    "description": "Permanently delete a clip",
+    "long_description": "Step 1: Fetch and display clip details to user\nStep 2: Ask for explicit yes confirmation before proceeding\nStep 3: DELETE /api/clips with X-Workspace-Id header: { clip_id } — note: uses clip_id field not id\nStep 4: Confirm deletion successful",
+    "category": "External Software",
+    "tags": ["clips", "vizard", "video"]
+  },
+  {
+    "name": "/videos",
+    "description": "List manually-added videos with filtering",
+    "long_description": "Step 1: GET /api/videos with X-Workspace-Id header; optional params: filter, category, sortBy\nStep 2: Format results showing id, name, url, source, status, category\nStep 3: Display stats and category counts",
+    "category": "External Software",
+    "tags": ["videos", "content"]
+  },
+  {
+    "name": "/add-video",
+    "description": "Add a new video to the workspace",
+    "long_description": "Step 1: Ask for video name and URL (required); optionally source, category, category_emoji\nStep 2: POST /api/videos with X-Workspace-Id header and video data\nStep 3: Confirm video added with id — default status is pending_review",
+    "category": "External Software",
+    "tags": ["videos", "content"]
+  },
+  {
+    "name": "/update-video",
+    "description": "Update a video's status or category",
+    "long_description": "Step 1: Ask for video id and fields to update (status, category, category_emoji)\nStep 2: Valid statuses: pending_review | approved | published | rejected\nStep 3: PUT /api/videos with X-Workspace-Id header: { id, ...fields }\nStep 4: Confirm update successful",
+    "category": "External Software",
+    "tags": ["videos", "content"]
+  },
+  {
+    "name": "/delete-video",
+    "description": "Permanently delete a video",
+    "long_description": "Step 1: Fetch and display video details to user\nStep 2: Ask for explicit yes confirmation before proceeding\nStep 3: DELETE /api/videos with X-Workspace-Id header: { id }\nStep 4: Confirm deletion successful",
+    "category": "External Software",
+    "tags": ["videos", "content"]
+  },
+  {
+    "name": "/video-categories",
+    "description": "List all video categories for workspace",
+    "long_description": "Step 1: GET /api/video-categories with X-Workspace-Id header\nStep 2: Format results showing id, name, emoji\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["videos", "categories"]
+  },
+  {
+    "name": "/create-video-category",
+    "description": "Create a new video category",
+    "long_description": "Step 1: Ask for category name and optional emoji\nStep 2: POST /api/video-categories with X-Workspace-Id header: { name, emoji }\nStep 3: Note: duplicate names return 409 error\nStep 4: Confirm category created",
+    "category": "Resources",
+    "tags": ["videos", "categories"]
+  },
+  {
+    "name": "/delete-video-category",
+    "description": "Delete a video category",
+    "long_description": "Step 1: Fetch and display category details to user\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/video-categories with X-Workspace-Id header: { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["videos", "categories"]
+  },
+  {
+    "name": "/articles",
+    "description": "List all articles",
+    "long_description": "Step 1: GET /api/articles with X-Workspace-Id header\nStep 2: Format results showing id, title, status, publication, created_at\nStep 3: Display to user with total count",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/articles-approved",
+    "description": "List approved articles ready for publishing",
+    "long_description": "Step 1: GET /api/articles/approved with X-Workspace-Id header; optional: sort (newest_first|oldest_first|title), search\nStep 2: Format results showing id, title, publication\nStep 3: Display count and suggest publishing oldest first",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/add-article",
+    "description": "Add an article manually (draft status)",
+    "long_description": "Step 1: Ask for title, url, imageUrl (required); optionally description, storageId, publicationName\nStep 2: POST /api/articles/add with X-Workspace-Id header\nStep 3: Confirm article saved as draft",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/create-article",
+    "description": "Create article via Letterman with image upload",
+    "long_description": "Step 1: Ask for publicationId, publicationName, url (required); optionally keywords, imageBase64\nStep 2: POST /api/articles/create with X-Workspace-Id header (requires letterman_api_key in settings)\nStep 3: Confirm article created and show returned image_url",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/approve-article",
+    "description": "Approve an article for publishing",
+    "long_description": "Step 1: Ask for article id (or list draft articles first)\nStep 2: POST /api/articles/approve with X-Workspace-Id header: { id }\nStep 3: Confirm article status changed to approve",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/reject-article",
+    "description": "Reject an article",
+    "long_description": "Step 1: Ask for article id\nStep 2: POST /api/articles/reject with X-Workspace-Id header: { id }\nStep 3: Confirm article rejected",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/draft-article",
+    "description": "Move article back to draft",
+    "long_description": "Step 1: Ask for article id\nStep 2: POST /api/articles/draft with X-Workspace-Id header: { id }\nStep 3: Confirm article moved back to draft for editing",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/publish-article",
+    "description": "Mark article as published (must be in approve status)",
+    "long_description": "Step 1: Ask for article id — must be in approve status\nStep 2: POST /api/articles/publish with X-Workspace-Id header: { id }\nStep 3: Confirm article status set to published",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/delete-article",
+    "description": "Permanently delete an article",
+    "long_description": "Step 1: Fetch and display article details to user\nStep 2: Ask for explicit yes confirmation\nStep 3: POST /api/articles/delete with X-Workspace-Id header: { id } — note: this is a POST not DELETE\nStep 4: Confirm deletion",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/update-article-status",
+    "description": "Update article status directly",
+    "long_description": "Step 1: Ask for article id and target status (draft | approve | rejected | published)\nStep 2: PATCH /api/articles/status with X-Workspace-Id header: { id, status }\nStep 3: Confirm status updated",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/letterman-publications",
+    "description": "Fetch available Letterman publications",
+    "long_description": "Step 1: Verify letterman_api_key is saved in settings\nStep 2: GET /api/articles/publications with X-Workspace-Id header\nStep 3: Display publications list with id and name — use id as storageId when adding articles",
+    "category": "Titanium",
+    "tags": ["articles", "letterman", "content"]
+  },
+  {
+    "name": "/social-posts",
+    "description": "List social media posts with status filter",
+    "long_description": "Step 1: GET /api/social-posts with X-Workspace-Id header; optional status filter: all|pending|approved|scheduled|published|rejected\nStep 2: Format results showing id, title, platforms, format, status\nStep 3: Display list with count",
+    "category": "Titanium",
+    "tags": ["social", "posts"]
+  },
+  {
+    "name": "/create-social-post",
+    "description": "Create a new social media post",
+    "long_description": "Step 1: Ask for title (required); optionally description, image_url, caption, platforms, format\nStep 2: Valid platforms: instagram|youtube|tiktok|x|bluesky|linkedin; formats: image|video|text|carousel\nStep 3: POST /api/social-posts with X-Workspace-Id header\nStep 4: Confirm post created with pending status",
+    "category": "Titanium",
+    "tags": ["social", "posts"]
+  },
+  {
+    "name": "/update-social-post",
+    "description": "Approve, reject, or publish a social post",
+    "long_description": "Step 1: Ask for post id and action (approve | reject | publish)\nStep 2: PUT /api/social-posts with X-Workspace-Id header: { id, action }\nStep 3: Confirm status updated (approve→approved, reject→rejected, publish→published)",
+    "category": "Titanium",
+    "tags": ["social", "posts"]
+  },
+  {
+    "name": "/delete-social-post",
+    "description": "Permanently delete a social post",
+    "long_description": "Step 1: Fetch and display post details to user\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/social-posts with X-Workspace-Id header: { id }\nStep 4: Confirm deletion",
+    "category": "Titanium",
+    "tags": ["social", "posts"]
+  },
+  {
+    "name": "/publications",
+    "description": "List all publications",
+    "long_description": "Step 1: GET /api/publications with Bearer token\nStep 2: Format results showing id, name, status, city, state\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["publications", "letterman"]
+  },
+  {
+    "name": "/create-publication",
+    "description": "Create a new publication",
+    "long_description": "Step 1: Ask for name (required); optionally description, city, state, letterman_publication_id, letterman_url\nStep 2: POST /api/publications with provided fields\nStep 3: Confirm publication created with active status",
+    "category": "Resources",
+    "tags": ["publications", "letterman"]
+  },
+  {
+    "name": "/toggle-publication",
+    "description": "Activate or deactivate a publication",
+    "long_description": "Step 1: Ask for publication id and action (activate | deactivate)\nStep 2: PATCH /api/publications with { id, action }\nStep 3: Confirm status toggled",
+    "category": "Resources",
+    "tags": ["publications", "letterman"]
+  },
+  {
+    "name": "/delete-publication",
+    "description": "Permanently delete a publication",
+    "long_description": "Step 1: Fetch and display publication details\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/publications with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["publications", "letterman"]
+  },
+  {
+    "name": "/ideas",
+    "description": "List all ideas",
+    "long_description": "Step 1: GET /api/ideas with Bearer token\nStep 2: Format results showing id, title, status, priority, category\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["ideas", "productivity"]
+  },
+  {
+    "name": "/create-idea",
+    "description": "Create a new idea",
+    "long_description": "Step 1: Ask for title (required); optionally description, category, status (active|archived), priority (low|medium|high), tags\nStep 2: POST /api/ideas with provided fields\nStep 3: Confirm idea created with id",
+    "category": "Resources",
+    "tags": ["ideas", "productivity"]
+  },
+  {
+    "name": "/update-idea",
+    "description": "Update an existing idea",
+    "long_description": "Step 1: Ask for idea id and fields to update\nStep 2: PUT /api/ideas with { id, ...fields }\nStep 3: Confirm update successful",
+    "category": "Resources",
+    "tags": ["ideas", "productivity"]
+  },
+  {
+    "name": "/delete-idea",
+    "description": "Permanently delete an idea",
+    "long_description": "Step 1: Fetch and display idea details\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/ideas with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["ideas", "productivity"]
+  },
+  {
+    "name": "/bookmarks",
+    "description": "List all bookmarks",
+    "long_description": "Step 1: GET /api/bookmarks with Bearer token\nStep 2: Format results showing id, title, url, category, status\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["bookmarks", "productivity"]
+  },
+  {
+    "name": "/create-bookmark",
+    "description": "Create a new bookmark",
+    "long_description": "Step 1: Ask for title (required); optionally url, description, category, status (read-later|read|archived), tags\nStep 2: POST /api/bookmarks with provided fields\nStep 3: Confirm bookmark created",
+    "category": "Resources",
+    "tags": ["bookmarks", "productivity"]
+  },
+  {
+    "name": "/update-bookmark",
+    "description": "Update an existing bookmark",
+    "long_description": "Step 1: Ask for bookmark id and fields to update\nStep 2: PUT /api/bookmarks with { id, ...fields }\nStep 3: Confirm update successful",
+    "category": "Resources",
+    "tags": ["bookmarks", "productivity"]
+  },
+  {
+    "name": "/delete-bookmark",
+    "description": "Permanently delete a bookmark",
+    "long_description": "Step 1: Fetch and display bookmark details\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/bookmarks with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["bookmarks", "productivity"]
+  },
+  {
+    "name": "/businesses",
+    "description": "List all business boards",
+    "long_description": "Step 1: GET /api/businesses with Bearer token\nStep 2: Format results showing id, name, columns, card count\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["businesses", "crm"]
+  },
+  {
+    "name": "/add-business",
+    "description": "Create a new business board",
+    "long_description": "Step 1: Ask for business name (required); optionally column names (default: Marketing, Follow-up, Research, Delivery)\nStep 2: POST /api/businesses with { action: 'add', name, columns }\nStep 3: Confirm business created",
+    "category": "Resources",
+    "tags": ["businesses", "crm"]
+  },
+  {
+    "name": "/update-business",
+    "description": "Update a business board (full document replace)",
+    "long_description": "Step 1: GET /api/businesses to fetch current business state\nStep 2: Apply changes to the business object (name, columns, cards, resources)\nStep 3: POST /api/businesses with { action: 'update', business: { id, name, columns, cards, resources } } — this is a FULL replace\nStep 4: Confirm update successful",
+    "category": "Resources",
+    "tags": ["businesses", "crm"]
+  },
+  {
+    "name": "/delete-business",
+    "description": "Permanently delete a business board",
+    "long_description": "Step 1: Fetch and display business details\nStep 2: Ask for explicit yes confirmation — this deletes all cards and resources\nStep 3: DELETE /api/businesses with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["businesses", "crm"]
+  },
+  {
+    "name": "/assets",
+    "description": "List all digital assets",
+    "long_description": "Step 1: GET /api/assets with Bearer token\nStep 2: Format results showing id, title, category, status, tags\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["assets", "design"]
+  },
+  {
+    "name": "/create-asset",
+    "description": "Create a new asset entry",
+    "long_description": "Step 1: Ask for title (required); optionally description, category, status (active|planning|completed), tags\nStep 2: POST /api/assets with provided fields\nStep 3: Confirm asset created with id",
+    "category": "Resources",
+    "tags": ["assets", "design"]
+  },
+  {
+    "name": "/update-asset",
+    "description": "Update an existing asset",
+    "long_description": "Step 1: Ask for asset id and fields to update (title, description, category, status, tags)\nStep 2: PUT /api/assets with { id, ...fields }\nStep 3: Confirm update successful",
+    "category": "Resources",
+    "tags": ["assets", "design"]
+  },
+  {
+    "name": "/delete-asset",
+    "description": "Permanently delete an asset",
+    "long_description": "Step 1: Fetch and display asset details\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/assets with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["assets", "design"]
+  },
+  {
+    "name": "/memory-banks",
+    "description": "List all memory banks",
+    "long_description": "Step 1: GET /api/memory-banks with Bearer token\nStep 2: Format results showing id, name, description\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["memory", "ai"]
+  },
+  {
+    "name": "/create-memory-bank",
+    "description": "Create a new memory bank",
+    "long_description": "Step 1: Ask for name (required) and optional description\nStep 2: POST /api/memory-banks with { name, description }\nStep 3: Confirm memory bank created — starts with empty content array",
+    "category": "Resources",
+    "tags": ["memory", "ai"]
+  },
+  {
+    "name": "/delete-memory-bank",
+    "description": "Permanently delete a memory bank",
+    "long_description": "Step 1: Fetch and display memory bank details\nStep 2: Ask for explicit yes confirmation — this deletes all content inside\nStep 3: DELETE /api/memory-banks with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["memory", "ai"]
+  },
+  {
+    "name": "/team-projects",
+    "description": "List all team projects",
+    "long_description": "Step 1: GET /api/team/projects with Bearer token\nStep 2: Format results showing id, name, color, task_count\nStep 3: Display list — must create a project before adding tasks",
+    "category": "Resources",
+    "tags": ["team", "tasks", "kanban"]
+  },
+  {
+    "name": "/create-team-project",
+    "description": "Create a new team project",
+    "long_description": "Step 1: Ask for project name (required) and optional hex color\nStep 2: POST /api/team/projects with { name, color }\nStep 3: Confirm project created — now tasks can be added to this project",
+    "category": "Resources",
+    "tags": ["team", "tasks", "kanban"]
+  },
+  {
+    "name": "/update-team-project",
+    "description": "Update a team project name or color",
+    "long_description": "Step 1: Ask for project id and fields to update (name, color)\nStep 2: PUT /api/team/projects with { id, name?, color? }\nStep 3: Confirm update successful",
+    "category": "Resources",
+    "tags": ["team", "tasks", "kanban"]
+  },
+  {
+    "name": "/delete-team-project",
+    "description": "Permanently delete a team project",
+    "long_description": "Step 1: Fetch and display project details including task count\nStep 2: Ask for explicit yes confirmation\nStep 3: DELETE /api/team/projects with { id }\nStep 4: Confirm deletion",
+    "category": "Resources",
+    "tags": ["team", "tasks", "kanban"]
+  },
+  {
+    "name": "/team-tasks",
+    "description": "List team tasks with optional project filter",
+    "long_description": "Step 1: GET /api/team/tasks with Bearer token; optional ?project_id= to filter\nStep 2: Format results showing id, title, status, priority, assignee, due_date, progress\nStep 3: Display list with count",
+    "category": "Resources",
+    "tags": ["team", "tasks", "kanban"]
+  },
+  {
+    "name": "/create-team-task",
+    "description": "Create a new team task",
+    "long_description": "Step 1: Ask for title (required); optionally description, status (inbox|assigned|in_progress|review|done), priority (low|medium|high), project_id, assignee,

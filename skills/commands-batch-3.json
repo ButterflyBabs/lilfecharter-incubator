@@ -1,0 +1,387 @@
+[
+  {
+    "name": "/cold-outreach-sequence",
+    "description": "B2B cold email campaigns with hyper-personalization",
+    "long_description": "Step 1: Set up SMTP connection using SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD\nStep 2: Use OPENAI_API_KEY to generate hyper-personalized email content\nStep 3: Create multi-step follow-up sequences\nStep 4: Track engagement metrics\nStep 5: Manage lead pipeline through the outreach process",
+    "category": "External Software",
+    "tags": ["cold-email", "outreach", "b2b", "smtp", "lead-generation"]
+  },
+  {
+    "name": "/competitor-intelligence",
+    "description": "Monitor competitors across web, pricing, and social",
+    "long_description": "Step 1: Configure SERP_API_KEY for web monitoring\nStep 2: Set up OPENAI_API_KEY for analysis\nStep 3: Monitor competitor websites for changes\nStep 4: Track pricing changes and product launches\nStep 5: Monitor reviews and social media activity\nStep 6: Generate weekly intelligence reports",
+    "category": "External Software",
+    "tags": ["competitor-analysis", "monitoring", "intelligence", "serp"]
+  },
+  {
+    "name": "/coursesprout",
+    "description": "Course and membership management via CourseSprout",
+    "long_description": "Step 1: Configure COURSESPROUT_API_KEY\nStep 2: Manage courses and lessons\nStep 3: Create and manage membership pods\nStep 4: Manage members and enrollments\nStep 5: Set up gamification features\nStep 6: Enable AI retrieval capabilities\nStep 7: Track student progress",
+    "category": "External Software",
+    "tags": ["courses", "membership", "lms", "education", "gamification"]
+  },
+  {
+    "name": "/elevenlabs-tts",
+    "description": "Text-to-speech with voice cloning via ElevenLabs",
+    "long_description": "Step 1: Configure ELEVENLABS_API_KEY\nStep 2: Generate text-to-speech audio\nStep 3: Clone voices for custom voice creation\nStep 4: Browse and manage voice library\nStep 5: Generate sound effects\nStep 6: Support multi-language speech generation",
+    "category": "External Software",
+    "tags": ["text-to-speech", "voice", "audio", "voice-cloning", "tts"]
+  },
+  {
+    "name": "/google-drive",
+    "description": "File management and organization in Google Drive",
+    "long_description": "Step 1: Configure GOOGLE_DRIVE_TOKEN for authentication\nStep 2: Create new files and documents\nStep 3: Search for existing files\nStep 4: Share files with specific permissions\nStep 5: Organize folders and structure\nStep 6: Manage document lifecycle\nStep 7: Set up webhook notifications for changes",
+    "category": "External Software",
+    "tags": ["google-drive", "files", "storage", "documents", "cloud"]
+  },
+  {
+    "name": "/imagekit",
+    "description": "Image and video optimization via ImageKit",
+    "long_description": "Step 1: Configure IMAGEKIT_PRIVATE_KEY\nStep 2: Apply image transformations\nStep 3: Optimize videos for web delivery\nStep 4: Use CDN for fast global delivery\nStep 5: Apply watermarks to images\nStep 6: Resize images for different use cases\nStep 7: Perform bulk operations on media",
+    "category": "External Software",
+    "tags": ["images", "cdn", "optimization", "media", "watermark"]
+  },
+  {
+    "name": "/local article",
+    "description": "Create newsletter article via Letterman",
+    "long_description": "Step 1: Configure Letterman API Key (JWT token)\nStep 2: Create new newsletter article\nStep 3: Manage article content and structure\nStep 4: Optimize for SEO\nStep 5: Schedule publication",
+    "category": "External Software",
+    "tags": ["newsletter", "article", "letterman", "publishing", "seo"]
+  },
+  {
+    "name": "/story search",
+    "description": "Search for stories via Letterman",
+    "long_description": "Step 1: Configure Letterman API Key (JWT token)\nStep 2: Search for existing stories\nStep 3: Filter and browse story database",
+    "category": "External Software",
+    "tags": ["newsletter", "search", "letterman", "stories"]
+  },
+  {
+    "name": "/plaid-connect",
+    "description": "Bank account linking and financial data via Plaid",
+    "long_description": "Step 1: Configure PLAID_CLIENT_ID, PLAID_SECRET, and PLAID_ENV\nStep 2: Link bank accounts securely\nStep 3: Retrieve transaction history\nStep 4: Check account balances\nStep 5: Verify identity\nStep 6: Access investment data\nStep 7: Track liabilities",
+    "category": "External Software",
+    "tags": ["finance", "banking", "plaid", "transactions", "account-linking"]
+  },
+  {
+    "name": "/serpsling-list-projects",
+    "description": "List SEO projects in SerpSling",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Retrieve list of all SEO projects\nStep 3: View project summaries and status",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "projects", "rank-tracking"]
+  },
+  {
+    "name": "/serpsling-get-project",
+    "description": "Get project details from SerpSling",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Retrieve detailed information for a specific project\nStep 3: View project settings and configuration",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "projects", "details"]
+  },
+  {
+    "name": "/serpsling-list-keywords",
+    "description": "List tracked keywords in SerpSling",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Retrieve all keywords being tracked\nStep 3: View keyword metrics and status",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "keywords", "rank-tracking"]
+  },
+  {
+    "name": "/serpsling-add-keyword",
+    "description": "Add keyword to track in SerpSling",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Specify keyword to add\nStep 3: Configure tracking settings\nStep 4: Add keyword to project",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "keywords", "add"]
+  },
+  {
+    "name": "/serpsling-delete-keyword",
+    "description": "Remove keyword from SerpSling tracking",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Specify keyword to remove\nStep 3: Confirm deletion from tracking",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "keywords", "delete"]
+  },
+  {
+    "name": "/serpsling-get-ranks",
+    "description": "Get ranking data from SerpSling",
+    "long_description": "Step 1: Configure SERPSLING_API_KEY\nStep 2: Retrieve current ranking positions\nStep 3: View historical ranking data\nStep 4: Analyze ranking trends",
+    "category": "External Software",
+    "tags": ["seo", "serpsling", "rankings", "data"]
+  },
+  {
+    "name": "/stripe_api_setup_with_guardrails",
+    "description": "Secure Stripe API setup with encryption",
+    "long_description": "Step 1: Provide Stripe API keys (sk_live_/sk_test_, pk_live_/pk_test_)\nStep 2: Validate API key format and permissions\nStep 3: Securely store keys using AES-256-GCM encryption\nStep 4: Run testing procedures\nStep 5: Set up error handling and monitoring",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "setup", "security", "encryption"]
+  },
+  {
+    "name": "/stripe-customer-create",
+    "description": "Create Stripe customer",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Create new customer record\nStep 3: Add customer details and metadata\nStep 4: Store customer ID for future transactions",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "customers"]
+  },
+  {
+    "name": "/stripe-charge",
+    "description": "Process Stripe charge",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Create payment intent or charge\nStep 3: Process payment securely\nStep 4: Handle success/failure responses",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "charge", "transaction"]
+  },
+  {
+    "name": "/stripe-subscription-create",
+    "description": "Create Stripe subscription",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Create subscription for customer\nStep 3: Set billing interval and amount\nStep 4: Configure subscription settings",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "subscription", "recurring"]
+  },
+  {
+    "name": "/stripe-invoice-create",
+    "description": "Create Stripe invoice",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Create invoice for customer\nStep 3: Add line items\nStep 4: Send or finalize invoice",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "invoice", "billing"]
+  },
+  {
+    "name": "/stripe-refund",
+    "description": "Process Stripe refund",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Identify charge to refund\nStep 3: Process full or partial refund\nStep 4: Confirm refund status",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "refund"]
+  },
+  {
+    "name": "/stripe-product-create",
+    "description": "Create Stripe product",
+    "long_description": "Step 1: Configure STRIPE_SECRET_KEY\nStep 2: Define product name and description\nStep 3: Set product metadata\nStep 4: Create associated pricing",
+    "category": "External Software",
+    "tags": ["stripe", "payments", "product", "catalog"]
+  },
+  {
+    "name": "/unsplash-search",
+    "description": "Search royalty-free images on Unsplash",
+    "long_description": "Step 1: Configure UNSPLASH_ACCESS_KEY\nStep 2: Search for images by keyword\nStep 3: Browse search results\nStep 4: View photographer attribution info",
+    "category": "Resources",
+    "tags": ["unsplash", "images", "stock-photos", "royalty-free"]
+  },
+  {
+    "name": "/unsplash-download",
+    "description": "Download high-resolution Unsplash images",
+    "long_description": "Step 1: Configure UNSPLASH_ACCESS_KEY\nStep 2: Select image from search results\nStep 3: Download high-resolution version\nStep 4: Include required attribution",
+    "category": "Resources",
+    "tags": ["unsplash", "images", "download", "high-resolution"]
+  },
+  {
+    "name": "/unsplash-collections",
+    "description": "Browse Unsplash collections",
+    "long_description": "Step 1: Configure UNSPLASH_ACCESS_KEY\nStep 2: Browse curated collections\nStep 3: View collection contents\nStep 4: Find images by theme",
+    "category": "Resources",
+    "tags": ["unsplash", "collections", "images", "browse"]
+  },
+  {
+    "name": "/whatsapp-send",
+    "description": "Send WhatsApp Business messages",
+    "long_description": "Step 1: Configure WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID\nStep 2: Compose message content\nStep 3: Send message to recipient\nStep 4: Track delivery status",
+    "category": "External Software",
+    "tags": ["whatsapp", "messaging", "business", "sms"]
+  },
+  {
+    "name": "/whatsapp-template",
+    "description": "Send WhatsApp template messages",
+    "long_description": "Step 1: Configure WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID\nStep 2: Select approved template\nStep 3: Fill template variables\nStep 4: Send template message",
+    "category": "External Software",
+    "tags": ["whatsapp", "messaging", "template", "business"]
+  },
+  {
+    "name": "/whatsapp-media",
+    "description": "Send WhatsApp media messages",
+    "long_description": "Step 1: Configure WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID\nStep 2: Upload or select media\nStep 3: Attach media to message\nStep 4: Send media message",
+    "category": "External Software",
+    "tags": ["whatsapp", "messaging", "media", "images", "video"]
+  },
+  {
+    "name": "/whatsapp-interactive",
+    "description": "Send WhatsApp interactive button messages",
+    "long_description": "Step 1: Configure WHATSAPP_ACCESS_TOKEN and WHATSAPP_PHONE_NUMBER_ID\nStep 2: Create interactive buttons\nStep 3: Define button actions\nStep 4: Send interactive message",
+    "category": "External Software",
+    "tags": ["whatsapp", "messaging", "interactive", "buttons"]
+  },
+  {
+    "name": "/wistia-upload",
+    "description": "Upload videos to Wistia",
+    "long_description": "Step 1: Configure WISTIA_API_TOKEN\nStep 2: Select video file to upload\nStep 3: Set video title and description\nStep 4: Upload to Wistia project",
+    "category": "External Software",
+    "tags": ["wistia", "video", "upload", "hosting"]
+  },
+  {
+    "name": "/wistia-projects",
+    "description": "Manage Wistia video projects",
+    "long_description": "Step 1: Configure WISTIA_API_TOKEN\nStep 2: Create or select project\nStep 3: Organize videos within projects\nStep 4: Manage project settings",
+    "category": "External Software",
+    "tags": ["wistia", "video", "projects", "organization"]
+  },
+  {
+    "name": "/wistia-analytics",
+    "description": "Retrieve Wistia video analytics",
+    "long_description": "Step 1: Configure WISTIA_API_TOKEN\nStep 2: Select video for analytics\nStep 3: View engagement metrics\nStep 4: Analyze viewer behavior",
+    "category": "External Software",
+    "tags": ["wistia", "video", "analytics", "metrics"]
+  },
+  {
+    "name": "/wistia-player",
+    "description": "Customize Wistia video player",
+    "long_description": "Step 1: Configure WISTIA_API_TOKEN\nStep 2: Select video to customize\nStep 3: Adjust player appearance\nStep 4: Configure playback settings",
+    "category": "External Software",
+    "tags": ["wistia", "video", "player", "customization"]
+  },
+  {
+    "name": "/youtube-channel",
+    "description": "Manage YouTube channel",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Access channel settings\nStep 3: Update channel information\nStep 4: Manage channel features",
+    "category": "External Software",
+    "tags": ["youtube", "channel", "management"]
+  },
+  {
+    "name": "/youtube-upload",
+    "description": "Upload videos to YouTube",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Select video file\nStep 3: Add title, description, tags\nStep 4: Set privacy and category\nStep 5: Upload video",
+    "category": "External Software",
+    "tags": ["youtube", "video", "upload"]
+  },
+  {
+    "name": "/youtube-playlist",
+    "description": "Create and manage YouTube playlists",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Create new playlist\nStep 3: Add videos to playlist\nStep 4: Organize playlist order",
+    "category": "External Software",
+    "tags": ["youtube", "playlist", "organization"]
+  },
+  {
+    "name": "/youtube-analytics",
+    "description": "View YouTube analytics",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Select video or channel\nStep 3: View performance metrics\nStep 4: Analyze audience data",
+    "category": "External Software",
+    "tags": ["youtube", "analytics", "metrics"]
+  },
+  {
+    "name": "/youtube-comments",
+    "description": "Manage YouTube comments",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: View video comments\nStep 3: Reply to comments\nStep 4: Moderate comment section",
+    "category": "External Software",
+    "tags": ["youtube", "comments", "moderation"]
+  },
+  {
+    "name": "/youtube-seo",
+    "description": "Optimize YouTube videos for SEO",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Analyze video metadata\nStep 3: Suggest SEO improvements\nStep 4: Optimize titles, descriptions, tags",
+    "category": "External Software",
+    "tags": ["youtube", "seo", "optimization"]
+  },
+  {
+    "name": "/youtube-search",
+    "description": "Search YouTube videos",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Enter search query\nStep 3: View search results\nStep 4: Filter and sort results",
+    "category": "External Software",
+    "tags": ["youtube", "search", "videos"]
+  },
+  {
+    "name": "/youtube-download",
+    "description": "Download YouTube videos",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY and YOUTUBE_ACCESS_TOKEN\nStep 2: Provide video URL\nStep 3: Select download format\nStep 4: Download video file",
+    "category": "External Software",
+    "tags": ["youtube", "download", "video"]
+  },
+  {
+    "name": "/youtube-metadata",
+    "description": "Extract YouTube video metadata",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Provide video URL or ID\nStep 3: Extract title, description, tags\nStep 4: View video statistics",
+    "category": "External Software",
+    "tags": ["youtube", "metadata", "extraction"]
+  },
+  {
+    "name": "/youtube-transcript",
+    "description": "Retrieve YouTube video transcripts",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Provide video URL or ID\nStep 3: Fetch available transcripts\nStep 4: Download transcript text",
+    "category": "External Software",
+    "tags": ["youtube", "transcript", "captions"]
+  },
+  {
+    "name": "/youtube-thumbnail",
+    "description": "Download YouTube video thumbnails",
+    "long_description": "Step 1: Configure YOUTUBE_API_KEY\nStep 2: Provide video URL or ID\nStep 3: Select thumbnail quality\nStep 4: Download thumbnail image",
+    "category": "External Software",
+    "tags": ["youtube", "thumbnail", "download", "image"]
+  },
+  {
+    "name": "/o365-send",
+    "description": "Send email via Office365",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: Compose email message\nStep 3: Add recipients and attachments\nStep 4: Send email",
+    "category": "External Software",
+    "tags": ["office365", "email", "outlook", "send"]
+  },
+  {
+    "name": "/o365-inbox",
+    "description": "Check Office365 inbox",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: Access inbox folder\nStep 3: View email list\nStep 4: Read email contents",
+    "category": "External Software",
+    "tags": ["office365", "email", "outlook", "inbox"]
+  },
+  {
+    "name": "/o365-folders",
+    "description": "List Office365 email folders",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: Retrieve folder list\nStep 3: View folder hierarchy",
+    "category": "External Software",
+    "tags": ["office365", "email", "outlook", "folders"]
+  },
+  {
+    "name": "/o365-search",
+    "description": "Search Office365 emails",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: Enter search query\nStep 3: Search across emails\nStep 4: View search results",
+    "category": "External Software",
+    "tags": ["office365", "email", "outlook", "search"]
+  },
+  {
+    "name": "/o365-draft",
+    "description": "Save email draft in Office365",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: Compose draft message\nStep 3: Save to drafts folder\nStep 4: Edit or send later",
+    "category": "External Software",
+    "tags": ["office365", "email", "outlook", "draft"]
+  },
+  {
+    "name": "/o365-calendar",
+    "description": "Access Office365 calendar",
+    "long_description": "Step 1: Configure MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET, MS_GRAPH_TENANT_ID\nStep 2: View calendar events\nStep 3: Create new events\nStep 4: Manage calendar items",
+    "category": "External Software",
+    "tags": ["office365", "calendar", "outlook", "schedule"]
+  },
+  {
+    "name": "/zoom-create",
+    "description": "Create Zoom meetings",
+    "long_description": "Step 1: Configure ZOOM_ACCESS_TOKEN\nStep 2: Set meeting title and time\nStep 3: Configure meeting options\nStep 4: Generate meeting link",
+    "category": "External Software",
+    "tags": ["zoom", "meetings", "video-conference"]
+  },
+  {
+    "name": "/zoom-schedule",
+    "description": "Schedule Zoom meetings",
+    "long_description": "Step 1: Configure ZOOM_ACCESS_TOKEN\nStep 2: Set meeting date and time\nStep 3: Configure recurrence if needed\nStep 4: Send invitations",
+    "category": "External Software",
+    "tags": ["zoom", "meetings", "schedule"]
+  },
+  {
+    "name": "/zoom-participants",
+    "description": "Manage Zoom participants",
+    "long_description": "Step 1: Configure ZOOM_ACCESS_TOKEN\nStep 2: View participant list\nStep 3: Manage participant permissions\nStep 4: Track attendance",
+    "category": "External Software",
+    "tags": ["zoom", "meetings", "participants"]
+  },
+  {
+    "name": "/zoom-recordings",
+    "description": "Access Zoom recordings",
+    "long_description": "Step 1: Configure ZOOM_ACCESS_TOKEN\nStep 2: List available recordings\nStep 3: Download or share recordings\nStep 4: Manage recording settings",
+    "category": "External Software",
+    "tags": ["zoom", "meetings", "recordings"]
+  },
+  {
+    "name": "/zoom-webinar",
+    "description": "Set up Zoom webinars",
+    "long_description": "Step 1: Configure ZOOM_ACCESS_TOKEN\nStep 2: Create webinar event\nStep 3: Configure registration settings\nStep 4: Manage webinar options",
+    "category": "External Software",
+    "tags": ["zoom", "webinar", "events"]
+  }
+]

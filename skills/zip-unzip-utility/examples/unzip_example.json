@@ -1,0 +1,8 @@
+{
+  "action": "unzip",
+  "archive_path": "/workspace/exports/project_20260403_201500.zip",
+  "extract_to": "/workspace/restored/project",
+  "overwrite": false,
+  "safe_extract": true,
+  "flatten_single_root": false
+}

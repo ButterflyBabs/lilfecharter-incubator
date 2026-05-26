@@ -1,0 +1,586 @@
+[
+    {
+        "name":  "/contacts",
+        "description":  "List all contacts",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts",
+        "sort_order":  0
+    },
+    {
+        "name":  "/contacts-active-open",
+        "description":  "Contacts who opened emails (last 30 days)",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-active-open",
+        "sort_order":  1
+    },
+    {
+        "name":  "/contacts-active-click",
+        "description":  "Contacts who clicked emails (last 30 days)",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-active-click",
+        "sort_order":  2
+    },
+    {
+        "name":  "/contacts-inactive",
+        "description":  "Inactive contacts (30-60 days)",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-inactive",
+        "sort_order":  3
+    },
+    {
+        "name":  "/contacts-passive",
+        "description":  "Sent emails but never engaged",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-passive",
+        "sort_order":  4
+    },
+    {
+        "name":  "/contacts-new",
+        "description":  "Never sent an email",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-new",
+        "sort_order":  5
+    },
+    {
+        "name":  "/contacts-undeliverable",
+        "description":  "Bounced/undeliverable emails",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-undeliverable",
+        "sort_order":  6
+    },
+    {
+        "name":  "/contacts-dead",
+        "description":  "No engagement \u003e60 days",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contacts-dead",
+        "sort_order":  7
+    },
+    {
+        "name":  "/contact",
+        "description":  "Get contact by ID",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contact",
+        "sort_order":  8
+    },
+    {
+        "name":  "/contact-details",
+        "description":  "Get detailed contact info",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "contact-details",
+        "sort_order":  9
+    },
+    {
+        "name":  "/create-contact",
+        "description":  "Create a new contact",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "create-contact",
+        "sort_order":  10
+    },
+    {
+        "name":  "/update-contact",
+        "description":  "Update contact information",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "update-contact",
+        "sort_order":  11
+    },
+    {
+        "name":  "/delete-contact",
+        "description":  "Delete contact (requires confirmation)",
+        "category":  "contacts",
+        "command_group":  "global-control",
+        "shortcut":  "delete-contact",
+        "sort_order":  12
+    },
+    {
+        "name":  "/tags",
+        "description":  "List all tags",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tags",
+        "sort_order":  13
+    },
+    {
+        "name":  "/tags-with-status",
+        "description":  "Tags with contact status counts",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tags-with-status",
+        "sort_order":  14
+    },
+    {
+        "name":  "/tag",
+        "description":  "Get tag by ID",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tag",
+        "sort_order":  15
+    },
+    {
+        "name":  "/create-tag",
+        "description":  "Create a new tag",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "create-tag",
+        "sort_order":  16
+    },
+    {
+        "name":  "/update-tag",
+        "description":  "Update tag information",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "update-tag",
+        "sort_order":  17
+    },
+    {
+        "name":  "/delete-tag",
+        "description":  "Delete tag (requires confirmation)",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "delete-tag",
+        "sort_order":  18
+    },
+    {
+        "name":  "/fire-tag",
+        "description":  "Apply tag to contact",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "fire-tag",
+        "sort_order":  19
+    },
+    {
+        "name":  "/fire-tags",
+        "description":  "Apply multiple tags to contact",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "fire-tags",
+        "sort_order":  20
+    },
+    {
+        "name":  "/tag-groups",
+        "description":  "List all tag groups",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tag-groups",
+        "sort_order":  21
+    },
+    {
+        "name":  "/tag-group",
+        "description":  "Get tag group by ID",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tag-group",
+        "sort_order":  22
+    },
+    {
+        "name":  "/create-tag-group",
+        "description":  "Create a tag group",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "create-tag-group",
+        "sort_order":  23
+    },
+    {
+        "name":  "/update-tag-group",
+        "description":  "Update tag group",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "update-tag-group",
+        "sort_order":  24
+    },
+    {
+        "name":  "/delete-tag-group",
+        "description":  "Delete tag group (requires confirmation)",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "delete-tag-group",
+        "sort_order":  25
+    },
+    {
+        "name":  "/tag-labels",
+        "description":  "List all tag labels",
+        "category":  "tags",
+        "command_group":  "global-control",
+        "shortcut":  "tag-labels",
+        "sort_order":  26
+    },
+    {
+        "name":  "/workflows",
+        "description":  "List all workflows",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "workflows",
+        "sort_order":  27
+    },
+    {
+        "name":  "/workflow",
+        "description":  "Get workflow by ID",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "workflow",
+        "sort_order":  28
+    },
+    {
+        "name":  "/create-workflow",
+        "description":  "Create a workflow",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "create-workflow",
+        "sort_order":  29
+    },
+    {
+        "name":  "/update-workflow",
+        "description":  "Update workflow",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "update-workflow",
+        "sort_order":  30
+    },
+    {
+        "name":  "/delete-workflow",
+        "description":  "Delete workflow (requires confirmation)",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "delete-workflow",
+        "sort_order":  31
+    },
+    {
+        "name":  "/update-flow",
+        "description":  "Update workflow flow",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "update-flow",
+        "sort_order":  32
+    },
+    {
+        "name":  "/delete-flow",
+        "description":  "Delete workflow flow (requires confirmation)",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "delete-flow",
+        "sort_order":  33
+    },
+    {
+        "name":  "/release-contacts",
+        "description":  "Release queued contacts (requires confirmation)",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "release-contacts",
+        "sort_order":  34
+    },
+    {
+        "name":  "/remove-contact-from-workflow",
+        "description":  "Remove contact from workflow queue",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "remove-contact-from-workflow",
+        "sort_order":  35
+    },
+    {
+        "name":  "/workflow-groups",
+        "description":  "List all workflow groups",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "workflow-groups",
+        "sort_order":  36
+    },
+    {
+        "name":  "/workflow-group",
+        "description":  "Get workflow group by ID",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "workflow-group",
+        "sort_order":  37
+    },
+    {
+        "name":  "/create-workflow-group",
+        "description":  "Create workflow group",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "create-workflow-group",
+        "sort_order":  38
+    },
+    {
+        "name":  "/delete-workflow-group",
+        "description":  "Delete workflow group (requires confirmation)",
+        "category":  "workflows",
+        "command_group":  "global-control",
+        "shortcut":  "delete-workflow-group",
+        "sort_order":  39
+    },
+    {
+        "name":  "/domains",
+        "description":  "List all domains",
+        "category":  "domains",
+        "command_group":  "global-control",
+        "shortcut":  "domains",
+        "sort_order":  40
+    },
+    {
+        "name":  "/domain",
+        "description":  "Get domain by ID",
+        "category":  "domains",
+        "command_group":  "global-control",
+        "shortcut":  "domain",
+        "sort_order":  41
+    },
+    {
+        "name":  "/create-domain",
+        "description":  "Create a domain",
+        "category":  "domains",
+        "command_group":  "global-control",
+        "shortcut":  "create-domain",
+        "sort_order":  42
+    },
+    {
+        "name":  "/delete-domain",
+        "description":  "Delete domain (requires confirmation)",
+        "category":  "domains",
+        "command_group":  "global-control",
+        "shortcut":  "delete-domain",
+        "sort_order":  43
+    },
+    {
+        "name":  "/smtp-domains",
+        "description":  "Get SMTP domain list",
+        "category":  "domains",
+        "command_group":  "global-control",
+        "shortcut":  "smtp-domains",
+        "sort_order":  44
+    },
+    {
+        "name":  "/broadcast-fields",
+        "description":  "List broadcast email fields",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-fields",
+        "sort_order":  45
+    },
+    {
+        "name":  "/create-broadcast-field",
+        "description":  "Create broadcast field",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "create-broadcast-field",
+        "sort_order":  46
+    },
+    {
+        "name":  "/send-broadcast",
+        "description":  "Send broadcast email (requires confirmation)",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "send-broadcast",
+        "sort_order":  47
+    },
+    {
+        "name":  "/broadcast-active-count",
+        "description":  "Get active contacts count",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-active-count",
+        "sort_order":  48
+    },
+    {
+        "name":  "/broadcast-inactive-count",
+        "description":  "Get inactive contacts count",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-inactive-count",
+        "sort_order":  49
+    },
+    {
+        "name":  "/broadcast-new-count",
+        "description":  "Get new contacts count",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-new-count",
+        "sort_order":  50
+    },
+    {
+        "name":  "/broadcast-dead-count",
+        "description":  "Get dead contacts count",
+        "category":  "broadcast",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-dead-count",
+        "sort_order":  51
+    },
+    {
+        "name":  "/broadcast-report",
+        "description":  "Get broadcast email report",
+        "category":  "reports",
+        "command_group":  "global-control",
+        "shortcut":  "broadcast-report",
+        "sort_order":  52
+    },
+    {
+        "name":  "/newsletter-report",
+        "description":  "Get newsletter report",
+        "category":  "reports",
+        "command_group":  "global-control",
+        "shortcut":  "newsletter-report",
+        "sort_order":  53
+    },
+    {
+        "name":  "/workflow-report",
+        "description":  "Get workflow report",
+        "category":  "reports",
+        "command_group":  "global-control",
+        "shortcut":  "workflow-report",
+        "sort_order":  54
+    },
+    {
+        "name":  "/custom-fields",
+        "description":  "List all custom fields",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "custom-fields",
+        "sort_order":  55
+    },
+    {
+        "name":  "/custom-field",
+        "description":  "Get custom field by ID",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "custom-field",
+        "sort_order":  56
+    },
+    {
+        "name":  "/create-custom-field",
+        "description":  "Create custom field",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "create-custom-field",
+        "sort_order":  57
+    },
+    {
+        "name":  "/update-custom-field",
+        "description":  "Update custom field",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "update-custom-field",
+        "sort_order":  58
+    },
+    {
+        "name":  "/delete-custom-field",
+        "description":  "Delete custom field (requires confirmation)",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "delete-custom-field",
+        "sort_order":  59
+    },
+    {
+        "name":  "/custom-field-groups",
+        "description":  "List all custom field groups",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "custom-field-groups",
+        "sort_order":  60
+    },
+    {
+        "name":  "/custom-field-group",
+        "description":  "Get custom field group by ID",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "custom-field-group",
+        "sort_order":  61
+    },
+    {
+        "name":  "/create-custom-field-group",
+        "description":  "Create custom field group",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "create-custom-field-group",
+        "sort_order":  62
+    },
+    {
+        "name":  "/update-custom-field-group",
+        "description":  "Update custom field group",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "update-custom-field-group",
+        "sort_order":  63
+    },
+    {
+        "name":  "/delete-custom-field-group",
+        "description":  "Delete custom field group (requires confirmation)",
+        "category":  "custom-fields",
+        "command_group":  "global-control",
+        "shortcut":  "delete-custom-field-group",
+        "sort_order":  64
+    },
+    {
+        "name":  "/sub-users",
+        "description":  "List all sub-users",
+        "category":  "users",
+        "command_group":  "global-control",
+        "shortcut":  "sub-users",
+        "sort_order":  65
+    },
+    {
+        "name":  "/sub-user",
+        "description":  "Get sub-user by ID",
+        "category":  "users",
+        "command_group":  "global-control",
+        "shortcut":  "sub-user",
+        "sort_order":  66
+    },
+    {
+        "name":  "/create-sub-user",
+        "description":  "Create sub-user",
+        "category":  "users",
+        "command_group":  "global-control",
+        "shortcut":  "create-sub-user",
+        "sort_order":  67
+    },
+    {
+        "name":  "/update-sub-user",
+        "description":  "Update sub-user",
+        "category":  "users",
+        "command_group":  "global-control",
+        "shortcut":  "update-sub-user",
+        "sort_order":  68
+    },
+    {
+        "name":  "/delete-sub-user",
+        "description":  "Delete sub-user (requires confirmation)",
+        "category":  "users",
+        "command_group":  "global-control",
+        "shortcut":  "delete-sub-user",
+        "sort_order":  69
+    },
+    {
+        "name":  "/integrations",
+        "description":  "List all integrations",
+        "category":  "integrations",
+        "command_group":  "global-control",
+        "shortcut":  "integrations",
+        "sort_order":  70
+    },
+    {
+        "name":  "/connected-integrations",
+        "description":  "List connected integrations",
+        "category":  "integrations",
+        "command_group":  "global-control",
+        "shortcut":  "connected-integrations",
+        "sort_order":  71
+    },
+    {
+        "name":  "/integration-categories",
+        "description":  "List integration categories",
+        "category":  "integrations",
+        "command_group":  "global-control",
+        "shortcut":  "integration-categories",
+        "sort_order":  72
+    }
+]

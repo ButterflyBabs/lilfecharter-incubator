@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Zip + Unzip File Utility Input",
+  "type": "object",
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["zip", "unzip"],
+      "description": "Operation to run. Use zip to create an archive or unzip to extract one."
+    },
+    "source_path": {
+      "type": "string",
+      "description": "File or folder to archive when action=zip."
+    },
+    "archive_path": {
+      "type": "string",
+      "description": "ZIP archive to extract when action=unzip."
+    },
+    "output_path": {
+      "type": "string",
+      "description": "Destination ZIP file when action=zip."
+    },
+    "extract_to": {
+      "type": "string",
+      "description": "Destination directory when action=unzip."
+    },
+    "include_timestamp": {
+      "type": "boolean",
+      "default": false,
+      "description": "Append YYYYMMDD_HHMMSS to archive filename before .zip when creating archives."
+    },
+    "overwrite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Allow overwriting an existing archive or extracted file."
+    },
+    "exclude_patterns": {
+      "type": "array",
+      "items": {"type": "string"},
+      "default": [],
+      "description": "Glob-style patterns to exclude when zipping."
+    },
+    "compression": {
+      "type": "string",
+      "enum": ["stored", "deflated"],
+      "default": "deflated",
+      "description": "Compression method for action=zip."
+    },
+    "include_hidden": {
+      "type": "boolean",
+      "default": true,
+      "description": "Include hidden files and folders when action=zip."
+    },
+    "root_folder_mode": {
+      "type": "string",
+      "enum": ["preserve", "contents_only"],
+      "default": "preserve",
+      "description": "Preserve top-level folder name in the archive or archive only its contents."
+    },
+    "safe_extract": {
+      "type": "boolean",
+      "default": true,
+      "description": "Block path traversal and unsafe extraction paths when action=unzip."
+    },
+    "flatten_single_root": {
+      "type": "boolean",
+      "default": false,
+      "description": "If the ZIP contains one top-level folder, flatten it into extract_to after extraction."
+    }
+  },
+  "required": ["action"],
+  "allOf": [
+    {
+      "if": {"properties": {"action": {"const": "zip"}}, "required": ["action"]},
+      "then": {
+        "required": ["source_path", "output_path"]
+      }
+    },
+    {
+      "if": {"properties": {"action": {"const": "unzip"}}, "required": ["action"]},
+      "then": {
+        "required": ["archive_path", "extract_to"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

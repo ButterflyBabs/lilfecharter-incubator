@@ -1,0 +1,44 @@
+[
+  {
+    "name": "/copywriter-framework",
+    "description": "8-phase sales copy framework",
+    "long_description": "Complete 8-phase sales copy framework for creating high-converting sales letters, landing pages, and marketing materials using proven psychological triggers and persuasion patterns.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  },
+  {
+    "name": "/copywriter-pas",
+    "description": "PAS copy framework (Problem-Agitation-Solution)",
+    "long_description": "Generate sales copy using the Problem-Agitation-Solution framework. Identifies the prospect's pain point, amplifies the emotional impact of that problem, then presents your offer as the solution.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  },
+  {
+    "name": "/copywriter-aida",
+    "description": "AIDA copy framework (Attention-Interest-Desire-Action)",
+    "long_description": "Create marketing copy using the Attention-Interest-Desire-Action framework. Grabs attention, builds interest, creates desire for the solution, and drives the reader to take action.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  },
+  {
+    "name": "/copywriter-sales-letter",
+    "description": "Long-form sales letters",
+    "long_description": "Generate complete long-form sales letters with full structure including headline, lead, story, problem agitation, solution presentation, proof, offer, guarantee, urgency, and close.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  },
+  {
+    "name": "/copywriter-vsl",
+    "description": "Video Sales Letter (VSL) scripts",
+    "long_description": "Create complete Video Sales Letter scripts optimized for conversion. Includes hook, story, problem presentation, solution reveal, proof elements, offer stack, and call-to-action.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  },
+  {
+    "name": "/copywriter-webinar",
+    "description": "Webinar scripts",
+    "long_description": "Generate high-converting webinar scripts including introduction, content delivery, teaching segments, transition to pitch, offer presentation, Q&A handling, and closing sequences.",
+    "category": "Resources",
+    "tags": ["copywriting"]
+  }
+]

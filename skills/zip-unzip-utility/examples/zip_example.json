@@ -1,0 +1,11 @@
+{
+  "action": "zip",
+  "source_path": "/workspace/project",
+  "output_path": "/workspace/exports/project.zip",
+  "include_timestamp": true,
+  "overwrite": false,
+  "exclude_patterns": ["*.log", ".git/*", "node_modules/*"],
+  "compression": "deflated",
+  "include_hidden": true,
+  "root_folder_mode": "preserve"
+}
