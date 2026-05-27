@@ -92,7 +92,7 @@
                 });
             })
             .then(function() {
-                window.location.href = 'thank-you.html';
+                document.getElementById('form').innerHTML = '<div class="success"><h2>✓ You are Registered!</h2><p>Welcome! Check your email for confirmation.</p><p><a href="thank-you.html" style="color: white;">Continue to Thank You Page →</a></p></div>';
             })
             .catch(function(err) {
                 result.className = 'error';
