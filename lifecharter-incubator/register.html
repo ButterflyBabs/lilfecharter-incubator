@@ -451,6 +451,8 @@
             resultDiv.className = 'result';
             resultDiv.style.display = 'none';
             
+            console.log('Form submission started');
+            
             // Get form data
             const firstName = document.getElementById('firstName').value.trim();
             const lastName = document.getElementById('lastName').value.trim();
@@ -466,6 +468,8 @@
             
             // Build survey summary for address field (visible in GC)
             const surveySummary = `Growth Journey: ${growthJourney} | Misalignment: ${misalignment} | Outcomes: ${outcomes} | Readiness: ${readiness} | Reflection: ${reflection}`;
+            
+            console.log('Submitting:', { firstName, lastName, email, phone, surveySummary });
             
             try {
                 // Step 1: Create contact in Global Control
