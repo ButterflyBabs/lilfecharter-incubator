@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCI Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(47, 49, 47, 0.1);
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            border-radius: 12px;
+        }
+        
+        h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--linework);
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--clay);
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--fog);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        
+        .required::after {
+            content: ' *';
+            color: #c62828;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--fog);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--clay);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .radio-item input,
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .radio-item label,
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn-primary {
+            background: var(--clay);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--ochre);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--fog);
+            cursor: not-allowed;
+        }
+        
+        .message {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+        
+        .message.success {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            display: block;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            border: 1px solid #ef5350;
+            color: #c62828;
+            display: block;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .back-link a {
+            color: var(--clay);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="lifecharter-logo.jpg" alt="LifeCharter" class="logo">
+        </div>
+        
+        <h1>LCI Registration</h1>
+        <p class="subtitle">LifeCharter Incubator — June 4, 2026 at 5:00 PM MT</p>
+        
+        <form id="regForm">
+            <h2 class="section-title">Contact Information</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="required">First Name</label>
+                    <input type="text" id="firstName" required>
+                </div>
+                <div class="form-group">
+                    <label class="required">Last Name</label>
+                    <input type="text" id="lastName" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Email</label>
+                <input type="email" id="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label class="required">Phone Number</label>
+                <input type="tel" id="phone" required>
+            </div>
+            
+            <h2 class="section-title">Personal Growth Journey</h2>
+            
+            <div class="form-group">
+                <label class="required">Where are you on your personal growth journey?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="lost" id="j1" required>
+                        <label for="j1">I feel completely lost and unsure of who I am or what I want</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="want_change" id="j2">
+                        <label for="j2">I know I want change but don't know where to start</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="need_clarity" id="j3">
+                        <label for="j3">I have a sense of direction, but I need clarity and a solid plan</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="aligned" id="j4">
+                        <label for="j4">I feel aligned and want support to take the next step</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="uncertain" id="j5">
+                        <label for="j5">Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Areas of Misalignment</h2>
+            
+            <div class="form-group">
+                <label class="required">What area(s) of life feel most out of alignment?</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Relationships" id="m1">
+                        <label for="m1">Relationships</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Health" id="m2">
+                        <label for="m2">Health & Well-being</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Finances" id="m3">
+                        <label for="m3">Finances</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Life Balance" id="m4">
+                        <label for="m4">Life Balance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Career" id="m5">
+                        <label for="m5">Career / Work / Calling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Spiritual" id="m6">
+                        <label for="m6">Spiritual Life</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Confidence" id="m7">
+                        <label for="m7">Confidence & Self-worth</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Other" id="m8">
+                        <label for="m8">Other/Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Desired Outcomes</h2>
+            
+            <div class="form-group">
+                <label class="required">What would you love to walk away with?</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Clarity" id="o1">
+                        <label for="o1">Clarity on who I am and what I want</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Vision" id="o2">
+                        <label for="o2">A clear vision and plan for my next chapter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Tools" id="o3">
+                        <label for="o3">Tools to shift limiting beliefs</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Purpose" id="o4">
+                        <label for="o4">A deep reconnection to my purpose</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Strategy" id="o5">
+                        <label for="o5">A soulful business strategy</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="All" id="o6">
+                        <label for="o6">All of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Readiness</h2>
+            
+            <div class="form-group">
+                <label class="required">Are you willing to engage with the community?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="yes" id="r1" required>
+                        <label for="r1">Yes, I'm in. I know this is for me.</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="questions" id="r2">
+                        <label for="r2">I want to, but I have questions</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="no" id="r3">
+                        <label for="r3">No, I can't make the full time</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Reflection</h2>
+            
+            <div class="form-group">
+                <label>Anything you'd like us to know?</label>
+                <textarea id="reflection"></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="submitBtn">Register Now</button>
+        </form>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Incubator page</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('regForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var btn = document.getElementById('submitBtn');
+            var msg = document.getElementById('message');
+            
+            btn.disabled = true;
+            btn.textContent = 'Registering...';
+            msg.style.display = 'none';
+            
+            // Get values
+            var firstName = document.getElementById('firstName').value.trim();
+            var lastName = document.getElementById('lastName').value.trim();
+            var email = document.getElementById('email').value.trim();
+            var phone = document.getElementById('phone').value.trim();
+            var reflection = document.getElementById('reflection').value.trim();
+            
+            // Get radio values
+            var growthJourney = document.querySelector('input[name="growthJourney"]:checked');
+            var readiness = document.querySelector('input[name="readiness"]:checked');
+            
+            // Get checkbox values
+            var misalignment = [];
+            document.querySelectorAll('input[name="misalignment"]:checked').forEach(function(cb) {
+                misalignment.push(cb.value);
+            });
+            
+            var outcomes = [];
+            document.querySelectorAll('input[name="outcomes"]:checked').forEach(function(cb) {
+                outcomes.push(cb.value);
+            });
+            
+            // Validate
+            if (!firstName || !lastName || !email || !phone) {
+                msg.className = 'message error';
+                msg.textContent = 'Please fill in all contact fields.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+                return;
+            }
+            
+            if (!growthJourney) {
+                msg.className = 'message error';
+                msg.textContent = 'Please select your growth journey.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+                return;
+            }
+            
+            if (misalignment.length === 0) {
+                msg.className = 'message error';
+                msg.textContent = 'Please select at least one area of misalignment.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+                return;
+            }
+            
+            if (outcomes.length === 0) {
+                msg.className = 'message error';
+                msg.textContent = 'Please select at least one desired outcome.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+                return;
+            }
+            
+            if (!readiness) {
+                msg.className = 'message error';
+                msg.textContent = 'Please select your readiness level.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+                return;
+            }
+            
+            // Build summary
+            var surveySummary = 'Growth Journey: ' + growthJourney.value + 
+                              ' | Misalignment: ' + misalignment.join(', ') +
+                              ' | Outcomes: ' + outcomes.join(', ') +
+                              ' | Readiness: ' + readiness.value +
+                              ' | Reflection: ' + reflection;
+            
+            // API call
+            var GC_API_KEY = '57653380648b8ae0aeff5416a5422f81a1d0bd89e75d760de0f482abe5e8858d';
+            
+            fetch('https://api.globalcontrol.io/api/ai/contacts', {
+                method: 'POST',
+                headers: {
+                    'X-API-KEY': GC_API_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    phone: phone,
+                    address: surveySummary
+                })
+            })
+            .then(function(response) {
+                if (!response.ok) {
+                    throw new Error('Registration failed');
+                }
+                return response.json();
+            })
+            .then(function() {
+                // Fire tag
+                return fetch('https://api.globalcontrol.io/api/ai/tags/fire-tag/69fa1666f047865f2e391269', {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': GC_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email })
+                });
+            })
+            .then(function() {
+                // Success - redirect
+                window.location.href = 'thank-you.html';
+            })
+            .catch(function(error) {
+                msg.className = 'message error';
+                msg.textContent = 'Error: ' + error.message + '. Please try again.';
+                btn.disabled = false;
+                btn.textContent = 'Register Now';
+            });
+        });
+    </script>
+</body>
+</html>
