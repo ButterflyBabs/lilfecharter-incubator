@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCI Registration</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(47, 49, 47, 0.1);
+            margin: 0 auto;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            border-radius: 12px;
+        }
+        
+        h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            color: var(--ink);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--linework);
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+        
+        .section-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--clay);
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--fog);
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--ink);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .required::after {
+            content: ' *';
+            color: #c62828;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--fog);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            background: white;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--clay);
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background: var(--fog);
+        }
+        
+        .radio-item input,
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .radio-item label,
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .btn-primary {
+            background: var(--clay);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Open Sans', sans-serif;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--ochre);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(203, 164, 136, 0.4);
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+        }
+        
+        .result.success {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            display: block;
+        }
+        
+        .result.error {
+            background: #ffebee;
+            border: 1px solid #ef5350;
+            color: #c62828;
+            display: block;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .back-link a {
+            color: var(--clay);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="lifecharter-logo.jpg" alt="LifeCharter" class="logo">
+        </div>
+        
+        <h1>LCI Registration</h1>
+        <p class="subtitle">LifeCharter Incubator — a free 90-minute workshop</p>
+        
+        <form id="registrationForm" action="https://api.globalcontrol.io/api/ai/contacts" method="POST">
+            <!-- Contact Information -->
+            <h2 class="section-title">Contact Information</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName" class="required">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Enter first name...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName" class="required">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Enter last name...">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter email address...">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone" class="required">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Enter phone number...">
+            </div>
+            
+            <!-- Personal Growth Journey -->
+            <h2 class="section-title">Personal Growth Journey</h2>
+            
+            <div class="form-group">
+                <label class="required">Where are you on your personal growth journey? (select one)</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="journey1" name="growthJourney" value="lost" required>
+                        <label for="journey1">I feel completely lost and unsure of who I am or what I want</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey2" name="growthJourney" value="want_change">
+                        <label for="journey2">I know I want change but don't know where to start</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey3" name="growthJourney" value="need_clarity">
+                        <label for="journey3">I have a sense of direction, but I need clarity and a solid plan</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey4" name="growthJourney" value="aligned">
+                        <label for="journey4">I feel aligned and want support to take the next step in my purpose</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey5" name="growthJourney" value="uncertain">
+                        <label for="journey5">Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Areas of Misalignment -->
+            <h2 class="section-title">Areas of Misalignment</h2>
+            
+            <div class="form-group">
+                <label class="required">What area(s) of life feel most out of alignment right now? (check all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area1" name="misalignment" value="Relationships">
+                        <label for="area1">Relationships</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area2" name="misalignment" value="Health & Well-being">
+                        <label for="area2">Health & Well-being</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area3" name="misalignment" value="Finances">
+                        <label for="area3">Finances</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area4" name="misalignment" value="Life Balance">
+                        <label for="area4">Life Balance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area5" name="misalignment" value="Career / Work / Calling">
+                        <label for="area5">Career / Work / Calling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area6" name="misalignment" value="Spiritual Life">
+                        <label for="area6">Spiritual Life</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area7" name="misalignment" value="Confidence & Self-worth">
+                        <label for="area7">Confidence & Self-worth</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area8" name="misalignment" value="Other/Uncertain">
+                        <label for="area8">Other/Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desired Outcomes -->
+            <h2 class="section-title">Desired Outcomes</h2>
+            
+            <div class="form-group">
+                <label class="required">What would you love to walk away with after the 90-minute Incubator? (select all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome1" name="outcomes" value="Clarity on who I am">
+                        <label for="outcome1">Clarity on who I am and what I want</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome2" name="outcomes" value="Clear vision and plan">
+                        <label for="outcome2">A clear vision and plan for my next chapter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome3" name="outcomes" value="Tools to shift limiting beliefs">
+                        <label for="outcome3">Tools to shift the limiting beliefs that are holding me back</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome4" name="outcomes" value="Reconnection to purpose">
+                        <label for="outcome4">A deep reconnection to my purpose and inner wisdom</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome5" name="outcomes" value="Soulful business strategy">
+                        <label for="outcome5">A soulful business strategy that doesn't require hustle</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome6" name="outcomes" value="All of the above">
+                        <label for="outcome6">All of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Challenges and Readiness -->
+            <h2 class="section-title">Challenges and Readiness</h2>
+            
+            <div class="form-group">
+                <label class="required">Are you willing to engage with the community during the Incubator (camera on, open heart, present presence)?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="ready1" name="readiness" value="yes_all_in" required>
+                        <label for="ready1">Yes, I'm in. I know this is for me.</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="ready2" name="readiness" value="want_to_but_questions">
+                        <label for="ready2">I want to, but I have questions</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="ready3" name="readiness" value="cant_make_full_time">
+                        <label for="ready3">No, I can't make the full time</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Open Reflection -->
+            <h2 class="section-title">Open Reflection</h2>
+            
+            <div class="form-group">
+                <label for="reflection">Anything you'd like us to know about your journey, your heart, or what drew you here?</label>
+                <textarea id="reflection" name="reflection" placeholder="Type here..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="submitBtn">Register Now</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Incubator page</a>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            const form = document.getElementById('registrationForm');
+            
+            // Get form data
+            const formData = new FormData(form);
+            const data = {};
+            
+            // Get text inputs
+            data.firstName = formData.get('firstName');
+            data.lastName = formData.get('lastName');
+            data.email = formData.get('email');
+            data.phone = formData.get('phone');
+            
+            // Get radio buttons
+            data.growthJourney = formData.get('growthJourney') || '';
+            data.readiness = formData.get('readiness') || '';
+            
+            // Get checkboxes (multiple values)
+            data.misalignment = formData.getAll('misalignment').join(', ');
+            data.outcomes = formData.getAll('outcomes').join(', ');
+            
+            // Get textarea
+            data.reflection = formData.get('reflection') || '';
+            
+            // Build address field with all survey data
+            const surveySummary = `Growth Journey: ${data.growthJourney} | Misalignment: ${data.misalignment} | Outcomes: ${data.outcomes} | Readiness: ${data.readiness} | Reflection: ${data.reflection}`;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+            resultDiv.style.display = 'none';
+            
+            // API Configuration
+            const GC_API_KEY = '57653380648b8ae0aeff5416a5422f81a1d0bd89e75d760de0f482abe5e8858d';
+            const GC_API_URL = 'https://api.globalcontrol.io/api/ai';
+            const TAG_ID = '69fa1666f047865f2e391269';
+            
+            // Step 1: Create contact
+            fetch(`${GC_API_URL}/contacts`, {
+                method: 'POST',
+                headers: {
+                    'X-API-KEY': GC_API_KEY,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email: data.email,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                    phone: data.phone,
+                    address: surveySummary
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Registration failed');
+                }
+                return response.json();
+            })
+            .then(() => {
+                // Step 2: Fire tag
+                return fetch(`${GC_API_URL}/tags/fire-tag/${TAG_ID}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': GC_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: data.email
+                    })
+                });
+            })
+            .then(() => {
+                // Success
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = '<strong>✓ You are Registered!</strong><br>Welcome, ' + data.firstName + '! Check your email for confirmation.<br>We will see you at the Incubator.';
+                resultDiv.style.display = 'block';
+                form.reset();
+            })
+            .catch(error => {
+                // Error
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = '<strong>✗ Registration Failed</strong><br>' + error.message + '<br>Please try again or contact support.';
+                resultDiv.style.display = 'block';
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+            });
+        });
+    </script>
+</body>
+</html>
