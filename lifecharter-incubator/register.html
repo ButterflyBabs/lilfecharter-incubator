@@ -464,14 +464,8 @@
             const readiness = document.querySelector('input[name="readiness"]:checked')?.value || '';
             const reflection = document.getElementById('reflection').value.trim();
             
-            // Build survey data as named custom fields
-            const customFieldArray = [
-                { key: 'Growth Journey', value: growthJourney },
-                { key: 'Misalignment Areas', value: misalignment },
-                { key: 'Desired Outcomes', value: outcomes },
-                { key: 'Readiness', value: readiness },
-                { key: 'Reflection', value: reflection }
-            ];
+            // Build survey summary for address field (visible in GC)
+            const surveySummary = `Growth Journey: ${growthJourney} | Misalignment: ${misalignment} | Outcomes: ${outcomes} | Readiness: ${readiness} | Reflection: ${reflection}`;
             
             try {
                 // Step 1: Create contact in Global Control
@@ -486,7 +480,7 @@
                         firstName: firstName,
                         lastName: lastName,
                         phone: phone,
-                        customFields: customFieldArray
+                        address: surveySummary
                     })
                 });
                 
