@@ -464,12 +464,14 @@
             const readiness = document.querySelector('input[name="readiness"]:checked')?.value || '';
             const reflection = document.getElementById('reflection').value.trim();
             
-            // Build survey summary for meta field
-            const surveySummary = `Growth Journey: ${growthJourney}
-Misalignment Areas: ${misalignment}
-Desired Outcomes: ${outcomes}
-Readiness: ${readiness}
-Reflection: ${reflection}`;
+            // Build survey data as named custom fields
+            const customFieldArray = [
+                { key: 'Growth Journey', value: growthJourney },
+                { key: 'Misalignment Areas', value: misalignment },
+                { key: 'Desired Outcomes', value: outcomes },
+                { key: 'Readiness', value: readiness },
+                { key: 'Reflection', value: reflection }
+            ];
             
             try {
                 // Step 1: Create contact in Global Control
@@ -484,7 +486,7 @@ Reflection: ${reflection}`;
                         firstName: firstName,
                         lastName: lastName,
                         phone: phone,
-                        meta: [{key: 'incubatorSurvey', value: surveySummary}]
+                        customFields: customFieldArray
                     })
                 });
                 
