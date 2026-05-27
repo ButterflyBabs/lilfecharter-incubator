@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register for LifeCharter Incubator</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(47, 49, 47, 0.1);
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            max-width: 200px;
+            height: auto;
+            border-radius: 12px;
+        }
+        
+        h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 32px;
+            color: var(--ink);
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--linework);
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--ink);
+            font-size: 14px;
+        }
+        
+        .required::after {
+            content: ' *';
+            color: #c62828;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--fog);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Open Sans', sans-serif;
+            background: white;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--clay);
+        }
+        
+        input::placeholder {
+            color: var(--linework);
+            opacity: 0.7;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .btn-primary {
+            background: var(--clay);
+            color: white;
+            border: none;
+            padding: 18px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Open Sans', sans-serif;
+            width: 100%;
+            margin-top: 10px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--ochre);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(203, 164, 136, 0.4);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--fog);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+            text-align: center;
+        }
+        
+        .result.success {
+            background: #e8f5e9;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+            display: block;
+        }
+        
+        .result.error {
+            background: #ffebee;
+            border: 1px solid #ef5350;
+            color: #c62828;
+            display: block;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: var(--clay);
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <img src="lifecharter-logo.jpg" alt="LifeCharter" class="logo">
+        </div>
+        
+        <h1>Save Your Seat</h1>
+        <p class="subtitle">Join the LifeCharter Incubator — a free 90-minute workshop</p>
+        
+        <form id="registrationForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName" class="required">First Name</label>
+                    <input type="text" id="firstName" name="firstName" required placeholder="Enter first name...">
+                </div>
+                
+                <div class="form-group">
+                    <label for="lastName" class="required">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" required placeholder="Enter last name...">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email" class="required">Email</label>
+                <input type="email" id="email" name="email" required placeholder="Enter email address...">
+            </div>
+            
+            <div class="form-group">
+                <label for="phone" class="required">Phone Number</label>
+                <input type="tel" id="phone" name="phone" required placeholder="Enter phone number...">
+            </div>
+            
+            <button type="submit" class="btn-primary" id="submitBtn">Register Now</button>
+        </form>
+        
+        <div id="result" class="result"></div>
+        
+        <div class="back-link">
+            <a href="index.html">← Back to Incubator page</a>
+        </div>
+    </div>
+
+    <script>
+        // Global Control API Configuration
+        const GC_API_KEY = '1a4347d8f88a'; // Replace with your actual API key
+        const GC_API_URL = 'https://api.globalcontrol.io/api/ai';
+        const TAG_ID = '69fa1666f047865f2e391269'; // incubator-registration tag
+        
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const resultDiv = document.getElementById('result');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Registering...';
+            resultDiv.className = 'result';
+            resultDiv.style.display = 'none';
+            
+            // Get form data
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            
+            try {
+                // Step 1: Create contact in Global Control
+                const contactResponse = await fetch(`${GC_API_URL}/contacts`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': GC_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        phone: phone
+                    })
+                });
+                
+                if (!contactResponse.ok) {
+                    const error = await contactResponse.text();
+                    throw new Error('Registration failed: ' + error);
+                }
+                
+                // Step 2: Fire the incubator-registration tag
+                const tagResponse = await fetch(`${GC_API_URL}/tags/fire-tag/${TAG_ID}`, {
+                    method: 'POST',
+                    headers: {
+                        'X-API-KEY': GC_API_KEY,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email
+                    })
+                });
+                
+                if (!tagResponse.ok) {
+                    console.warn('Tag firing failed, but contact was created');
+                }
+                
+                // Success
+                resultDiv.className = 'result success';
+                resultDiv.innerHTML = `
+                    <strong>✓ You're Registered!</strong><br>
+                    Welcome, ${firstName}! Check your email for confirmation.<br>
+                    We'll see you at the Incubator.
+                `;
+                
+                // Clear form
+                document.getElementById('registrationForm').reset();
+                
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <strong>✗ Registration Failed</strong><br>
+                    ${error.message}<br>
+                    Please try again or contact support.
+                `;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Register Now';
+            }
+        });
+    </script>
+</body>
+</html>
