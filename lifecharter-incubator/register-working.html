@@ -80,8 +80,16 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(function(res) { return res.json(); })
-            .then(function() {
+            .then(function(res) { 
+                if (!res.ok) {
+                    return res.text().then(function(text) {
+                        throw new Error('API Error: ' + text);
+                    });
+                }
+                return res.json(); 
+            })
+            .then(function(json) {
+                console.log('Contact created:', json);
                 return fetch('https://api.globalcontrol.io/api/ai/tags/fire-tag/69fa1666f047865f2e391269', {
                     method: 'POST',
                     headers: {
@@ -91,7 +99,10 @@
                     body: JSON.stringify({email: email})
                 });
             })
-            .then(function() {
+            .then(function(tagRes) {
+                if (!tagRes.ok) {
+                    console.warn('Tag firing failed but contact was created');
+                }
                 document.getElementById('form').innerHTML = '<div class="success"><h2>✓ You are Registered!</h2><p>Welcome! Check your email for confirmation.</p><p><a href="thank-you.html" style="color: white;">Continue to Thank You Page →</a></p></div>';
             })
             .catch(function(err) {
