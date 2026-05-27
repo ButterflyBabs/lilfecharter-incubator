@@ -464,14 +464,12 @@
             const readiness = document.querySelector('input[name="readiness"]:checked')?.value || '';
             const reflection = document.getElementById('reflection').value.trim();
             
-            // Build custom fields for survey data
-            const customFields = {
-                growthJourney: growthJourney,
-                misalignmentAreas: misalignment,
-                desiredOutcomes: outcomes,
-                readiness: readiness,
-                reflection: reflection
-            };
+            // Build survey summary for meta field
+            const surveySummary = `Growth Journey: ${growthJourney}
+Misalignment Areas: ${misalignment}
+Desired Outcomes: ${outcomes}
+Readiness: ${readiness}
+Reflection: ${reflection}`;
             
             try {
                 // Step 1: Create contact in Global Control
@@ -486,7 +484,7 @@
                         firstName: firstName,
                         lastName: lastName,
                         phone: phone,
-                        customFields: customFields
+                        meta: [{key: 'incubatorSurvey', value: surveySummary}]
                     })
                 });
                 
