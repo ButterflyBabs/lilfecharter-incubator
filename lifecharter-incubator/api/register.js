@@ -36,6 +36,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
+    console.log('Received data:', { firstName, lastName, email, phone, growthJourney, misalignment, outcomes, readiness, reflection });
     console.log('Processing Incubator registration:', { firstName, lastName, email });
 
     // Build survey summary
