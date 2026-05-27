@@ -28,19 +28,17 @@
             color: var(--ink);
             line-height: 1.7;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             padding: 40px 20px;
         }
         
         .container {
-            max-width: 500px;
+            max-width: 700px;
             width: 100%;
             background: white;
             border-radius: 16px;
             padding: 40px;
             box-shadow: 0 10px 40px rgba(47, 49, 47, 0.1);
+            margin: 0 auto;
         }
         
         .logo-container {
@@ -65,20 +63,30 @@
         .subtitle {
             text-align: center;
             color: var(--linework);
-            margin-bottom: 30px;
+            margin-bottom: 40px;
             font-size: 16px;
         }
         
+        .section-title {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--clay);
+            margin: 30px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--fog);
+        }
+        
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
             color: var(--ink);
-            font-size: 14px;
+            font-size: 15px;
+            line-height: 1.5;
         }
         
         .required::after {
@@ -88,7 +96,8 @@
         
         input[type="text"],
         input[type="email"],
-        input[type="tel"] {
+        input[type="tel"],
+        textarea {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid var(--fog);
@@ -99,20 +108,69 @@
             transition: border-color 0.3s;
         }
         
-        input:focus {
+        input:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--clay);
         }
         
-        input::placeholder {
+        input::placeholder,
+        textarea::placeholder {
             color: var(--linework);
             opacity: 0.7;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 120px;
         }
         
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 15px;
+        }
+        
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--paper);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .radio-item:hover,
+        .checkbox-item:hover {
+            background: var(--fog);
+        }
+        
+        .radio-item input,
+        .checkbox-item input {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+        }
+        
+        .radio-item label,
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1.5;
         }
         
         .btn-primary {
@@ -127,7 +185,7 @@
             transition: all 0.3s ease;
             font-family: 'Open Sans', sans-serif;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 20px;
         }
         
         .btn-primary:hover {
@@ -167,7 +225,7 @@
         
         .back-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
         }
         
         .back-link a {
@@ -180,7 +238,7 @@
             text-decoration: underline;
         }
         
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -191,6 +249,10 @@
             
             h1 {
                 font-size: 28px;
+            }
+            
+            .section-title {
+                font-size: 20px;
             }
         }
     </style>
@@ -205,6 +267,9 @@
         <p class="subtitle">Join the LifeCharter Incubator — a free 90-minute workshop</p>
         
         <form id="registrationForm">
+            <!-- Contact Information -->
+            <h2 class="section-title">Contact Information</h2>
+            
             <div class="form-row">
                 <div class="form-group">
                     <label for="firstName" class="required">First Name</label>
@@ -225,6 +290,138 @@
             <div class="form-group">
                 <label for="phone" class="required">Phone Number</label>
                 <input type="tel" id="phone" name="phone" required placeholder="Enter phone number...">
+            </div>
+            
+            <!-- Personal Growth Journey -->
+            <h2 class="section-title">Personal Growth Journey</h2>
+            
+            <div class="form-group">
+                <label class="required">Where are you on your personal growth journey? (select one)</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="journey1" name="growthJourney" value="lost" required>
+                        <label for="journey1">I feel completely lost and unsure of who I am or what I want</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey2" name="growthJourney" value="want_change">
+                        <label for="journey2">I know I want change but don't know where to start</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey3" name="growthJourney" value="need_clarity">
+                        <label for="journey3">I have a sense of direction, but I need clarity and a solid plan</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey4" name="growthJourney" value="aligned">
+                        <label for="journey4">I feel aligned and want support to take the next step in my purpose</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="journey5" name="growthJourney" value="uncertain">
+                        <label for="journey5">Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Areas of Misalignment -->
+            <h2 class="section-title">Areas of Misalignment</h2>
+            
+            <div class="form-group">
+                <label class="required">What area(s) of life feel most out of alignment right now? (check all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area1" name="misalignment" value="Relationships">
+                        <label for="area1">Relationships</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area2" name="misalignment" value="Health & Well-being">
+                        <label for="area2">Health & Well-being</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area3" name="misalignment" value="Finances">
+                        <label for="area3">Finances</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area4" name="misalignment" value="Life Balance">
+                        <label for="area4">Life Balance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area5" name="misalignment" value="Career / Work / Calling">
+                        <label for="area5">Career / Work / Calling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area6" name="misalignment" value="Spiritual Life">
+                        <label for="area6">Spiritual Life</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area7" name="misalignment" value="Confidence & Self-worth">
+                        <label for="area7">Confidence & Self-worth</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="area8" name="misalignment" value="Other/Uncertain">
+                        <label for="area8">Other/Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Desired Outcomes -->
+            <h2 class="section-title">Desired Outcomes</h2>
+            
+            <div class="form-group">
+                <label class="required">What would you love to walk away with after the 90-minute Incubator? (select all that apply)</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome1" name="outcomes" value="Clarity on who I am">
+                        <label for="outcome1">Clarity on who I am and what I want</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome2" name="outcomes" value="Clear vision and plan">
+                        <label for="outcome2">A clear vision and plan for my next chapter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome3" name="outcomes" value="Tools to shift limiting beliefs">
+                        <label for="outcome3">Tools to shift the limiting beliefs that are holding me back</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome4" name="outcomes" value="Reconnection to purpose">
+                        <label for="outcome4">A deep reconnection to my purpose and inner wisdom</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome5" name="outcomes" value="Soulful business strategy">
+                        <label for="outcome5">A soulful business strategy that doesn't require hustle</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="outcome6" name="outcomes" value="All of the above">
+                        <label for="outcome6">All of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Challenges and Readiness -->
+            <h2 class="section-title">Challenges and Readiness</h2>
+            
+            <div class="form-group">
+                <label class="required">Are you willing to engage with the community during the Incubator (camera on, open heart, present presence)?</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="ready1" name="readiness" value="yes_all_in" required>
+                        <label for="ready1">Yes, I'm in. I know this is for me.</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="ready2" name="readiness" value="want_to_but_questions">
+                        <label for="ready2">I want to, but I have questions</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="ready3" name="readiness" value="cant_make_full_time">
+                        <label for="ready3">No, I can't make the full time</label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Open Reflection -->
+            <h2 class="section-title">Open Reflection</h2>
+            
+            <div class="form-group">
+                <label for="reflection">Anything you'd like us to know about your journey, your heart, or what drew you here?</label>
+                <textarea id="reflection" name="reflection" placeholder="Type here..."></textarea>
             </div>
             
             <button type="submit" class="btn-primary" id="submitBtn">Register Now</button>
@@ -260,6 +457,22 @@
             const email = document.getElementById('email').value.trim();
             const phone = document.getElementById('phone').value.trim();
             
+            // Get survey responses
+            const growthJourney = document.querySelector('input[name="growthJourney"]:checked')?.value || '';
+            const misalignment = Array.from(document.querySelectorAll('input[name="misalignment"]:checked')).map(cb => cb.value).join(', ');
+            const outcomes = Array.from(document.querySelectorAll('input[name="outcomes"]:checked')).map(cb => cb.value).join(', ');
+            const readiness = document.querySelector('input[name="readiness"]:checked')?.value || '';
+            const reflection = document.getElementById('reflection').value.trim();
+            
+            // Build custom fields for survey data
+            const customFields = {
+                growthJourney: growthJourney,
+                misalignmentAreas: misalignment,
+                desiredOutcomes: outcomes,
+                readiness: readiness,
+                reflection: reflection
+            };
+            
             try {
                 // Step 1: Create contact in Global Control
                 const contactResponse = await fetch(`${GC_API_URL}/contacts`, {
@@ -272,7 +485,8 @@
                         email: email,
                         firstName: firstName,
                         lastName: lastName,
-                        phone: phone
+                        phone: phone,
+                        customFields: customFields
                     })
                 });
                 
