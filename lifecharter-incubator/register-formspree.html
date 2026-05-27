@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LCI Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: 50px auto; padding: 20px; background: #f5f1e8; }
+        .container { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2f312f; text-align: center; font-size: 32px; margin-bottom: 10px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 30px; }
+        .section-title { color: #cba488; font-size: 22px; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #dad2b9; }
+        .field { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="email"], input[type="tel"], textarea { width: 100%; padding: 12px; border: 2px solid #dad2b9; border-radius: 5px; font-size: 16px; font-family: Arial; }
+        textarea { resize: vertical; min-height: 100px; }
+        .radio-group, .checkbox-group { display: flex; flex-direction: column; gap: 10px; }
+        .radio-item, .checkbox-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: #f5f1e8; border-radius: 5px; }
+        .radio-item input, .checkbox-item input { margin-top: 3px; }
+        .radio-item label, .checkbox-item label { margin: 0; font-weight: normal; cursor: pointer; }
+        button { background: #cba488; color: white; padding: 18px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
+        button:hover { background: #c4b792; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LCI Registration</h1>
+        <p class="subtitle">LifeCharter Incubator — June 4, 2026 at 5:00 PM MT</p>
+        
+        <!-- Using Formspree for form submission -->
+        <form action="https://formspree.io/f/xnqevjdr" method="POST">
+            
+            <h2 class="section-title">Contact Information</h2>
+            
+            <div class="field">
+                <label>First Name *</label>
+                <input type="text" name="firstName" required>
+            </div>
+            
+            <div class="field">
+                <label>Last Name *</label>
+                <input type="text" name="lastName" required>
+            </div>
+            
+            <div class="field">
+                <label>Email *</label>
+                <input type="email" name="email" required>
+            </div>
+            
+            <div class="field">
+                <label>Phone Number *</label>
+                <input type="tel" name="phone" required>
+            </div>
+            
+            <h2 class="section-title">Personal Growth Journey</h2>
+            
+            <div class="field">
+                <label>Where are you on your personal growth journey? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="lost" id="j1" required>
+                        <label for="j1">I feel completely lost and unsure of who I am or what I want</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="want_change" id="j2">
+                        <label for="j2">I know I want change but don't know where to start</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="need_clarity" id="j3">
+                        <label for="j3">I have a sense of direction, but I need clarity and a solid plan</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="aligned" id="j4">
+                        <label for="j4">I feel aligned and want support to take the next step</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="growthJourney" value="uncertain" id="j5">
+                        <label for="j5">Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Areas of Misalignment</h2>
+            
+            <div class="field">
+                <label>What area(s) of life feel most out of alignment? *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Relationships" id="m1">
+                        <label for="m1">Relationships</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Health & Well-being" id="m2">
+                        <label for="m2">Health & Well-being</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Finances" id="m3">
+                        <label for="m3">Finances</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Life Balance" id="m4">
+                        <label for="m4">Life Balance</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Career / Work / Calling" id="m5">
+                        <label for="m5">Career / Work / Calling</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Spiritual Life" id="m6">
+                        <label for="m6">Spiritual Life</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Confidence & Self-worth" id="m7">
+                        <label for="m7">Confidence & Self-worth</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="misalignment" value="Other/Uncertain" id="m8">
+                        <label for="m8">Other/Uncertain</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Desired Outcomes</h2>
+            
+            <div class="field">
+                <label>What would you love to walk away with? *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Clarity on who I am" id="o1">
+                        <label for="o1">Clarity on who I am and what I want</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="A clear vision and plan" id="o2">
+                        <label for="o2">A clear vision and plan for my next chapter</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Tools to shift limiting beliefs" id="o3">
+                        <label for="o3">Tools to shift the limiting beliefs holding me back</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Reconnection to purpose" id="o4">
+                        <label for="o4">A deep reconnection to my purpose and inner wisdom</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="Soulful business strategy" id="o5">
+                        <label for="o5">A soulful business strategy that doesn't require hustle</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="outcomes" value="All of the above" id="o6">
+                        <label for="o6">All of the above</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Readiness</h2>
+            
+            <div class="field">
+                <label>Are you willing to engage with the community? *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="Yes, I'm in" id="r1" required>
+                        <label for="r1">Yes, I'm in. I know this is for me.</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="I have questions" id="r2">
+                        <label for="r2">I want to, but I have questions</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" name="readiness" value="Can't make it" id="r3">
+                        <label for="r3">No, I can't make the full time</label>
+                    </div>
+                </div>
+            </div>
+            
+            <h2 class="section-title">Reflection</h2>
+            
+            <div class="field">
+                <label>Anything you'd like us to know?</label>
+                <textarea name="reflection"></textarea>
+            </div>
+            
+            <!-- Hidden field for event info -->
+            <input type="hidden" name="event" value="LifeCharter Incubator - June 4, 2026 at 5pm MT">
+            
+            <button type="submit">Register Now</button>
+        </form>
+    </div>
+</body>
+</html>
