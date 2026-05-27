@@ -486,11 +486,8 @@
                 });
             })
             .then(() => {
-                // Success
-                resultDiv.className = 'result success';
-                resultDiv.innerHTML = '<strong>✓ You are Registered!</strong><br>Welcome, ' + data.firstName + '! Check your email for confirmation.<br>We will see you at the Incubator.';
-                resultDiv.style.display = 'block';
-                form.reset();
+                // Success - redirect to thank you page
+                window.location.href = 'thank-you.html';
             })
             .catch(error => {
                 // Error

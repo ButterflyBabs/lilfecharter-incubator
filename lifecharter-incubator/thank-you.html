@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>You're Registered! - LifeCharter Incubator</title>
+    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --paper: #F5F1E8;
+            --fog: #DAD2B9;
+            --sage: #ADB8A0;
+            --ochre: #C4B792;
+            --clay: #CBA488;
+            --ink: #2F312F;
+            --linework: #8F8875;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', Arial, sans-serif;
+            background-color: var(--paper);
+            color: var(--ink);
+            line-height: 1.7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            padding: 60px 40px;
+            box-shadow: 0 10px 40px rgba(47, 49, 47, 0.1);
+            text-align: center;
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--sage);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 40px;
+            color: white;
+        }
+        
+        h1 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 36px;
+            color: var(--ink);
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            color: var(--linework);
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .details-box {
+            background: var(--paper);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .details-box h2 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 22px;
+            color: var(--clay);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .detail-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--fog);
+        }
+        
+        .detail-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: var(--ink);
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            color: var(--linework);
+        }
+        
+        .next-steps {
+            margin-bottom: 30px;
+        }
+        
+        .next-steps h3 {
+            font-family: 'EB Garamond', Georgia, serif;
+            font-size: 24px;
+            color: var(--ink);
+            margin-bottom: 20px;
+        }
+        
+        .next-steps ul {
+            list-style: none;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .next-steps li {
+            margin-bottom: 12px;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .next-steps li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--sage);
+            font-weight: bold;
+        }
+        
+        .btn-primary {
+            display: inline-block;
+            background: var(--clay);
+            color: white;
+            text-decoration: none;
+            padding: 18px 48px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: var(--ochre);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(203, 164, 136, 0.4);
+        }
+        
+        .contact-info {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--fog);
+            color: var(--linework);
+            font-size: 14px;
+        }
+        
+        .contact-info a {
+            color: var(--clay);
+            text-decoration: none;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 40px 30px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .success-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✓</div>
+        
+        <h1>You are Registered!</h1>
+        <p class="subtitle">Welcome to the LifeCharter Incubator</p>
+        
+        <div class="details-box">
+            <h2>Event Details</h2>
+            <div class="detail-item">
+                <span class="detail-label">What</span>
+                <span class="detail-value">LifeCharter Incubator - Free 90-Minute Workshop</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">When</span>
+                <span class="detail-value">[Date/Time will be emailed to you]</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Where</span>
+                <span class="detail-value">Virtual (Zoom link will be sent via email)</span>
+            </div>
+            <div class="detail-item">
+                <span class="detail-label">Cost</span>
+                <span class="detail-value">FREE</span>
+            </div>
+        </div>
+        
+        <div class="next-steps">
+            <h3>What Happens Next</h3>
+            <ul>
+                <li>Check your email for confirmation and calendar invite</li>
+                <li>Add the event to your calendar</li>
+                <li>Join our private community (link in email)</li>
+                <li>Show up with an open heart and ready to transform</li>
+            </ul>
+        </div>
+        
+        <a href="index.html" class="btn-primary">Return to Home Page</a>
+        
+        <div class="contact-info">
+            <p>Questions? Email us at <a href="mailto:amilynne@amilynnecarroll.com">amilynne@amilynnecarroll.com</a></p>
+            <p style="margin-top: 10px;">We can't wait to see you there!</p>
+        </div>
+    </div>
+</body>
+</html>

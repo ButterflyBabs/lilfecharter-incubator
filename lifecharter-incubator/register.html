@@ -509,16 +509,8 @@
                     console.warn('Tag firing failed, but contact was created');
                 }
                 
-                // Success
-                resultDiv.className = 'result success';
-                resultDiv.innerHTML = `
-                    <strong>✓ You're Registered!</strong><br>
-                    Welcome, ${firstName}! Check your email for confirmation.<br>
-                    We'll see you at the Incubator.
-                `;
-                
-                // Clear form
-                document.getElementById('registrationForm').reset();
+                // Success - redirect to thank you page
+                window.location.href = 'thank-you.html';
                 
             } catch (error) {
                 resultDiv.className = 'result error';
