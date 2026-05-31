@@ -3,7 +3,7 @@
 - **Name:** AmiLynne Carroll
 - **What to call them:** Babs (spiritual name - short for "Bad Ass Butterfly")
 - **Pronouns:** 
-- **Timezone:** 
+- **Timezone:** Denver, CO - Mountain Time (UTC-7 / UTC-6 DST) 
 
 ## Agent Email
 - **Inbox:** mariposa@agentmail.to 
