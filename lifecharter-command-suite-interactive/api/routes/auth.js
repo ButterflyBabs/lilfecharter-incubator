@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const { v4: uuidv4 } = require('uuid');
-const { dbAsync } = require('../database');
+const { dbAsync, dbType } = require('../database');
 const { generateToken } = require('../middleware/auth');
 
 const router = express.Router();
@@ -31,16 +31,17 @@ router.post('/register', async (req, res) => {
 
     // Create user
     const userId = uuidv4();
+    const now = new Date().toISOString();
     await dbAsync.run(
-      `INSERT INTO users (id, email, password, first_name, last_name, business_name) 
-       VALUES (?, ?, ?, ?, ?, ?)`,
-      [userId, email.toLowerCase(), hashedPassword, firstName || null, lastName || null, businessName || null]
+      `INSERT INTO users (id, email, password, first_name, last_name, business_name, created_at, updated_at) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [userId, email.toLowerCase(), hashedPassword, firstName || null, lastName || null, businessName || null, now, now]
     );
 
     // Create default settings
     await dbAsync.run(
-      `INSERT INTO user_settings (id, user_id) VALUES (?, ?)`,
-      [uuidv4(), userId]
+      `INSERT INTO user_settings (id, user_id, created_at, updated_at) VALUES (?, ?, ?, ?)`,
+      [uuidv4(), userId, now, now]
     );
 
     // Initialize module progress
@@ -55,15 +56,15 @@ router.post('/register', async (req, res) => {
 
     for (const mod of defaultModules) {
       await dbAsync.run(
-        `INSERT INTO module_progress (id, user_id, module_id, module_name, status) VALUES (?, ?, ?, ?, ?)`,
-        [uuidv4(), userId, mod.id, mod.name, 'not_started']
+        `INSERT INTO module_progress (id, user_id, module_id, module_name, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        [uuidv4(), userId, mod.id, mod.name, 'not_started', now, now]
       );
     }
 
     // Log activity
     await dbAsync.run(
-      `INSERT INTO activity_log (id, user_id, action, entity_type, details) VALUES (?, ?, ?, ?, ?)`,
-      [uuidv4(), userId, 'USER_REGISTERED', 'user', JSON.stringify({ email })]
+      `INSERT INTO activity_log (id, user_id, action, entity_type, details, created_at) VALUES (?, ?, ?, ?, ?, ?)`,
+      [uuidv4(), userId, 'USER_REGISTERED', 'user', JSON.stringify({ email }), now]
     );
 
     // Generate token
@@ -120,12 +121,13 @@ router.post('/login', async (req, res) => {
     }
 
     // Update last login
-    await dbAsync.run('UPDATE users SET last_login = CURRENT_TIMESTAMP WHERE id = ?', [user.id]);
+    const now = new Date().toISOString();
+    await dbAsync.run('UPDATE users SET last_login = ?, updated_at = ? WHERE id = ?', [now, now, user.id]);
 
     // Log activity
     await dbAsync.run(
-      `INSERT INTO activity_log (id, user_id, action, entity_type) VALUES (?, ?, ?, ?)`,
-      [uuidv4(), user.id, 'USER_LOGIN', 'user']
+      `INSERT INTO activity_log (id, user_id, action, entity_type, created_at) VALUES (?, ?, ?, ?, ?)`,
+      [uuidv4(), user.id, 'USER_LOGIN', 'user', now]
     );
 
     // Generate token

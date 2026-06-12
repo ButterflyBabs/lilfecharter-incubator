@@ -36,10 +36,36 @@ A fully interactive, password-protected LifeCharter Command Suite application wi
 ## Tech Stack
 
 - **Backend**: Node.js, Express.js
-- **Database**: SQLite (file-based)
+- **Database**: In-Memory (with Supabase PostgreSQL support)
 - **Authentication**: JWT tokens, bcrypt
 - **Frontend**: Vanilla JavaScript, CSS3
 - **Deployment**: Vercel (serverless functions)
+
+## Database Options
+
+The app supports multiple database backends:
+
+### Option 1: In-Memory (Default - No Setup Required)
+- Data persists for the lifetime of the serverless function instance
+- Data resets on each deployment or when the function cold-starts
+- Good for testing and demos
+
+### Option 2: Supabase PostgreSQL (Recommended for Production)
+- True persistent storage
+- Free tier available
+- Easy setup
+
+**To enable Supabase:**
+1. Create a free account at [supabase.com](https://supabase.com)
+2. Create a new project
+3. Get your `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` from Project Settings > API
+4. Add them as environment variables in Vercel:
+```bash
+vercel env add SUPABASE_URL
+vercel env add SUPABASE_SERVICE_KEY
+```
+5. Run the SQL setup script in Supabase SQL Editor (see `supabase-setup.sql`)
+6. Redeploy: `vercel --prod`
 
 ## Local Development
 
@@ -193,10 +219,10 @@ The app uses the LifeCharter brand palette:
 
 ## Notes
 
-- SQLite database is stored in `/tmp` on Vercel (ephemeral, resets on each deployment)
-- For production with persistent data, consider migrating to PostgreSQL or MongoDB
+- Default in-memory database resets on each deployment (use Supabase for persistence)
 - JWT tokens expire after 7 days
 - Maximum 5 AI agents per user
+- Health check endpoint at `/api/health` shows current database status
 
 ## License
 

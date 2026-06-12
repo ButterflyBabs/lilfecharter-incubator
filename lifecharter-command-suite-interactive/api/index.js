@@ -3,6 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 require('dotenv').config();
+const { dbType } = require('./database');
 
 const app = express();
 
@@ -42,7 +43,11 @@ app.get('/api/health', (req, res) => {
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    database: {
+      type: dbType,
+      note: dbType === 'memory' ? 'Using in-memory storage (data resets on deployment). Add SUPABASE_URL and SUPABASE_SERVICE_KEY env vars for persistent storage.' : 'Connected'
+    }
   });
 });
 
