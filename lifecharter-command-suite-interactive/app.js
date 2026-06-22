@@ -37,19 +37,7 @@ function getModuleStatusBadge(moduleId) {
     } else if (module.status === 'in_progress') {
         return `${module.progress}%`;
     } else {
-        const moduleOrder = ['brain', 'soul', 'business', 'competitive', 'value', 'offer', 'journey', 'brand'];
-        const currentIndex = moduleOrder.indexOf(moduleId);
-        
-        if (currentIndex === 0) {
-            return 'Start Here';
-        } else if (currentIndex > 0) {
-            const prevModule = moduleOrder[currentIndex - 1];
-            if (moduleProgress[prevModule].status === 'completed') {
-                return 'New';
-            } else {
-                return 'Locked';
-            }
-        }
+        // All modules unlocked - no sequential locking
         return 'New';
     }
 }
@@ -64,19 +52,7 @@ function getModuleStatusClass(moduleId) {
     } else if (module.status === 'in_progress') {
         return 'status-progress';
     } else {
-        const moduleOrder = ['brain', 'soul', 'business', 'competitive', 'value', 'offer', 'journey', 'brand'];
-        const currentIndex = moduleOrder.indexOf(moduleId);
-        
-        if (currentIndex === 0) {
-            return 'status-progress';
-        } else if (currentIndex > 0) {
-            const prevModule = moduleOrder[currentIndex - 1];
-            if (moduleProgress[prevModule].status === 'completed') {
-                return 'status-locked';
-            } else {
-                return 'status-locked';
-            }
-        }
+        // All modules unlocked - show as available
         return 'status-locked';
     }
 }
