@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LifeCharter Command Suite</title>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
         :root {
             --deep-indigo: #1F315B;
@@ -149,6 +150,7 @@
 
         #app { display: none; }
 
+        /* Top Navigation - Utilities Only */
         .top-nav {
             background: rgba(31, 49, 91, 0.95);
             backdrop-filter: blur(10px);
@@ -173,26 +175,6 @@
             letter-spacing: 1px;
             cursor: pointer;
         }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-link {
-            color: rgba(246, 241, 232, 0.7);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
-            padding: 8px 0;
-            border-bottom: 2px solid transparent;
-            cursor: pointer;
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-            font-family: inherit;
-        }
-        .nav-link:hover, .nav-link.active {
-            color: var(--ivory-light);
-            border-bottom-color: var(--warm-gold);
-        }
         .nav-right { display: flex; align-items: center; gap: 20px; }
         .btn-icon {
             background: none;
@@ -203,6 +185,7 @@
             border-radius: 8px;
             transition: all 0.3s;
             font-size: 18px;
+            position: relative;
         }
         .btn-icon:hover { background: rgba(212, 175, 99, 0.1); color: var(--ivory-light); }
         .user-menu {
@@ -252,28 +235,52 @@
         }
         .user-dropdown-item:hover { background: rgba(212, 175, 99, 0.1); color: var(--ivory-light); }
 
+        /* Search Bar in Top Nav */
+        .nav-search {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(246, 241, 232, 0.05);
+            border: 1px solid rgba(212, 175, 99, 0.2);
+            border-radius: 10px;
+            padding: 10px 16px;
+            min-width: 300px;
+        }
+        .nav-search input {
+            background: none;
+            border: none;
+            color: var(--ivory-light);
+            font-size: 14px;
+            outline: none;
+            width: 100%;
+        }
+        .nav-search input::placeholder { color: rgba(246, 241, 232, 0.4); }
+
         .app-container {
             display: flex;
             margin-top: 70px;
             min-height: calc(100vh - 70px);
         }
+
+        /* Sidebar Navigation */
         .sidebar {
             width: 280px;
             background: rgba(31, 49, 91, 0.5);
             border-right: 1px solid rgba(212, 175, 99, 0.1);
-            padding: 30px 0;
+            padding: 20px 0;
             position: fixed;
             height: calc(100vh - 70px);
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
-        .sidebar-section { margin-bottom: 30px; }
+        .sidebar-section { margin-bottom: 8px; }
         .sidebar-heading {
             font-size: 11px;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             color: rgba(246, 241, 232, 0.5);
-            padding: 0 24px;
-            margin-bottom: 12px;
+            padding: 16px 24px 8px;
         }
         .sidebar-link {
             display: flex;
@@ -300,6 +307,7 @@
             color: var(--warm-gold);
             border-left-color: var(--warm-gold);
         }
+        .sidebar-link-icon { font-size: 18px; width: 24px; text-align: center; }
         .progress-dot {
             width: 8px;
             height: 8px;
@@ -319,10 +327,10 @@
             padding: 12px 24px;
             background: rgba(212, 175, 99, 0.05);
             border: none;
-            border-left: 3px solid var(--warm-gold);
+            border-left: 3px solid transparent;
             color: var(--ivory-light);
             font-family: inherit;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
@@ -330,12 +338,27 @@
             letter-spacing: 0.5px;
         }
         .accordion-header:hover { background: rgba(212, 175, 99, 0.1); }
+        .accordion-header.active {
+            border-left-color: var(--warm-gold);
+            background: rgba(212, 175, 99, 0.1);
+            color: var(--warm-gold);
+        }
         .accordion-icon {
             font-size: 12px;
             transition: transform 0.3s;
         }
         .accordion-content {
-            padding: 8px 0;
+            display: none;
+        }
+        .accordion-content.open {
+            display: block;
+        }
+
+        /* Sidebar Bottom Utility Links */
+        .sidebar-bottom {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(212, 175, 99, 0.1);
         }
 
         .main-content {
@@ -343,6 +366,24 @@
             margin-left: 280px;
             padding: 40px;
         }
+
+        /* Breadcrumb Navigation */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            font-size: 13px;
+            color: rgba(246, 241, 232, 0.6);
+        }
+        .breadcrumb a {
+            color: rgba(246, 241, 232, 0.6);
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .breadcrumb a:hover { color: var(--warm-gold); }
+        .breadcrumb-separator { color: rgba(246, 241, 232, 0.3); }
+        .breadcrumb-current { color: var(--ivory-light); font-weight: 500; }
 
         .welcome-section { margin-bottom: 40px; }
         .welcome-title {
@@ -533,88 +574,52 @@
         .activity-text { font-size: 14px; color: var(--ivory-light); }
         .activity-time { font-size: 12px; color: rgba(246, 241, 232, 0.5); margin-top: 4px; }
 
-        .assessment-container { max-width: 800px; }
-        .question-card {
-            background: rgba(31, 49, 91, 0.3);
-            border: 1px solid rgba(212, 175, 99, 0.1);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-        }
-        .question-number {
-            font-size: 12px;
-            color: var(--warm-gold);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-        .question-text {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
+        /* Mobile Sidebar Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
             color: var(--ivory-light);
-        }
-        .question-input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(246, 241, 232, 0.05);
-            border: 1px solid rgba(246, 241, 232, 0.15);
-            border-radius: 10px;
-            color: var(--ivory-light);
-            font-size: 15px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-        }
-        .question-input:focus { outline: none; border-color: var(--warm-gold); }
-        .question-select {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(246, 241, 232, 0.05);
-            border: 1px solid rgba(246, 241, 232, 0.15);
-            border-radius: 10px;
-            color: var(--ivory-light);
-            font-size: 15px;
-            font-family: inherit;
+            font-size: 24px;
             cursor: pointer;
+            padding: 8px;
         }
-        .question-select:focus { outline: none; border-color: var(--warm-gold); }
-        .question-select option { background: var(--deep-indigo); color: var(--ivory-light); }
 
-        .section-nav {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-        .section-nav-btn {
-            padding: 10px 20px;
-            background: rgba(31, 49, 91, 0.3);
-            border: 1px solid rgba(212, 175, 99, 0.15);
-            border-radius: 8px;
-            color: rgba(246, 241, 232, 0.7);
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: inherit;
-            font-size: 14px;
-        }
-        .section-nav-btn:hover { border-color: rgba(212, 175, 99, 0.3); color: var(--ivory-light); }
-        .section-nav-btn.active {
-            background: rgba(212, 175, 99, 0.15);
-            border-color: var(--warm-gold);
-            color: var(--warm-gold);
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 99;
         }
 
         @media (max-width: 1200px) {
             .workspace-grid { grid-template-columns: 1fr; }
             .progress-overview { grid-template-columns: repeat(2, 1fr); }
         }
+
         @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main-content { margin-left: 0; }
-            .nav-links { display: none; }
-            .auth-card { padding: 32px 24px; }
+            .mobile-menu-toggle { display: block; }
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                z-index: 100;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.open {
+                display: block;
+            }
+            .main-content { margin-left: 0; padding: 20px; }
+            .nav-search { display: none; }
+            .top-nav { padding: 0 20px; }
             .welcome-title { font-size: 32px; }
+            .auth-card { padding: 32px 24px; }
         }
     </style>
 </head>
@@ -698,18 +703,38 @@
     <div id="app">
         <nav class="top-nav">
             <div class="nav-left">
-                <div class="logo" onclick="showDashboard()">⚡ COMMAND SUITE</div>
-                <div class="nav-links">
-                    <button class="nav-link active" onclick="showDashboard()">Dashboard</button>
-                    <button class="nav-link" onclick="showAssessments()">Assessments</button>
-                    <button class="nav-link" onclick="showAIAgents()">AI Tools</button>
-                    <button class="nav-link" onclick="showContentCalendar()">Content</button>
-                    <button class="nav-link" onclick="showSettings()">Settings</button>
-                </div>
+                <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">☰</button>
+                <div class="logo" onclick="showCommandCenter()">⚡ COMMAND SUITE</div>
             </div>
-            <div class="nav-right">
-                <button class="btn-icon" title="Notifications" onclick="showNotifications()">🔔</button>
-                <button class="btn-icon" title="Help" onclick="showHelp()">❓</button>
+            
+            <!-- Search Bar -->
+            <div class="nav-search">
+                <span>🔍</span>
+                <input type="text" placeholder="Search / Ask Command Suite..." id="global-search">
+            </div>
+            
+            <div class="nav-right" style="position: relative;">
+                <!-- Notifications Bell -->
+                <button class="btn-icon" id="notifications-btn" title="Notifications" onclick="toggleNotifications()" style="position: relative;">
+                    🔔
+                    <span id="notification-badge" style="position: absolute; top: -4px; right: -4px; background: var(--sacred-teal); color: white; font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 10px; min-width: 16px; display: none; align-items: center; justify-content: center;">0</span>
+                </button>
+                
+                <!-- Notifications Panel -->
+                <div id="notifications-panel" style="display: none; position: absolute; top: 100%; right: 60px; width: 360px; background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); margin-top: 12px; z-index: 1000; backdrop-filter: blur(20px);">
+                    <!-- Content populated by JavaScript -->
+                </div>
+                
+                <!-- Help Button -->
+                <button class="btn-icon" id="support-btn" title="Help & Support" onclick="toggleSupportPanel()" style="position: relative;">
+                    ❓
+                </button>
+                
+                <!-- Support Panel -->
+                <div id="support-panel" style="display: none; position: absolute; top: 100%; right: 20px; width: 400px; background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.4); margin-top: 12px; z-index: 1000; backdrop-filter: blur(20px);">
+                    <!-- Content populated by JavaScript -->
+                </div>
+                
                 <div class="user-menu" onclick="toggleUserDropdown()">
                     <div class="user-avatar" id="user-avatar">U</div>
                     <span class="user-name" id="user-name">User</span>
@@ -722,201 +747,119 @@
             </div>
         </nav>
 
+        <!-- Mobile Sidebar Overlay -->
+        <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
         <div class="app-container">
-            <aside class="sidebar">
-                <!-- Foundation Modules -->
+            <aside class="sidebar" id="sidebar">
+                <!-- 1. Command Center -->
                 <div class="sidebar-section">
-                    <button class="accordion-header" onclick="toggleAccordion('foundation-modules')">
-                        <span>📋 Foundation Modules</span>
-                        <span class="accordion-icon" id="foundation-modules-icon">▼</span>
+                    <button class="sidebar-link" id="nav-command-center" onclick="showCommandCenter()">
+                        <span class="sidebar-link-icon">🎯</span>
+                        <span>Command Center</span>
                     </button>
-                    <div class="accordion-content" id="foundation-modules" style="display: block;">
-                        <button class="sidebar-link" id="nav-brain" onclick="showBrainAssessment()">
-                            <span>🧠</span>
-                            <span>Brain.md Assessment</span>
-                            <span class="progress-dot not-started" id="brain-dot"></span>
+                </div>
+
+                <!-- 2. My Roadmap -->
+                <div class="sidebar-section">
+                    <button class="sidebar-link" id="nav-roadmap" onclick="showMyRoadmap()">
+                        <span class="sidebar-link-icon">🗺️</span>
+                        <span>My Roadmap</span>
+                    </button>
+                </div>
+
+                <!-- 3. Foundation -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" id="accordion-foundation" onclick="toggleAccordion('foundation')">
+                        <span>📋 Foundation</span>
+                        <span class="accordion-icon" id="icon-foundation">▼</span>
+                    </button>
+                    <div class="accordion-content" id="content-foundation">
+                        <button class="sidebar-link" id="nav-brain" onclick="showBrainOverview()">
+                            <span class="sidebar-link-icon">🧠</span>
+                            <span>Brain.md</span>
+                            <span class="progress-dot not-started" id="dot-brain"></span>
                         </button>
-                        <button class="sidebar-link" id="nav-soul" onclick="showSoulAssessment()">
-                            <span>✨</span>
-                            <span>Soul.md Assessment</span>
-                            <span class="progress-dot not-started" id="soul-dot"></span>
+                        <button class="sidebar-link" id="nav-soul" onclick="showSoulOverview()">
+                            <span class="sidebar-link-icon">✨</span>
+                            <span>Soul.md</span>
+                            <span class="progress-dot not-started" id="dot-soul"></span>
                         </button>
-                        <button class="sidebar-link" id="nav-business" onclick="showBusinessAssessment()">
-                            <span>📊</span>
-                            <span>Business Command Audit</span>
-                            <span class="progress-dot not-started" id="business-dot"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-competitive" onclick="showCompetitivePositioning()">
-                            <span>🏆</span>
-                            <span>Competitive Positioning</span>
-                            <span class="progress-dot not-started" id="competitive-dot"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-value" onclick="showValueProposition()">
-                            <span>💎</span>
+                        <button class="sidebar-link" id="nav-vp" onclick="showValueProposition()">
+                            <span class="sidebar-link-icon">💎</span>
                             <span>Value Proposition</span>
-                            <span class="progress-dot not-started" id="value-dot"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-offer" onclick="showOfferArchitecture()">
-                            <span>🎯</span>
-                            <span>Offer Architecture</span>
-                            <span class="progress-dot not-started" id="offer-dot"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-journey" onclick="showClientJourney()">
-                            <span>🗺️</span>
-                            <span>Client Journey Map</span>
-                            <span class="progress-dot not-started" id="journey-dot"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-brand" onclick="showBrandVoice()">
-                            <span>🎨</span>
-                            <span>Brand Voice & Messaging</span>
-                            <span class="progress-dot not-started" id="brand-dot"></span>
+                            <span class="progress-dot not-started" id="dot-vp"></span>
                         </button>
                     </div>
                 </div>
 
-                <!-- AI & Automation -->
+                <!-- 4. Business Command -->
                 <div class="sidebar-section">
-                    <button class="accordion-header" onclick="toggleAccordion('ai-automation')">
-                        <span>🤖 AI & Automation</span>
-                        <span class="accordion-icon" id="ai-automation-icon">▼</span>
+                    <button class="accordion-header" id="accordion-business" onclick="toggleAccordion('business')">
+                        <span>⚙️ Business Command</span>
+                        <span class="accordion-icon" id="icon-business">▼</span>
                     </button>
-                    <div class="accordion-content" id="ai-automation" style="display: block;">
-                        <button class="sidebar-link" onclick="showAIAgents()">
-                            <span>🤖</span>
-                            <span>My AI Agents</span>
-                            <span class="progress-dot not-started"></span>
+                    <div class="accordion-content" id="content-business">
+                        <button class="sidebar-link" id="nav-sales" onclick="showSalesCommand()">
+                            <span class="sidebar-link-icon">💼</span>
+                            <span>Sales Command</span>
+                            <span class="progress-dot not-started" id="dot-sales"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-ops" onclick="showOperationsCommand()">
+                            <span class="sidebar-link-icon">⚡</span>
+                            <span>Operations Command</span>
+                            <span class="progress-dot not-started" id="dot-ops"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-marketing" onclick="showMarketingCommand()">
+                            <span class="sidebar-link-icon">📢</span>
+                            <span>Marketing Command</span>
+                            <span class="progress-dot not-started" id="dot-marketing"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-finance" onclick="showFinanceCommand()">
+                            <span class="sidebar-link-icon">💰</span>
+                            <span>Finance Command</span>
+                            <span class="progress-dot not-started" id="dot-finance"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-content" onclick="showContentCommand()">
+                            <span class="sidebar-link-icon">📝</span>
+                            <span>Content Command</span>
+                            <span class="progress-dot not-started" id="dot-content"></span>
                         </button>
                     </div>
                 </div>
 
-                <!-- Content & Marketing -->
+                <!-- 5. AI Tools -->
                 <div class="sidebar-section">
-                    <button class="accordion-header" onclick="toggleAccordion('content-marketing')">
-                        <span>📢 Content & Marketing</span>
-                        <span class="accordion-icon" id="content-marketing-icon">▼</span>
+                    <button class="sidebar-link" id="nav-ai-tools" onclick="showAIAgents()">
+                        <span class="sidebar-link-icon">🤖</span>
+                        <span>AI Tools</span>
                     </button>
-                    <div class="accordion-content" id="content-marketing" style="display: block;">
-                        <button class="sidebar-link" onclick="showContentCalendar()">
-                            <span>📅</span>
-                            <span>Content Calendar</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="show90DayContentSystem()">
-                            <span>📆</span>
-                            <span>90-Day Content System</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showEmailNurtureSequences()">
-                            <span>📧</span>
-                            <span>Email Nurture Sequences</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showWeeklyArticleSystem()">
-                            <span>📝</span>
-                            <span>Weekly Article System</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showSocialMediaSystem()">
-                            <span>📱</span>
-                            <span>Social Media System</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showLeadMagnets()">
-                            <span>🧲</span>
-                            <span>Lead Magnet Framework</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showContentRepurposing()">
-                            <span>🔄</span>
-                            <span>Content Repurposing</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Sales & Delivery -->
+                <!-- 6. Library -->
                 <div class="sidebar-section">
-                    <button class="accordion-header" onclick="toggleAccordion('sales-delivery')">
-                        <span>💼 Sales & Delivery</span>
-                        <span class="accordion-icon" id="sales-delivery-icon">▼</span>
+                    <button class="sidebar-link" id="nav-library" onclick="showLibrary()">
+                        <span class="sidebar-link-icon">📚</span>
+                        <span>Library</span>
                     </button>
-                    <div class="accordion-content" id="sales-delivery" style="display: block;">
-                        <button class="sidebar-link" onclick="showSalesScripts()">
-                            <span>📞</span>
-                            <span>Sales Call Scripts</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showProposals()">
-                            <span>📄</span>
-                            <span>Proposals & Contracts</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showDeliveryFrameworks()">
-                            <span>🎯</span>
-                            <span>Delivery Frameworks</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showObjectionHandling()">
-                            <span>🛡️</span>
-                            <span>Objection Handling</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showClientOnboarding()">
-                            <span>🚀</span>
-                            <span>Client Onboarding</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showProgressTracking()">
-                            <span>📊</span>
-                            <span>Progress Tracking</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                    </div>
                 </div>
 
-                <!-- Operations & Systems -->
-                <div class="sidebar-section">
-                    <button class="accordion-header" onclick="toggleAccordion('operations-systems')">
-                        <span>⚙️ Operations & Systems</span>
-                        <span class="accordion-icon" id="operations-systems-icon">▼</span>
+                <!-- Bottom Utility Links -->
+                <div class="sidebar-bottom">
+                    <div class="sidebar-heading">Settings</div>
+                    <button class="sidebar-link" id="nav-profile" onclick="showProfile()">
+                        <span class="sidebar-link-icon">👤</span>
+                        <span>Profile</span>
                     </button>
-                    <div class="accordion-content" id="operations-systems" style="display: block;">
-                        <button class="sidebar-link" onclick="showCEODashboard()">
-                            <span>📈</span>
-                            <span>CEO Dashboard</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showTeamCommunication()">
-                            <span>💬</span>
-                            <span>Team Communication</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showMeetingAgendas()">
-                            <span>📅</span>
-                            <span>Meeting Agendas</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showSOPs()">
-                            <span>📚</span>
-                            <span>SOP Library</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showTechStack()">
-                            <span>🔧</span>
-                            <span>Tech Stack Manager</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                        <button class="sidebar-link" onclick="showDocumentVault()">
-                            <span>📁</span>
-                            <span>Document Vault</span>
-                            <span class="progress-dot not-started"></span>
-                        </button>
-                    </div>
+                    <button class="sidebar-link" id="nav-settings" onclick="showSettings()">
+                        <span class="sidebar-link-icon">⚙️</span>
+                        <span>Settings</span>
+                    </button>
                 </div>
             </aside>
 
             <main class="main-content" id="main-content">
-                <!-- Content loaded dynamically -->
+                <!-- Dynamic content loaded here -->
             </main>
         </div>
     </div>
