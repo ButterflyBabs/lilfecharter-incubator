@@ -2027,9 +2027,18 @@ let brainAssessmentState = {
     currentView: 'overview' // 'overview', 'iframe', 'results'
 };
 
+// Wrapper functions for sidebar navigation
+function showBrainOverview() {
+    setActiveNav('brain');
+    showBrainAssessment();
+}
+
+function showSoulOverview() {
+    setActiveNav('soul');
+    showSoulAssessment();
+}
+
 async function showBrainAssessment() {
-    setActiveNav('assessments');
-    
     // Load saved progress from Supabase
     await loadBrainAssessmentState();
     
@@ -2497,8 +2506,6 @@ let soulAssessmentState = {
 };
 
 async function showSoulAssessment() {
-    setActiveNav('assessments');
-    
     // Load saved progress from Supabase
     await loadSoulAssessmentState();
     
