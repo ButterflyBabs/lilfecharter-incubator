@@ -1220,6 +1220,9 @@ function toggleAccordion(id) {
 
 // Load Dashboard Data
 async function loadDashboard() {
+    // Initialize notifications
+    initNotifications();
+    
     // DEMO MODE: Skip API calls, use local data
     if (DEMO_MODE) {
         console.log('Demo mode: Loading dashboard from localStorage');
@@ -1332,9 +1335,8 @@ function formatTime(timestamp) {
 
 // Navigation Functions
 function showDashboard() {
-    setActiveNav('dashboard');
-    document.getElementById('main-content').innerHTML = getDashboardHTML();
-    loadDashboard();
+    // Legacy function - redirects to Command Center
+    showCommandCenter();
 }
 
 function showAssessments() {
@@ -1410,8 +1412,373 @@ async function loadAssessmentProgress() {
 }
 
 function setActiveNav(page) {
-    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-    // Find and activate the appropriate nav link
+    // Remove active from all sidebar links
+    document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+    document.querySelectorAll('.accordion-header').forEach(header => header.classList.remove('active'));
+    
+    // Activate the appropriate nav link
+    const navMap = {
+        'command-center': 'nav-command-center',
+        'roadmap': 'nav-roadmap',
+        'brain': 'nav-brain',
+        'soul': 'nav-soul',
+        'value-proposition': 'nav-vp',
+        'sales-command': 'nav-sales',
+        'operations-command': 'nav-ops',
+        'marketing-command': 'nav-marketing',
+        'finance-command': 'nav-finance',
+        'content-command': 'nav-content',
+        'ai-tools': 'nav-ai-tools',
+        'library': 'nav-library',
+        'profile': 'nav-profile',
+        'settings': 'nav-settings'
+    };
+    
+    const navId = navMap[page];
+    if (navId) {
+        const navElement = document.getElementById(navId);
+        if (navElement) {
+            navElement.classList.add('active');
+            
+            // If this is inside an accordion, expand it
+            const parentAccordion = navElement.closest('.accordion-content');
+            if (parentAccordion) {
+                parentAccordion.classList.add('open');
+                const accordionId = parentAccordion.id.replace('content-', '');
+                const header = document.getElementById('accordion-' + accordionId);
+                const icon = document.getElementById('icon-' + accordionId);
+                if (header) header.classList.add('active');
+                if (icon) icon.style.transform = 'rotate(180deg)';
+            }
+        }
+    }
+}
+
+// ============================================
+// NEW NAVIGATION FUNCTIONS (Phase 1 UX Redesign)
+// ============================================
+
+function showCommandCenter() {
+    setActiveNav('command-center');
+    loadDashboard();
+}
+
+function showMyRoadmap() {
+    setActiveNav('roadmap');
+    // For now, show a placeholder - this will be implemented in Phase 2
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🗺️ My Roadmap</h1>
+            <p class="welcome-subtitle">Your personalized journey through the Command Suite.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🚧</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                The My Roadmap feature is being built to show your personalized path through all modules based on your assessment results.
+            </p>
+        </div>
+    `;
+}
+
+function toggleAccordion(accordionId) {
+    const content = document.getElementById('content-' + accordionId);
+    const header = document.getElementById('accordion-' + accordionId);
+    const icon = document.getElementById('icon-' + accordionId);
+    
+    if (content && header) {
+        const isOpen = content.classList.contains('open');
+        
+        if (isOpen) {
+            content.classList.remove('open');
+            header.classList.remove('active');
+            if (icon) icon.style.transform = 'rotate(0deg)';
+        } else {
+            content.classList.add('open');
+            header.classList.add('active');
+            if (icon) icon.style.transform = 'rotate(180deg)';
+        }
+    }
+}
+
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('open');
+    }
+}
+
+// Notification System
+let notifications = JSON.parse(localStorage.getItem('lccs_notifications') || '[]');
+let unreadCount = notifications.filter(n => !n.read).length;
+
+function toggleNotifications() {
+    const panel = document.getElementById('notifications-panel');
+    const supportPanel = document.getElementById('support-panel');
+    
+    // Close support panel if open
+    if (supportPanel) supportPanel.style.display = 'none';
+    
+    if (panel) {
+        const isVisible = panel.style.display === 'block';
+        panel.style.display = isVisible ? 'none' : 'block';
+        
+        if (!isVisible) {
+            renderNotifications();
+        }
+    }
+}
+
+function renderNotifications() {
+    const panel = document.getElementById('notifications-panel');
+    if (!panel) return;
+    
+    const unreadNotifications = notifications.filter(n => !n.read);
+    const readNotifications = notifications.filter(n => n.read).slice(0, 5);
+    
+    let html = `
+        <div style="padding: 20px; border-bottom: 1px solid rgba(212, 175, 99, 0.2);">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--warm-gold); margin: 0;">Notifications</h3>
+                ${unreadNotifications.length > 0 ? `<button onclick="markAllNotificationsRead()" style="background: none; border: none; color: var(--sacred-teal); font-size: 12px; cursor: pointer;">Mark all read</button>` : ''}
+            </div>
+        </div>
+        <div style="max-height: 400px; overflow-y: auto;">
+    `;
+    
+    if (unreadNotifications.length === 0 && readNotifications.length === 0) {
+        html += `
+            <div style="padding: 40px; text-align: center; color: rgba(246, 241, 232, 0.5);">
+                <div style="font-size: 48px; margin-bottom: 16px;">🔔</div>
+                <p>No notifications yet</p>
+            </div>
+        `;
+    } else {
+        // Unread notifications
+        unreadNotifications.forEach(n => {
+            html += `
+                <div onclick="handleNotificationClick('${n.id}')" style="padding: 16px 20px; border-bottom: 1px solid rgba(212, 175, 99, 0.1); cursor: pointer; background: rgba(46, 124, 131, 0.1); transition: background 0.2s;">
+                    <div style="display: flex; gap: 12px;">
+                        <span style="font-size: 20px;">${n.icon || '📢'}</span>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; color: var(--ivory-light); font-weight: 500;">${n.title}</div>
+                            <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6); margin-top: 4px;">${n.message}</div>
+                            <div style="font-size: 11px; color: rgba(246, 241, 232, 0.4); margin-top: 8px;">${formatTimeAgo(n.timestamp)}</div>
+                        </div>
+                        <div style="width: 8px; height: 8px; background: var(--sacred-teal); border-radius: 50%; margin-top: 4px;"></div>
+                    </div>
+                </div>
+            `;
+        });
+        
+        // Read notifications
+        readNotifications.forEach(n => {
+            html += `
+                <div onclick="handleNotificationClick('${n.id}')" style="padding: 16px 20px; border-bottom: 1px solid rgba(212, 175, 99, 0.1); cursor: pointer; opacity: 0.7; transition: background 0.2s;">
+                    <div style="display: flex; gap: 12px;">
+                        <span style="font-size: 20px;">${n.icon || '📢'}</span>
+                        <div style="flex: 1;">
+                            <div style="font-size: 14px; color: var(--ivory-light);">${n.title}</div>
+                            <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6); margin-top: 4px;">${n.message}</div>
+                            <div style="font-size: 11px; color: rgba(246, 241, 232, 0.4); margin-top: 8px;">${formatTimeAgo(n.timestamp)}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+    }
+    
+    html += `</div>`;
+    panel.innerHTML = html;
+}
+
+function formatTimeAgo(timestamp) {
+    const now = new Date();
+    const then = new Date(timestamp);
+    const diffMs = now - then;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return then.toLocaleDateString();
+}
+
+function markAllNotificationsRead() {
+    notifications.forEach(n => n.read = true);
+    localStorage.setItem('lccs_notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+    renderNotifications();
+}
+
+function handleNotificationClick(notificationId) {
+    const notification = notifications.find(n => n.id === notificationId);
+    if (notification) {
+        notification.read = true;
+        localStorage.setItem('lccs_notifications', JSON.stringify(notifications));
+        updateNotificationBadge();
+        
+        // Handle navigation based on notification type
+        if (notification.action === 'module') {
+            const moduleMap = {
+                'brain': showBrainOverview,
+                'soul': showSoulOverview,
+                'value-proposition': showValueProposition,
+                'sales-command': showSalesCommand
+            };
+            if (moduleMap[notification.moduleId]) {
+                moduleMap[notification.moduleId]();
+            }
+        }
+        
+        toggleNotifications(); // Close panel
+    }
+}
+
+function updateNotificationBadge() {
+    const badge = document.getElementById('notification-badge');
+    if (badge) {
+        const unreadCount = notifications.filter(n => !n.read).length;
+        badge.textContent = unreadCount;
+        badge.style.display = unreadCount > 0 ? 'flex' : 'none';
+    }
+}
+
+function addNotification(title, message, options = {}) {
+    const notification = {
+        id: Date.now().toString(),
+        title,
+        message,
+        timestamp: new Date().toISOString(),
+        read: false,
+        icon: options.icon || '📢',
+        action: options.action || null,
+        moduleId: options.moduleId || null
+    };
+    
+    notifications.unshift(notification);
+    // Keep only last 50 notifications
+    notifications = notifications.slice(0, 50);
+    localStorage.setItem('lccs_notifications', JSON.stringify(notifications));
+    updateNotificationBadge();
+}
+
+// Support Panel
+function toggleSupportPanel() {
+    const panel = document.getElementById('support-panel');
+    const notificationsPanel = document.getElementById('notifications-panel');
+    
+    // Close notifications panel if open
+    if (notificationsPanel) notificationsPanel.style.display = 'none';
+    
+    if (panel) {
+        const isVisible = panel.style.display === 'block';
+        panel.style.display = isVisible ? 'none' : 'block';
+        
+        if (!isVisible) {
+            renderSupportPanel();
+        }
+    }
+}
+
+function renderSupportPanel() {
+    const panel = document.getElementById('support-panel');
+    if (!panel) return;
+    
+    panel.innerHTML = `
+        <div style="padding: 20px; border-bottom: 1px solid rgba(212, 175, 99, 0.2);">
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--warm-gold); margin: 0;">Help & Support</h3>
+        </div>
+        <div style="padding: 20px;">
+            <div style="margin-bottom: 24px;">
+                <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(246, 241, 232, 0.5); margin-bottom: 12px;">Quick Help</h4>
+                <button onclick="showGettingStarted()" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.1); border-radius: 10px; color: var(--ivory-light); cursor: pointer; margin-bottom: 8px; text-align: left;">
+                    <span>🚀</span>
+                    <span>Getting Started Guide</span>
+                </button>
+                <button onclick="showFAQ()" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.1); border-radius: 10px; color: var(--ivory-light); cursor: pointer; margin-bottom: 8px; text-align: left;">
+                    <span>❓</span>
+                    <span>FAQ</span>
+                </button>
+                <button onclick="showVideoTutorials()" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.1); border-radius: 10px; color: var(--ivory-light); cursor: pointer; text-align: left;">
+                    <span>🎥</span>
+                    <span>Video Tutorials</span>
+                </button>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(246, 241, 232, 0.5); margin-bottom: 12px;">Contact</h4>
+                <button onclick="showContactSupport()" style="display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px; background: rgba(46, 124, 131, 0.1); border: 1px solid rgba(46, 124, 131, 0.3); border-radius: 10px; color: var(--sacred-teal); cursor: pointer; text-align: left;">
+                    <span>💬</span>
+                    <span>Contact Support</span>
+                </button>
+            </div>
+            
+            <div>
+                <h4 style="font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: rgba(246, 241, 232, 0.5); margin-bottom: 12px;">Keyboard Shortcuts</h4>
+                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(212, 175, 99, 0.1);">
+                        <span>Search</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 2px 8px; border-radius: 4px;">⌘ K</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(212, 175, 99, 0.1);">
+                        <span>Command Center</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 2px 8px; border-radius: 4px;">⌘ 1</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                        <span>Notifications</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 2px 8px; border-radius: 4px;">⌘ N</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Placeholder functions for support panel
+function showGettingStarted() {
+    alert('Getting Started guide coming soon!');
+}
+
+function showFAQ() {
+    alert('FAQ coming soon!');
+}
+
+function showVideoTutorials() {
+    alert('Video tutorials coming soon!');
+}
+
+function showContactSupport() {
+    alert('Contact support form coming soon!');
+}
+
+// Library placeholder
+function showLibrary() {
+    setActiveNav('library');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📚 Library</h1>
+            <p class="welcome-subtitle">Your resource hub for templates, guides, and assets.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📚</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                The Library will contain all your templates, worksheets, guides, and downloadable resources in one organized place.
+            </p>
+        </div>
+    `;
+}
+
+// Initialize notification badge on load
+function initNotifications() {
+    updateNotificationBadge();
 }
 
 function getDashboardHTML() {
