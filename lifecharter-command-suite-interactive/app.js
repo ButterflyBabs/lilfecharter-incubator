@@ -1481,6 +1481,88 @@ function showMyRoadmap() {
     `;
 }
 
+// New Navigation Function Wrappers (Phase 1 Fix)
+function showFounderSoul() {
+    // Alias for showSoulOverview
+    showSoulAssessment();
+}
+
+function showBusinessBrain() {
+    // Alias for showBrainOverview
+    showBrainAssessment();
+}
+
+function showBusinessCommandAudit() {
+    setActiveNav('business-audit');
+    showBusinessAssessment();
+}
+
+function showBrandVoice() {
+    setActiveNav('brand-voice');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎭 Brand Voice</h1>
+            <p class="welcome-subtitle">Define your unique brand voice and messaging guidelines.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🚧</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                The Brand Voice module will help you define your unique voice, tone, and messaging guidelines.
+            </p>
+        </div>
+    `;
+}
+
+function showCompetitivePositioning() {
+    setActiveNav('positioning');
+    window.open('https://lifecharter-competitive-positioning.vercel.app', '_blank');
+}
+
+function showOfferArchitecture() {
+    setActiveNav('offers');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">💎 Offer Architecture</h1>
+            <p class="welcome-subtitle">Design, price, and position your offers for maximum impact.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🚧</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                The Offer Architecture module will help you design, price, and position your offers.
+            </p>
+        </div>
+    `;
+}
+
+function showClientJourney() {
+    setActiveNav('journey');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🗺️ Client Journey Map</h1>
+            <p class="welcome-subtitle">Map your client's complete experience from discovery to advocacy.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">🚧</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                The Client Journey Map module will help you visualize and optimize every touchpoint.
+            </p>
+        </div>
+    `;
+}
+
+function showMyAITeam() {
+    // Alias for showAIAgents
+    showAIAgents();
+}
+
+function showAssetLibrary() {
+    // Alias for showLibrary
+    showLibrary();
+}
+
 function toggleAccordion(accordionId) {
     const content = document.getElementById('content-' + accordionId);
     const header = document.getElementById('accordion-' + accordionId);

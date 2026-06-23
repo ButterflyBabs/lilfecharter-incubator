@@ -775,85 +775,143 @@
                         <span class="accordion-icon" id="icon-foundation">▼</span>
                     </button>
                     <div class="accordion-content" id="content-foundation">
-                        <button class="sidebar-link" id="nav-brain" onclick="showBrainOverview()">
-                            <span class="sidebar-link-icon">🧠</span>
-                            <span>Brain.md</span>
-                            <span class="progress-dot not-started" id="dot-brain"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-soul" onclick="showSoulOverview()">
+                        <button class="sidebar-link" id="nav-founder-soul" onclick="showFounderSoul()">
                             <span class="sidebar-link-icon">✨</span>
-                            <span>Soul.md</span>
-                            <span class="progress-dot not-started" id="dot-soul"></span>
+                            <span>Founder Soul</span>
+                            <span class="progress-dot not-started" id="dot-founder-soul"></span>
                         </button>
-                        <button class="sidebar-link" id="nav-vp" onclick="showValueProposition()">
-                            <span class="sidebar-link-icon">💎</span>
-                            <span>Value Proposition</span>
-                            <span class="progress-dot not-started" id="dot-vp"></span>
+                        <button class="sidebar-link" id="nav-business-brain" onclick="showBusinessBrain()">
+                            <span class="sidebar-link-icon">🧠</span>
+                            <span>Business Brain</span>
+                            <span class="progress-dot not-started" id="dot-business-brain"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-business-audit" onclick="showBusinessCommandAudit()">
+                            <span class="sidebar-link-icon">📊</span>
+                            <span>Business Command Audit</span>
+                            <span class="progress-dot not-started" id="dot-business-audit"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-brand-voice" onclick="showBrandVoice()">
+                            <span class="sidebar-link-icon">🎭</span>
+                            <span>Brand Voice</span>
+                            <span class="progress-dot not-started" id="dot-brand-voice"></span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 4. Business Command -->
+                <!-- 4. Growth Engine -->
                 <div class="sidebar-section">
-                    <button class="accordion-header" id="accordion-business" onclick="toggleAccordion('business')">
-                        <span>⚙️ Business Command</span>
-                        <span class="accordion-icon" id="icon-business">▼</span>
+                    <button class="accordion-header" id="accordion-growth" onclick="toggleAccordion('growth')">
+                        <span>🚀 Growth Engine</span>
+                        <span class="accordion-icon" id="icon-growth">▼</span>
                     </button>
-                    <div class="accordion-content" id="content-business">
-                        <button class="sidebar-link" id="nav-sales" onclick="showSalesCommand()">
-                            <span class="sidebar-link-icon">💼</span>
-                            <span>Sales Command</span>
-                            <span class="progress-dot not-started" id="dot-sales"></span>
+                    <div class="accordion-content" id="content-growth">
+                        <button class="sidebar-link" id="nav-positioning" onclick="showCompetitivePositioning()">
+                            <span class="sidebar-link-icon">🎯</span>
+                            <span>Market Strategy</span>
+                            <span class="progress-dot not-started" id="dot-positioning"></span>
                         </button>
-                        <button class="sidebar-link" id="nav-ops" onclick="showOperationsCommand()">
-                            <span class="sidebar-link-icon">⚡</span>
-                            <span>Operations Command</span>
-                            <span class="progress-dot not-started" id="dot-ops"></span>
+                        <button class="sidebar-link" id="nav-offers" onclick="showOfferArchitecture()">
+                            <span class="sidebar-link-icon">💎</span>
+                            <span>Offers</span>
+                            <span class="progress-dot not-started" id="dot-offers"></span>
                         </button>
                         <button class="sidebar-link" id="nav-marketing" onclick="showMarketingCommand()">
                             <span class="sidebar-link-icon">📢</span>
-                            <span>Marketing Command</span>
+                            <span>Marketing</span>
                             <span class="progress-dot not-started" id="dot-marketing"></span>
                         </button>
-                        <button class="sidebar-link" id="nav-finance" onclick="showFinanceCommand()">
-                            <span class="sidebar-link-icon">💰</span>
-                            <span>Finance Command</span>
-                            <span class="progress-dot not-started" id="dot-finance"></span>
-                        </button>
-                        <button class="sidebar-link" id="nav-content" onclick="showContentCommand()">
-                            <span class="sidebar-link-icon">📝</span>
-                            <span>Content Command</span>
-                            <span class="progress-dot not-started" id="dot-content"></span>
+                        <button class="sidebar-link" id="nav-sales" onclick="showSalesCommand()">
+                            <span class="sidebar-link-icon">💼</span>
+                            <span>Sales</span>
+                            <span class="progress-dot not-started" id="dot-sales"></span>
                         </button>
                     </div>
                 </div>
 
-                <!-- 5. AI Tools -->
+                <!-- 5. Client Delivery -->
                 <div class="sidebar-section">
-                    <button class="sidebar-link" id="nav-ai-tools" onclick="showAIAgents()">
+                    <button class="accordion-header" id="accordion-delivery" onclick="toggleAccordion('delivery')">
+                        <span>🤝 Client Delivery</span>
+                        <span class="accordion-icon" id="icon-delivery">▼</span>
+                    </button>
+                    <div class="accordion-content" id="content-delivery">
+                        <button class="sidebar-link" id="nav-journey" onclick="showClientJourney()">
+                            <span class="sidebar-link-icon">🗺️</span>
+                            <span>Client Journey Map</span>
+                            <span class="progress-dot not-started" id="dot-journey"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-onboarding" onclick="showClientOnboarding()">
+                            <span class="sidebar-link-icon">🚀</span>
+                            <span>Client Onboarding</span>
+                            <span class="progress-dot not-started" id="dot-onboarding"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-frameworks" onclick="showDeliveryFrameworks()">
+                            <span class="sidebar-link-icon">📦</span>
+                            <span>Delivery Frameworks</span>
+                            <span class="progress-dot not-started" id="dot-frameworks"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-progress" onclick="showProgressTracking()">
+                            <span class="sidebar-link-icon">📈</span>
+                            <span>Progress Tracking</span>
+                            <span class="progress-dot not-started" id="dot-progress"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 6. Operations -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" id="accordion-operations" onclick="toggleAccordion('operations')">
+                        <span>⚙️ Operations</span>
+                        <span class="accordion-icon" id="icon-operations">▼</span>
+                    </button>
+                    <div class="accordion-content" id="content-operations">
+                        <button class="sidebar-link" id="nav-team" onclick="showTeamCommunications()">
+                            <span class="sidebar-link-icon">👥</span>
+                            <span>Team</span>
+                            <span class="progress-dot not-started" id="dot-team"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-systems" onclick="showSOPLibrary()">
+                            <span class="sidebar-link-icon">📋</span>
+                            <span>Systems</span>
+                            <span class="progress-dot not-started" id="dot-systems"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-tech" onclick="showTechStackManager()">
+                            <span class="sidebar-link-icon">🔧</span>
+                            <span>Technology</span>
+                            <span class="progress-dot not-started" id="dot-tech"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 7. AI Team -->
+                <div class="sidebar-section">
+                    <button class="sidebar-link" id="nav-ai-team" onclick="showMyAITeam()">
                         <span class="sidebar-link-icon">🤖</span>
-                        <span>AI Tools</span>
+                        <span>AI Team</span>
                     </button>
                 </div>
 
-                <!-- 6. Library -->
+                <!-- 8. Asset Library -->
                 <div class="sidebar-section">
-                    <button class="sidebar-link" id="nav-library" onclick="showLibrary()">
+                    <button class="sidebar-link" id="nav-assets" onclick="showAssetLibrary()">
                         <span class="sidebar-link-icon">📚</span>
-                        <span>Library</span>
+                        <span>Asset Library</span>
                     </button>
                 </div>
 
                 <!-- Bottom Utility Links -->
                 <div class="sidebar-bottom">
-                    <div class="sidebar-heading">Settings</div>
-                    <button class="sidebar-link" id="nav-profile" onclick="showProfile()">
-                        <span class="sidebar-link-icon">👤</span>
-                        <span>Profile</span>
+                    <button class="sidebar-link" id="nav-help" onclick="toggleSupportPanel()">
+                        <span class="sidebar-link-icon">❓</span>
+                        <span>Help</span>
                     </button>
                     <button class="sidebar-link" id="nav-settings" onclick="showSettings()">
                         <span class="sidebar-link-icon">⚙️</span>
                         <span>Settings</span>
+                    </button>
+                    <button class="sidebar-link" id="nav-logout" onclick="logout()">
+                        <span class="sidebar-link-icon">🚪</span>
+                        <span>Log Out</span>
                     </button>
                 </div>
             </aside>
