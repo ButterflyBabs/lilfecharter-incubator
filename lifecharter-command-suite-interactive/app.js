@@ -1776,6 +1776,75 @@ function showLibrary() {
     `;
 }
 
+// Business Command Module Placeholders
+function showOperationsCommand() {
+    setActiveNav('operations-command');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">⚡ Operations Command</h1>
+            <p class="welcome-subtitle">Streamline your business operations and workflows.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">⚡</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                Operations Command will help you build SOPs, automate workflows, and manage your team's tasks efficiently.
+            </p>
+        </div>
+    `;
+}
+
+function showMarketingCommand() {
+    setActiveNav('marketing-command');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📢 Marketing Command</h1>
+            <p class="welcome-subtitle">Plan, execute, and track your marketing campaigns.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📢</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                Marketing Command will include campaign planning, content calendars, social media management, and analytics tracking.
+            </p>
+        </div>
+    `;
+}
+
+function showFinanceCommand() {
+    setActiveNav('finance-command');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">💰 Finance Command</h1>
+            <p class="welcome-subtitle">Track revenue, expenses, and financial health.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">💰</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                Finance Command will help you track revenue streams, manage expenses, forecast cash flow, and prepare for tax season.
+            </p>
+        </div>
+    `;
+}
+
+function showContentCommand() {
+    setActiveNav('content-command');
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📝 Content Command</h1>
+            <p class="welcome-subtitle">Manage your content creation and distribution.</p>
+        </div>
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 20px;">📝</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Coming Soon</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto;">
+                Content Command will include editorial calendars, content pipelines, repurposing workflows, and publishing schedules.
+            </p>
+        </div>
+    `;
+}
+
 // Initialize notification badge on load
 function initNotifications() {
     updateNotificationBadge();
