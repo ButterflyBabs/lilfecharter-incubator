@@ -15,7 +15,7 @@ const SUPABASE_URL = 'https://evvudpnqbpjuyeqaapaa.supabase.co';
 let supabaseClient = null;
 
 /*
-REQUIRED SUPABASE TABLES for Brain.md and Soul.md Assessments:
+REQUIRED SUPABASE TABLES for Assessments:
 
 1. brain_assessments
    - id: uuid (primary key)
@@ -30,6 +30,18 @@ REQUIRED SUPABASE TABLES for Brain.md and Soul.md Assessments:
    - updated_at: timestamptz
 
 2. soul_assessments
+   - id: uuid (primary key)
+   - user_id: uuid (references auth.users)
+   - status: text ('not_started', 'in_progress', 'completed')
+   - progress_percentage: integer (0-100)
+   - answers: jsonb
+   - started_at: timestamptz
+   - completed_at: timestamptz
+   - last_saved: timestamptz
+   - created_at: timestamptz
+   - updated_at: timestamptz
+
+3. brand_voice_assessments
    - id: uuid (primary key)
    - user_id: uuid (references auth.users)
    - status: text ('not_started', 'in_progress', 'completed')
@@ -985,6 +997,7 @@ function loadModuleProgress() {
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
     setupEventListeners();
+    loadDashboardConfig(); // Load saved CEO Dashboard configuration
 });
 
 // Check Authentication
@@ -1197,6 +1210,9 @@ function showApp() {
         document.getElementById('user-name').textContent = currentUser.firstName || currentUser.email.split('@')[0];
         document.getElementById('user-avatar').textContent = (currentUser.firstName?.[0] || currentUser.email[0]).toUpperCase();
     }
+    
+    // Render the CEO Dashboard
+    renderCEODashboard();
 }
 
 // Toggle User Dropdown
@@ -1460,7 +1476,7 @@ function setActiveNav(page) {
 
 function showCommandCenter() {
     setActiveNav('command-center');
-    loadDashboard();
+    renderCEODashboard();
 }
 
 function showMyRoadmap() {
@@ -1483,12 +1499,14 @@ function showMyRoadmap() {
 
 // New Navigation Function Wrappers (Phase 1 Fix)
 function showFounderSoul() {
-    // Alias for showSoulOverview
+    // Show Soul.md assessment with Supabase save/return integration
+    setActiveNav('soul');
     showSoulAssessment();
 }
 
 function showBusinessBrain() {
-    // Alias for showBrainOverview
+    // Show Brain.md assessment with Supabase save/return integration
+    setActiveNav('brain');
     showBrainAssessment();
 }
 
@@ -2191,7 +2209,7 @@ function renderBrainOverview() {
                             ${isCompleted ? 'Assessment Complete!' : isInProgress ? 'Assessment in Progress' : 'Start Your Assessment'}
                         </h3>
                         <p style="color: rgba(246, 241, 232, 0.7);">
-                            ${isCompleted ? `You've completed ${completedCount} assessment${completedCount !== 1 ? 's' : ''}.` : isInProgress ? `You're ${progressPercent}% through the assessment.` : '55 questions • Approximately 60 minutes'}
+                            ${isCompleted ? `You've completed ${completedCount} assessment${completedCount !== 1 ? 's' : ''}.` : isInProgress ? `You're ${progressPercent}% through the assessment.` : '⏱️ Time Commitment: 2–3 hours (Minimal) • 4–6 hours (Thorough) • 8–12+ hours (Deep/Complete)'}
                         </p>
                     </div>
                 </div>
@@ -2229,14 +2247,13 @@ function renderBrainOverview() {
             
             <!-- Info Card -->
             <div style="background: rgba(46, 124, 131, 0.1); border: 1px solid rgba(46, 124, 99, 0.2); border-radius: 16px; padding: 24px;">
-                <h4 style="color: var(--sacred-teal); margin-bottom: 12px; font-size: 16px;">💡 What to Expect</h4>
+                <h4 style="color: var(--sacred-teal); margin-bottom: 12px; font-size: 16px;">⏱️ Time Commitment</h4>
                 <ul style="color: rgba(246, 241, 232, 0.7); font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
-                    <li>55 questions across 6 key business dimensions</li>
-                    <li>Your progress saves automatically as you go</li>
-                    <li>You can pause and resume anytime</li>
-                    <li>Complete multiple assessments to track your evolution</li>
-                    <li>Results help personalize your AI agents and recommendations</li>
+                    <li><strong>2–3 hours</strong> — Minimal Useful version</li>
+                    <li><strong>4–6 hours</strong> — Thorough Version</li>
+                    <li><strong>8–12+ hours</strong> — Deep/Complete version</li>
                 </ul>
+                <p style="color: rgba(246, 241, 232, 0.6); font-size: 13px; margin-top: 12px; font-style: italic;">Your progress saves automatically. You can pause and resume anytime.</p>
             </div>
         </div>
         
@@ -2658,7 +2675,7 @@ function renderSoulOverview() {
                             ${isCompleted ? 'Assessment Complete!' : isInProgress ? 'Assessment in Progress' : 'Start Your Assessment'}
                         </h3>
                         <p style="color: rgba(246, 241, 232, 0.7);">
-                            ${isCompleted ? `You've completed ${completedCount} assessment${completedCount !== 1 ? 's' : ''}.` : isInProgress ? `You're ${progressPercent}% through the assessment.` : '27 questions • Approximately 35 minutes'}
+                            ${isCompleted ? `You've completed ${completedCount} assessment${completedCount !== 1 ? 's' : ''}.` : isInProgress ? `You're ${progressPercent}% through the assessment.` : '⏱️ 9 sections • 100+ thoughtful questions • Save & return anytime'}
                         </p>
                     </div>
                 </div>
@@ -2696,13 +2713,12 @@ function renderSoulOverview() {
             
             <!-- Info Card -->
             <div style="background: rgba(94, 59, 108, 0.1); border: 1px solid rgba(94, 59, 108, 0.2); border-radius: 16px; padding: 24px;">
-                <h4 style="color: var(--soft-lavender); margin-bottom: 12px; font-size: 16px;">💡 What to Expect</h4>
+                <h4 style="color: var(--soft-lavender); margin-bottom: 12px; font-size: 16px;">⏱️ Time Commitment</h4>
+                <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; margin-bottom: 12px;">This questionnaire contains 9 sections with 100+ thoughtful questions. You can save your progress and return anytime.</p>
                 <ul style="color: rgba(246, 241, 232, 0.7); font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
-                    <li>27 questions exploring your values, vision, and alignment</li>
-                    <li>Your progress saves automatically as you go</li>
-                    <li>You can pause and resume anytime</li>
-                    <li>Complete multiple assessments to track your evolution</li>
-                    <li>Results help personalize your LifeCharter experience</li>
+                    <li><strong>60–90 minutes</strong> — Minimal Useful</li>
+                    <li><strong>2–3 hours</strong> — Thorough Version</li>
+                    <li><strong>4–6 hours</strong> — Deep/Complete Version</li>
                 </ul>
             </div>
         </div>
@@ -3191,6 +3207,7 @@ function getAgentTypeColor(type) {
         'content': 'rgba(205, 190, 214, 0.3)',
         'research': 'rgba(94, 59, 108, 0.3)',
         'automation': 'rgba(46, 124, 131, 0.2)',
+        'coaching': 'rgba(168, 72, 43, 0.3)',
         'general': 'rgba(31, 49, 91, 0.5)'
     };
     return colors[type] || colors['general'];
@@ -3471,7 +3488,12 @@ function showAgentTemplates() {
         { name: 'Sales Qualifier', type: 'sales', icon: '💼', description: 'Qualifies leads and guides prospects through initial conversations.' },
         { name: 'Content Assistant', type: 'content', icon: '📝', description: 'Helps create, edit, and optimize content across platforms.' },
         { name: 'Research Analyst', type: 'research', icon: '🔍', description: 'Conducts research and summarizes findings on any topic.' },
-        { name: 'Task Automator', type: 'automation', icon: '⚡', description: 'Automates repetitive tasks and workflows.' }
+        { name: 'Task Automator', type: 'automation', icon: '⚡', description: 'Automates repetitive tasks and workflows.' },
+        { name: 'Client Session Prepper', type: 'coaching', icon: '🎯', description: 'Prepares personalized coaching session plans and reflection questions.' },
+        { name: 'Program Builder', type: 'coaching', icon: '📚', description: 'Helps design coaching programs, curricula, and course outlines.' },
+        { name: 'Testimonial Collector', type: 'coaching', icon: '⭐', description: 'Guides clients through sharing their transformation stories.' },
+        { name: 'Accountability Partner', type: 'coaching', icon: '🤝', description: 'Checks in with clients, tracks goals, and celebrates wins.' },
+        { name: 'Discovery Call Assistant', type: 'coaching', icon: '📞', description: 'Conducts intake conversations and identifies client needs.' }
     ];
     
     let html = `
@@ -3863,131 +3885,951 @@ function showProgressTracking() {
     alert('Client Progress Tracking Tools - Coming soon!');
 }
 
-// Operations & Systems State
+// Revenue Tracker / Deal Tracker State
+const revenueTrackerState = {
+    deals: JSON.parse(localStorage.getItem('lccs_revenue_deals') || '[]'),
+    view: 'dashboard', // 'dashboard', 'list', 'detail'
+    filters: {
+        status: 'all',
+        dateRange: '30days'
+    },
+    selectedDeal: null
+};
+
+// ============================================
+// CEO DASHBOARD - CUSTOMIZABLE WITH DRAG-AND-DROP
+// ============================================
+
+// CEO Dashboard State
 const ceoDashboardState = {
-    metrics: [],
-    activities: [],
-    todos: []
+    cards: [],
+    availableCards: [],
+    isEditMode: false,
+    layout: 'grid',
+    theme: 'default',
+    draggedCard: null,
+    hasUnsavedChanges: false
 };
 
-const teamCommsState = {
-    messages: [],
-    channels: []
-};
+// Available card definitions
+const AVAILABLE_CARDS = [
+    {
+        id: 'next-best-action',
+        type: 'next-best-action',
+        title: 'Next Best Action',
+        icon: '🎯',
+        description: 'Shows the most important next task',
+        defaultSize: 'full'
+    },
+    {
+        id: 'revenue-snapshot',
+        type: 'revenue-snapshot',
+        title: 'Revenue Snapshot',
+        icon: '💰',
+        description: 'Pipeline, monthly revenue, YTD',
+        defaultSize: 'half'
+    },
+    {
+        id: 'active-deals',
+        type: 'active-deals',
+        title: 'Active Deals',
+        icon: '📊',
+        description: 'List of current deals with values',
+        defaultSize: 'half'
+    },
+    {
+        id: 'upcoming-meetings',
+        type: 'upcoming-meetings',
+        title: 'Upcoming Meetings',
+        icon: '📅',
+        description: 'Calendar view of next 7 days',
+        defaultSize: 'half'
+    },
+    {
+        id: 'team-activity',
+        type: 'team-activity',
+        title: 'Team Activity',
+        icon: '👥',
+        description: 'Recent team communications',
+        defaultSize: 'half'
+    },
+    {
+        id: 'foundation-progress',
+        type: 'foundation-progress',
+        title: 'Foundation Progress',
+        icon: '🏗️',
+        description: 'Completion % of assessments',
+        defaultSize: 'half'
+    },
+    {
+        id: 'growth-metrics',
+        type: 'growth-metrics',
+        title: 'Growth Metrics',
+        icon: '📈',
+        description: 'Marketing & sales KPIs',
+        defaultSize: 'half'
+    },
+    {
+        id: 'client-delivery',
+        type: 'client-delivery',
+        title: 'Client Delivery Status',
+        icon: '🚚',
+        description: 'Active client projects',
+        defaultSize: 'half'
+    },
+    {
+        id: 'ai-team-activity',
+        type: 'ai-team-activity',
+        title: 'AI Team Activity',
+        icon: '🤖',
+        description: 'Recent AI agent usage',
+        defaultSize: 'half'
+    },
+    {
+        id: 'quick-links',
+        type: 'quick-links',
+        title: 'Quick Links',
+        icon: '🔗',
+        description: 'Favorite modules/tools',
+        defaultSize: 'full'
+    },
+    {
+        id: 'notifications',
+        type: 'notifications',
+        title: 'Notifications',
+        icon: '🔔',
+        description: 'Recent alerts and messages',
+        defaultSize: 'half'
+    },
+    {
+        id: 'goals-tracker',
+        type: 'goals-tracker',
+        title: 'Goals Tracker',
+        icon: '🎯',
+        description: '90-day command progress',
+        defaultSize: 'half'
+    }
+];
 
-const meetingAgendasState = {
-    meetings: [],
-    templates: []
-};
+// Default layout for new users
+const DEFAULT_DASHBOARD_LAYOUT = [
+    { id: 'card-next-best-action', type: 'next-best-action', position: 0, size: 'full' },
+    { id: 'card-revenue-snapshot', type: 'revenue-snapshot', position: 1, size: 'half' },
+    { id: 'card-active-deals', type: 'active-deals', position: 2, size: 'half' },
+    { id: 'card-foundation-progress', type: 'foundation-progress', position: 3, size: 'half' },
+    { id: 'card-upcoming-meetings', type: 'upcoming-meetings', position: 4, size: 'half' },
+    { id: 'card-quick-links', type: 'quick-links', position: 5, size: 'full' }
+];
 
-const sopLibraryState = {
-    sops: [],
-    categories: []
-};
-
-const techStackState = {
-    tools: [],
-    categories: []
-};
-
-const documentVaultState = {
-    documents: [],
-    folders: []
-};
-
-// ============================================
-// 1. CEO DASHBOARD
-// ============================================
-function showCEODashboard() {
+// Initialize CEO Dashboard
+async function showCEODashboard() {
     setActiveNav('operations-systems');
     
-    const html = `
+    // Load saved configuration
+    await loadDashboardConfig();
+    
+    renderCEODashboard();
+}
+
+// Load dashboard configuration from Supabase
+async function loadDashboardConfig() {
+    const userId = getCurrentUserId();
+    if (!userId) {
+        // Use default layout if no user
+        ceoDashboardState.cards = [...DEFAULT_DASHBOARD_LAYOUT];
+        ceoDashboardState.availableCards = [...AVAILABLE_CARDS];
+        return;
+    }
+    
+    try {
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('ceo_dashboard_config')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+            
+            if (error && error.code !== 'PGRST116') {
+                throw error;
+            }
+            
+            if (data) {
+                ceoDashboardState.cards = data.cards || [...DEFAULT_DASHBOARD_LAYOUT];
+                ceoDashboardState.layout = data.layout || 'grid';
+                ceoDashboardState.theme = data.theme || 'default';
+            } else {
+                // No saved config, use default
+                ceoDashboardState.cards = [...DEFAULT_DASHBOARD_LAYOUT];
+            }
+        } else {
+            // Demo mode - load from localStorage
+            const saved = localStorage.getItem('lccs_ceo_dashboard_config');
+            if (saved) {
+                const config = JSON.parse(saved);
+                ceoDashboardState.cards = config.cards || [...DEFAULT_DASHBOARD_LAYOUT];
+                ceoDashboardState.layout = config.layout || 'grid';
+                ceoDashboardState.theme = config.theme || 'default';
+            } else {
+                ceoDashboardState.cards = [...DEFAULT_DASHBOARD_LAYOUT];
+            }
+        }
+        
+        ceoDashboardState.availableCards = [...AVAILABLE_CARDS];
+    } catch (err) {
+        console.error('Error loading dashboard config:', err);
+        ceoDashboardState.cards = [...DEFAULT_DASHBOARD_LAYOUT];
+        ceoDashboardState.availableCards = [...AVAILABLE_CARDS];
+    }
+}
+
+// Save dashboard configuration to Supabase
+async function saveDashboardConfig() {
+    const userId = getCurrentUserId();
+    
+    const configData = {
+        cards: ceoDashboardState.cards,
+        layout: ceoDashboardState.layout,
+        theme: ceoDashboardState.theme,
+        updated_at: new Date().toISOString()
+    };
+    
+    try {
+        if (supabaseClient && userId) {
+            // Check if record exists
+            const { data: existing } = await supabaseClient
+                .from('ceo_dashboard_config')
+                .select('id')
+                .eq('user_id', userId)
+                .single();
+            
+            if (existing) {
+                await supabaseClient
+                    .from('ceo_dashboard_config')
+                    .update(configData)
+                    .eq('id', existing.id);
+            } else {
+                configData.user_id = userId;
+                configData.created_at = new Date().toISOString();
+                await supabaseClient
+                    .from('ceo_dashboard_config')
+                    .insert([configData]);
+            }
+        } else {
+            // Demo mode - save to localStorage
+            localStorage.setItem('lccs_ceo_dashboard_config', JSON.stringify(configData));
+        }
+        
+        ceoDashboardState.hasUnsavedChanges = false;
+        showNotification('Dashboard saved successfully!', 'success');
+        return true;
+    } catch (err) {
+        console.error('Error saving dashboard config:', err);
+        showNotification('Error saving dashboard. Please try again.', 'error');
+        return false;
+    }
+}
+
+// Render the CEO Dashboard
+function renderCEODashboard() {
+    const isEditMode = ceoDashboardState.isEditMode;
+    
+    let html = `
         <div class="welcome-section">
             <h1 class="welcome-title">📊 CEO Dashboard</h1>
-            <p class="welcome-subtitle">Overview of your business metrics and priorities.</p>
+            <p class="welcome-subtitle">Your customizable command center.</p>
         </div>
         
-        <div id="ceo-container" style="padding: 20px;">
-            <!-- Quick Stats -->
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                <div class="stat-card" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">💰</div>
-                    <div style="font-size: 28px; font-weight: 600; color: var(--warm-gold);">$0</div>
-                    <div style="font-size: 14px; color: rgba(246, 241, 232, 0.7);">Monthly Revenue</div>
-                </div>
-                <div class="stat-card" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
-                    <div style="font-size: 28px; font-weight: 600; color: var(--warm-gold);">0</div>
-                    <div style="font-size: 14px; color: rgba(246, 241, 232, 0.7);">Active Clients</div>
-                </div>
-                <div class="stat-card" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">📋</div>
-                    <div style="font-size: 28px; font-weight: 600; color: var(--warm-gold);">0</div>
-                    <div style="font-size: 14px; color: rgba(246, 241, 232, 0.7);">Active Projects</div>
-                </div>
-                <div class="stat-card" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px;">
-                    <div style="font-size: 32px; margin-bottom: 8px;">👤</div>
-                    <div style="font-size: 28px; font-weight: 600; color: var(--warm-gold);">1</div>
-                    <div style="font-size: 14px; color: rgba(246, 241, 232, 0.7);">Team Members</div>
-                </div>
+        <!-- Dashboard Header -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px 20px; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; gap: 12px; align-items: center;">
+                ${isEditMode ? `
+                    <button class="btn btn-primary" onclick="openCardLibrary()">
+                        <span>➕</span> Add Card
+                    </button>
+                    <button class="btn btn-success" onclick="exitEditMode(true)">
+                        <span>💾</span> Save Layout
+                    </button>
+                    <button class="btn btn-secondary" onclick="exitEditMode(false)">
+                        <span>✕</span> Cancel
+                    </button>
+                ` : `
+                    <button class="btn btn-primary" onclick="enterEditMode()">
+                        <span>⚙️</span> Customize
+                    </button>
+                `}
             </div>
             
-            <!-- Action Items -->
-            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; margin-bottom: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                    <h3 style="color: var(--warm-gold); margin: 0;">🎯 Action Items</h3>
-                    <button class="btn btn-primary" id="btn-add-todo" data-action="add-todo" style="font-size: 13px;">+ Add</button>
-                </div>
-                <div id="todos-list">
-                    <p style="color: rgba(246, 241, 232, 0.5);">No action items yet. Add your first priority task.</p>
-                </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+                <span style="color: rgba(246, 241, 232, 0.6); font-size: 13px;">Layout:</span>
+                <select id="layout-selector" onchange="changeLayout(this.value)" 
+                    style="padding: 8px 12px; background: rgba(31, 49, 91, 0.5); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-family: inherit; font-size: 13px;">
+                    <option value="grid" ${ceoDashboardState.layout === 'grid' ? 'selected' : ''}>Grid</option>
+                    <option value="list" ${ceoDashboardState.layout === 'list' ? 'selected' : ''}>List</option>
+                    <option value="compact" ${ceoDashboardState.layout === 'compact' ? 'selected' : ''}>Compact</option>
+                </select>
             </div>
-            
-            <!-- Recent Activity -->
-            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px;">
-                <h3 style="color: var(--warm-gold); margin-bottom: 16px;">📈 Recent Activity</h3>
-                <div id="activity-list">
-                    <p style="color: rgba(246, 241, 232, 0.5);">No recent activity to display.</p>
-                </div>
+        </div>
+        
+        <!-- Edit Mode Banner -->
+        ${isEditMode ? `
+            <div style="background: rgba(212, 175, 99, 0.15); border: 1px solid rgba(212, 175, 99, 0.3); border-radius: 12px; padding: 16px 20px; margin: 0 20px 20px; display: flex; align-items: center; gap: 12px;">
+                <span style="font-size: 20px;">✋</span>
+                <span style="color: var(--warm-gold);">Edit Mode: Drag cards to reorder. Click × to remove. Add new cards from the library.</span>
             </div>
+        ` : ''}
+        
+        <!-- Dashboard Grid -->
+        <div id="dashboard-grid" class="dashboard-grid layout-${ceoDashboardState.layout}" 
+            style="padding: 0 20px; display: grid; gap: 20px;">
+            ${renderDashboardCards()}
         </div>
     `;
     
     document.getElementById('main-content').innerHTML = html;
     
-    // Event delegation
-    document.getElementById('ceo-container').addEventListener('click', function(e) {
-        const btn = e.target.closest('[data-action]');
-        if (btn) {
-            const action = btn.dataset.action;
-            handleCEOAction(action, btn.dataset.id);
-        }
+    // Apply layout styles
+    applyDashboardLayout();
+}
+
+// Apply layout styles based on selected layout
+function applyDashboardLayout() {
+    const grid = document.getElementById('dashboard-grid');
+    if (!grid) return;
+    
+    switch (ceoDashboardState.layout) {
+        case 'grid':
+            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(350px, 1fr))';
+            break;
+        case 'list':
+            grid.style.gridTemplateColumns = '1fr';
+            break;
+        case 'compact':
+            grid.style.gridTemplateColumns = 'repeat(auto-fit, minmax(280px, 1fr))';
+            break;
+    }
+}
+
+// Change layout
+function changeLayout(newLayout) {
+    ceoDashboardState.layout = newLayout;
+    ceoDashboardState.hasUnsavedChanges = true;
+    applyDashboardLayout();
+}
+
+// Render all dashboard cards
+function renderDashboardCards() {
+    if (ceoDashboardState.cards.length === 0) {
+        return `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(31, 49, 91, 0.2); border-radius: 16px; border: 2px dashed rgba(212, 175, 99, 0.3);">
+                <div style="font-size: 48px; margin-bottom: 16px;">📊</div>
+                <h3 style="color: var(--warm-gold); margin-bottom: 8px;">Your Dashboard is Empty</h3>
+                <p style="color: rgba(246, 241, 232, 0.6); margin-bottom: 20px;">Add cards to customize your CEO Dashboard</p>
+                <button class="btn btn-primary" onclick="openCardLibrary()">Add Your First Card</button>
+            </div>
+        `;
+    }
+    
+    return ceoDashboardState.cards.map((card, index) => renderCard(card, index)).join('');
+}
+
+// Render individual card
+function renderCard(card, index) {
+    const cardDef = AVAILABLE_CARDS.find(c => c.type === card.type) || AVAILABLE_CARDS[0];
+    const isEditMode = ceoDashboardState.isEditMode;
+    const sizeClass = card.size || cardDef.defaultSize || 'half';
+    
+    return `
+        <div class="dashboard-card ${sizeClass}" 
+             data-card-id="${card.id}" 
+             data-position="${index}"
+             draggable="${isEditMode}"
+             ondragstart="handleDragStart(event, '${card.id}')"
+             ondragover="handleDragOver(event)"
+             ondrop="handleDrop(event, '${card.id}')"
+             ondragend="handleDragEnd(event)"
+             style="background: rgba(31, 49, 91, 0.3); border: 1px solid ${isEditMode ? 'rgba(212, 175, 99, 0.4)' : 'rgba(212, 175, 99, 0.15)'}; border-radius: 16px; padding: 20px; position: relative; transition: all 0.2s; ${isEditMode ? 'cursor: move;' : ''} ${sizeClass === 'full' ? 'grid-column: 1 / -1;' : ''}">
+            
+            ${isEditMode ? `
+                <!-- Drag Handle -->
+                <div style="position: absolute; top: 12px; right: 40px; color: rgba(246, 241, 232, 0.4); font-size: 16px; cursor: grab;">
+                    ⋮⋮
+                </div>
+                <!-- Delete Button -->
+                <button onclick="removeCardFromDashboard('${card.id}')" 
+                    style="position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%; background: rgba(220, 53, 69, 0.2); border: none; color: #dc3545; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.2s;"
+                    onmouseover="this.style.background='rgba(220, 53, 69, 0.4)';"
+                    onmouseout="this.style.background='rgba(220, 53, 69, 0.2)';">
+                    ×
+                </button>
+            ` : ''}
+            
+            <!-- Card Header -->
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-right: ${isEditMode ? '60px' : '0'};">
+                <div style="font-size: 24px;">${cardDef.icon}</div>
+                <h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--warm-gold);">${cardDef.title}</h3>
+                ${!isEditMode ? `
+                    <button onclick="refreshCard('${card.type}')" style="margin-left: auto; background: none; border: none; color: rgba(246, 241, 232, 0.4); cursor: pointer; font-size: 14px; padding: 4px;">
+                        🔄
+                    </button>
+                ` : ''}
+            </div>
+            
+            <!-- Card Content -->
+            <div class="card-content">
+                ${getCardContent(card.type)}
+            </div>
+        </div>
+    `;
+}
+
+// Get content for each card type
+function getCardContent(cardType) {
+    switch (cardType) {
+        case 'next-best-action':
+            return renderNextBestActionCard();
+        case 'revenue-snapshot':
+            return renderRevenueSnapshotCard();
+        case 'active-deals':
+            return renderActiveDealsCard();
+        case 'upcoming-meetings':
+            return renderUpcomingMeetingsCard();
+        case 'team-activity':
+            return renderTeamActivityCard();
+        case 'foundation-progress':
+            return renderFoundationProgressCard();
+        case 'growth-metrics':
+            return renderGrowthMetricsCard();
+        case 'client-delivery':
+            return renderClientDeliveryCard();
+        case 'ai-team-activity':
+            return renderAITeamActivityCard();
+        case 'quick-links':
+            return renderQuickLinksCard();
+        case 'notifications':
+            return renderNotificationsCard();
+        case 'goals-tracker':
+            return renderGoalsTrackerCard();
+        default:
+            return '<p style="color: rgba(246, 241, 232, 0.5);">Card content loading...</p>';
+    }
+}
+
+// Card Content Renderers
+function renderNextBestActionCard() {
+    const actions = [
+        { priority: 'high', text: 'Complete Business Model Canvas', link: 'showBusinessModelCanvas()' },
+        { priority: 'medium', text: 'Review Q3 revenue goals', link: 'showRevenueTracker()' },
+        { priority: 'low', text: 'Update team meeting agenda', link: 'showMeetingAgendas()' }
+    ];
+    
+    const topAction = actions[0];
+    
+    return `
+        <div style="background: rgba(46, 124, 131, 0.15); border-left: 3px solid var(--sacred-teal); padding: 16px; border-radius: 0 12px 12px 0;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span style="background: rgba(220, 53, 69, 0.2); color: #ff6b6b; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: 600;">HIGH PRIORITY</span>
+            </div>
+            <p style="margin: 0 0 12px; color: var(--ivory-light); font-size: 16px; font-weight: 500;">${topAction.text}</p>
+            <button class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;" onclick="${topAction.link}">Take Action →</button>
+        </div>
+        <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(212, 175, 99, 0.1);">
+            <p style="margin: 0 0 8px; font-size: 12px; color: rgba(246, 241, 232, 0.5);">Up next:</p>
+            ${actions.slice(1).map(a => `
+                <div style="display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: rgba(246, 241, 232, 0.7);">
+                    <span style="width: 6px; height: 6px; border-radius: 50%; background: ${a.priority === 'high' ? '#ff6b6b' : a.priority === 'medium' ? '#ffc107' : '#28a745'};"></span>
+                    ${a.text}
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderRevenueSnapshotCard() {
+    const pipeline = revenueTrackerState.deals
+        .filter(d => d.status !== 'closed_won' && d.status !== 'closed_lost')
+        .reduce((sum, d) => sum + (d.deal_value * (d.probability / 100)), 0);
+    
+    const monthlyRevenue = revenueTrackerState.deals
+        .filter(d => d.status === 'closed_won' && d.actual_close_date && d.actual_close_date.startsWith(new Date().toISOString().slice(0, 7)))
+        .reduce((sum, d) => sum + d.deal_value, 0);
+    
+    const ytdRevenue = revenueTrackerState.deals
+        .filter(d => d.status === 'closed_won' && d.actual_close_date && d.actual_close_date.startsWith(new Date().getFullYear().toString()))
+        .reduce((sum, d) => sum + d.deal_value, 0);
+    
+    return `
+        <div style="display: grid; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <span style="color: rgba(246, 241, 232, 0.7); font-size: 13px;">Pipeline</span>
+                <span style="color: var(--warm-gold); font-size: 20px; font-weight: 600;">$${formatCurrency(pipeline)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <span style="color: rgba(246, 241, 232, 0.7); font-size: 13px;">This Month</span>
+                <span style="color: var(--sacred-teal); font-size: 20px; font-weight: 600;">$${formatCurrency(monthlyRevenue)}</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <span style="color: rgba(246, 241, 232, 0.7); font-size: 13px;">YTD Revenue</span>
+                <span style="color: #4caf50; font-size: 20px; font-weight: 600;">$${formatCurrency(ytdRevenue)}</span>
+            </div>
+        </div>
+        <button class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 13px;" onclick="showRevenueTracker()">View Full Report →</button>
+    `;
+}
+
+function renderActiveDealsCard() {
+    const activeDeals = revenueTrackerState.deals
+        .filter(d => d.status !== 'closed_won' && d.status !== 'closed_lost')
+        .slice(0, 5);
+    
+    if (activeDeals.length === 0) {
+        return `
+            <p style="color: rgba(246, 241, 232, 0.5); text-align: center; padding: 20px;">No active deals</p>
+            <button class="btn btn-primary" style="width: 100%; font-size: 13px;" onclick="showRevenueTracker()">Add First Deal →</button>
+        `;
+    }
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${activeDeals.map(deal => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(31, 49, 91, 0.4); border-radius: 8px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="font-weight: 500; color: var(--ivory-light); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${deal.deal_name}</div>
+                        <div style="font-size: 12px; color: rgba(246, 241, 232, 0.5);">${getDealStatusLabel(deal.status)}</div>
+                    </div>
+                    <div style="text-align: right; margin-left: 12px;">
+                        <div style="color: var(--warm-gold); font-weight: 600; font-size: 14px;">$${formatCurrency(deal.deal_value)}</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">${deal.probability}%</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        ${revenueTrackerState.deals.filter(d => d.status !== 'closed_won' && d.status !== 'closed_lost').length > 5 ? `
+            <button class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 13px;" onclick="showRevenueTracker()">View All Deals →</button>
+        ` : ''}
+    `;
+}
+
+function renderFoundationProgressCard() {
+    const brainProgress = brainAssessmentState.progress?.progress || 0;
+    const soulProgress = soulAssessmentState.progress?.progress || 0;
+    const brandProgress = brandVoiceState.progress?.progress || 0;
+    
+    return `
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+            <div style="text-align: center;">
+                <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 8px;">
+                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(31, 49, 91, 0.5)" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--sacred-teal)" stroke-width="3" stroke-dasharray="${brainProgress}, 100"/>
+                    </svg>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 600; color: var(--ivory-light);">${Math.round(brainProgress)}%</div>
+                </div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.7);">Brain.md</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 8px;">
+                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(31, 49, 91, 0.5)" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--royal-plum)" stroke-width="3" stroke-dasharray="${soulProgress}, 100"/>
+                    </svg>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 600; color: var(--ivory-light);">${Math.round(soulProgress)}%</div>
+                </div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.7);">Soul.md</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 8px;">
+                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(31, 49, 91, 0.5)" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--warm-gold)" stroke-width="3" stroke-dasharray="${brandProgress}, 100"/>
+                    </svg>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 600; color: var(--ivory-light);">${Math.round(brandProgress)}%</div>
+                </div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.7);">Brand Voice</div>
+            </div>
+        </div>
+        <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; font-size: 13px;" onclick="showBusinessAssessment()">Continue Assessments →</button>
+    `;
+}
+
+function renderUpcomingMeetingsCard() {
+    const meetings = [
+        { title: 'Team Standup', time: 'Today, 9:00 AM', attendees: 4 },
+        { title: 'Client Review', time: 'Tomorrow, 2:00 PM', attendees: 3 },
+        { title: 'Strategic Planning', time: 'Fri, 10:00 AM', attendees: 6 }
+    ];
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${meetings.map(m => `
+                <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                    <div style="width: 40px; height: 40px; border-radius: 10px; background: rgba(212, 175, 99, 0.2); display: flex; align-items: center; justify-content: center; font-size: 18px;">📅</div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 500; color: var(--ivory-light); font-size: 14px;">${m.title}</div>
+                        <div style="font-size: 12px; color: rgba(246, 241, 232, 0.5);">${m.time} • ${m.attendees} attendees</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        <button class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 13px;" onclick="showMeetingAgendas()">View Calendar →</button>
+    `;
+}
+
+function renderTeamActivityCard() {
+    const activities = [
+        { user: 'Aira', action: 'completed task', target: 'LifeCharter Incubator outreach', time: '2h ago' },
+        { user: 'Mariposa', action: 'published', target: 'Weekly newsletter', time: '4h ago' }
+    ];
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${activities.map(a => `
+                <div style="display: flex; align-items: flex-start; gap: 10px;">
+                    <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(46, 124, 131, 0.3); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: var(--sacred-teal);">${a.user.charAt(0)}</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 13px; color: var(--ivory-light);"><strong>${a.user}</strong> ${a.action} <em>${a.target}</em></div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">${a.time}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderGrowthMetricsCard() {
+    return `
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div style="text-align: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <div style="font-size: 24px; font-weight: 600; color: var(--warm-gold);">+12%</div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.6);">Email List</div>
+            </div>
+            <div style="text-align: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <div style="font-size: 24px; font-weight: 600; color: var(--sacred-teal);">+8%</div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.6);">Website</div>
+            </div>
+            <div style="text-align: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <div style="font-size: 24px; font-weight: 600; color: #4caf50;">+24%</div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.6);">Social</div>
+            </div>
+            <div style="text-align: center; padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                <div style="font-size: 24px; font-weight: 600; color: var(--soft-lavender);">3.2%</div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.6);">Conversion</div>
+            </div>
+        </div>
+    `;
+}
+
+function renderClientDeliveryCard() {
+    const projects = [
+        { name: 'LifeCharter Circle', status: 'active', progress: 75 },
+        { name: 'Brand Refresh', status: 'review', progress: 90 }
+    ];
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+            ${projects.map(p => `
+                <div style="padding: 12px; background: rgba(31, 49, 91, 0.4); border-radius: 10px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 500; color: var(--ivory-light); font-size: 14px;">${p.name}</span>
+                        <span style="font-size: 12px; color: ${p.status === 'active' ? 'var(--sacred-teal)' : 'var(--warm-gold)'};">${p.status}</span>
+                    </div>
+                    <div style="background: rgba(31, 49, 91, 0.5); border-radius: 6px; height: 6px; overflow: hidden;">
+                        <div style="background: ${p.status === 'active' ? 'var(--sacred-teal)' : 'var(--warm-gold)'}; height: 100%; width: ${p.progress}%; border-radius: 6px;"></div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderAITeamActivityCard() {
+    const activities = [
+        { agent: 'Mariposa', task: 'Drafted 3 email sequences', tokens: '2.4k' },
+        { agent: 'Claude', task: 'Research report complete', tokens: '8.1k' },
+        { agent: 'Sumbal', task: 'Social posts scheduled', tokens: '1.2k' }
+    ];
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${activities.map(a => `
+                <div style="display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(31, 49, 91, 0.4); border-radius: 8px;">
+                    <div style="width: 28px; height: 28px; border-radius: 6px; background: rgba(94, 59, 108, 0.4); display: flex; align-items: center; justify-content: center; font-size: 12px;">🤖</div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 13px; color: var(--ivory-light);">${a.agent}</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">${a.task}</div>
+                    </div>
+                    <div style="font-size: 11px; color: var(--warm-gold);">${a.tokens}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderQuickLinksCard() {
+    const links = [
+        { icon: '🎯', label: 'LifeCharter', action: 'showLifeCharter()' },
+        { icon: '🧠', label: 'Brain.md', action: 'showBrainAssessment()' },
+        { icon: '✨', label: 'Soul.md', action: 'showSoulAssessment()' },
+        { icon: '🎨', label: 'Brand Voice', action: 'showBrandVoice()' },
+        { icon: '💰', label: 'Revenue', action: 'showRevenueTracker()' },
+        { icon: '📊', label: 'Pipeline', action: 'showSalesPipeline()' }
+    ];
+    
+    return `
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px;">
+            ${links.map(l => `
+                <button onclick="${l.action}" style="display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px; background: rgba(31, 49, 91, 0.4); border: 1px solid rgba(212, 175, 99, 0.1); border-radius: 12px; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='rgba(31, 49, 91, 0.6)'; this.style.borderColor='rgba(212, 175, 99, 0.3)';"
+                    onmouseout="this.style.background='rgba(31, 49, 91, 0.4)'; this.style.borderColor='rgba(212, 175, 99, 0.1)';">
+                    <span style="font-size: 24px;">${l.icon}</span>
+                    <span style="font-size: 12px; color: rgba(246, 241, 232, 0.8);">${l.label}</span>
+                </button>
+            `).join('')}
+        </div>
+    `;
+}
+
+function renderNotificationsCard() {
+    const unreadCount = notificationsState.notifications.filter(n => !n.read).length;
+    const recent = notificationsState.notifications.slice(0, 3);
+    
+    if (recent.length === 0) {
+        return `
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 32px; margin-bottom: 8px;">🔔</div>
+                <p style="color: rgba(246, 241, 232, 0.5); margin: 0;">No new notifications</p>
+            </div>
+        `;
+    }
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+            ${recent.map(n => `
+                <div style="display: flex; align-items: flex-start; gap: 10px; padding: 10px; background: ${n.read ? 'rgba(31, 49, 91, 0.3)' : 'rgba(46, 124, 131, 0.15)'}; border-radius: 8px; border-left: 2px solid ${n.read ? 'transparent' : 'var(--sacred-teal)'};">
+                    <span style="font-size: 16px;">${getNotificationIcon(n.type)}</span>
+                    <div style="flex: 1;">
+                        <div style="font-size: 13px; color: var(--ivory-light); font-weight: ${n.read ? '400' : '500'};">${n.title}</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">${n.message}</div>
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+        <button class="btn btn-secondary" style="width: 100%; margin-top: 12px; font-size: 13px;" onclick="toggleNotificationsPanel()">
+            ${unreadCount > 0 ? `View ${unreadCount} Unread` : 'View All'}
+        </button>
+    `;
+}
+
+function renderGoalsTrackerCard() {
+    const goals = [
+        { name: 'Q3 Revenue Target', current: 45000, target: 100000, unit: '$' },
+        { name: 'New Clients', current: 8, target: 20, unit: '' },
+        { name: 'Content Pieces', current: 24, target: 50, unit: '' }
+    ];
+    
+    return `
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            ${goals.map(g => {
+                const percent = Math.round((g.current / g.target) * 100);
+                return `
+                    <div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                            <span style="font-size: 13px; color: var(--ivory-light);">${g.name}</span>
+                            <span style="font-size: 12px; color: var(--warm-gold);">${g.unit}${g.current.toLocaleString()} / ${g.unit}${g.target.toLocaleString()}</span>
+                        </div>
+                        <div style="background: rgba(31, 49, 91, 0.5); border-radius: 6px; height: 8px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, var(--sacred-teal), var(--warm-gold)); height: 100%; width: ${percent}%; border-radius: 6px;"></div>
+                        </div>
+                        <div style="text-align: right; font-size: 11px; color: rgba(246, 241, 232, 0.5); margin-top: 2px;">${percent}%</div>
+                    </div>
+                `;
+            }).join('')}
+        </div>
+    `;
+}
+
+// Edit Mode Functions
+function enterEditMode() {
+    ceoDashboardState.isEditMode = true;
+    renderCEODashboard();
+}
+
+function exitEditMode(save = true) {
+    if (save && ceoDashboardState.hasUnsavedChanges) {
+        saveDashboardConfig();
+    } else if (!save && ceoDashboardState.hasUnsavedChanges) {
+        // Reload original config
+        loadDashboardConfig().then(() => {
+            ceoDashboardState.isEditMode = false;
+            renderCEODashboard();
+        });
+        return;
+    }
+    
+    ceoDashboardState.isEditMode = false;
+    renderCEODashboard();
+}
+
+// Card Library Modal
+function openCardLibrary() {
+    const availableCards = AVAILABLE_CARDS.filter(ac => 
+        !ceoDashboardState.cards.some(cc => cc.type === ac.type)
+    );
+    
+    const modalHtml = `
+        <div id="card-library-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.7); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px;">
+            <div style="background: rgba(31, 49, 91, 0.95); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 20px; width: 100%; max-width: 800px; max-height: 80vh; overflow: hidden; display: flex; flex-direction: column;">
+                <div style="padding: 24px; border-bottom: 1px solid rgba(212, 175, 99, 0.15); display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; color: var(--warm-gold);">📚 Card Library</h2>
+                    <button onclick="closeCardLibrary()" style="background: none; border: none; color: rgba(246, 241, 232, 0.6); font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div style="padding: 20px; border-bottom: 1px solid rgba(212, 175, 99, 0.1);">
+                    <input type="text" id="card-search" placeholder="Search cards..." oninput="filterCardLibrary(this.value)"
+                        style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit;">
+                </div>
+                
+                <div id="card-library-grid" style="padding: 20px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px;">
+                    ${availableCards.length === 0 ? `
+                        <div style="grid-column: 1 / -1; text-align: center; padding: 40px;">
+                            <p style="color: rgba(246, 241, 232, 0.5);">All available cards are already on your dashboard!</p>
+                        </div>
+                    ` : availableCards.map(card => `
+                        <div class="card-library-item" data-type="${card.type}" style="background: rgba(31, 49, 91, 0.5); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 12px; padding: 20px; text-align: center; transition: all 0.2s;"
+                            onmouseover="this.style.borderColor='rgba(212, 175, 99, 0.4)'; this.style.transform='translateY(-2px)';"
+                            onmouseout="this.style.borderColor='rgba(212, 175, 99, 0.15)'; this.style.transform='';">
+                            <div style="font-size: 36px; margin-bottom: 12px;">${card.icon}</div>
+                            <h4 style="margin: 0 0 8px; color: var(--ivory-light); font-size: 16px;">${card.title}</h4>
+                            <p style="margin: 0 0 16px; font-size: 13px; color: rgba(246, 241, 232, 0.6); line-height: 1.4;">${card.description}</p>
+                            <button class="btn btn-primary" style="width: 100%; font-size: 13px;" onclick="addCardToDashboard('${card.type}')">Add to Dashboard</button>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+function closeCardLibrary() {
+    const modal = document.getElementById('card-library-modal');
+    if (modal) modal.remove();
+}
+
+function filterCardLibrary(query) {
+    const items = document.querySelectorAll('.card-library-item');
+    const lowerQuery = query.toLowerCase();
+    
+    items.forEach(item => {
+        const type = item.dataset.type;
+        const card = AVAILABLE_CARDS.find(c => c.type === type);
+        const match = card.title.toLowerCase().includes(lowerQuery) || 
+                      card.description.toLowerCase().includes(lowerQuery);
+        item.style.display = match ? 'block' : 'none';
     });
 }
 
-function handleCEOAction(action, id) {
-    switch(action) {
-        case 'add-todo':
-            const todo = prompt('Enter action item:');
-            if (todo) {
-                ceoDashboardState.todos.push({
-                    id: Date.now(),
-                    text: todo,
-                    completed: false,
-                    createdAt: new Date().toISOString()
-                });
-                alert('Action item added: ' + todo);
-            }
-            break;
-        case 'complete-todo':
-            const todoItem = ceoDashboardState.todos.find(t => t.id == id);
-            if (todoItem) {
-                todoItem.completed = !todoItem.completed;
-                showCEODashboard();
-            }
-            break;
-        default:
-            console.log('Unknown action:', action);
+function addCardToDashboard(cardType) {
+    const cardDef = AVAILABLE_CARDS.find(c => c.type === cardType);
+    if (!cardDef) return;
+    
+    const newCard = {
+        id: 'card-' + Date.now(),
+        type: cardType,
+        position: ceoDashboardState.cards.length,
+        size: cardDef.defaultSize
+    };
+    
+    ceoDashboardState.cards.push(newCard);
+    ceoDashboardState.hasUnsavedChanges = true;
+    
+    closeCardLibrary();
+    renderCEODashboard();
+}
+
+function removeCardFromDashboard(cardId) {
+    if (!confirm('Remove this card from your dashboard?')) return;
+    
+    ceoDashboardState.cards = ceoDashboardState.cards.filter(c => c.id !== cardId);
+    ceoDashboardState.hasUnsavedChanges = true;
+    
+    // Reorder positions
+    ceoDashboardState.cards.forEach((c, idx) => c.position = idx);
+    
+    renderCEODashboard();
+}
+
+function refreshCard(cardType) {
+    // Re-render the dashboard to refresh data
+    renderCEODashboard();
+    showNotification('Card refreshed', 'success');
+}
+
+// Drag and Drop Functions
+function handleDragStart(e, cardId) {
+    ceoDashboardState.draggedCard = cardId;
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', cardId);
+    
+    // Add visual feedback
+    e.target.style.opacity = '0.5';
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    
+    // Add hover effect
+    const card = e.target.closest('.dashboard-card');
+    if (card && card.dataset.cardId !== ceoDashboardState.draggedCard) {
+        card.style.borderColor = 'rgba(212, 175, 99, 0.6)';
+        card.style.background = 'rgba(212, 175, 99, 0.1)';
+    }
+}
+
+function handleDrop(e, targetCardId) {
+    e.preventDefault();
+    
+    const draggedId = ceoDashboardState.draggedCard;
+    if (!draggedId || draggedId === targetCardId) return;
+    
+    // Find indices
+    const fromIndex = ceoDashboardState.cards.findIndex(c => c.id === draggedId);
+    const toIndex = ceoDashboardState.cards.findIndex(c => c.id === targetCardId);
+    
+    if (fromIndex === -1 || toIndex === -1) return;
+    
+    // Reorder
+    const [movedCard] = ceoDashboardState.cards.splice(fromIndex, 1);
+    ceoDashboardState.cards.splice(toIndex, 0, movedCard);
+    
+    // Update positions
+    ceoDashboardState.cards.forEach((c, idx) => c.position = idx);
+    
+    ceoDashboardState.hasUnsavedChanges = true;
+    ceoDashboardState.draggedCard = null;
+    
+    renderCEODashboard();
+}
+
+function handleDragEnd(e) {
+    e.target.style.opacity = '1';
+    ceoDashboardState.draggedCard = null;
+    
+    // Remove hover effects
+    document.querySelectorAll('.dashboard-card').forEach(card => {
+        card.style.borderColor = '';
+        card.style.background = '';
+    });
+}
+
+// Notification helper
+function showNotification(message, type = 'info') {
+    // Use existing notification system if available
+    if (typeof addNotification === 'function') {
+        addNotification(type === 'success' ? 'Success' : 'Notification', message, type);
+    } else {
+        alert(message);
     }
 }
 
@@ -4086,6 +4928,177 @@ function handleCommsAction(action) {
 
 function loadChannelMessages(channelName) {
     console.log('Loading messages for channel:', channelName);
+}
+
+// Meeting Agendas Module
+function showMeetingAgendas() {
+    setActiveNav('operations-systems');
+    
+    const html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📅 Meeting Agendas</h1>
+            <p class="welcome-subtitle">Plan, organize, and track your team meetings.</p>
+        </div>
+        
+        <div id="agendas-container" style="padding: 20px;">
+            <!-- Action Bar -->
+            <div style="display: flex; gap: 16px; margin-bottom: 30px; flex-wrap: wrap;">
+                <button class="btn btn-primary" id="btn-create-agenda" data-action="create-agenda">
+                    <span>➕</span>
+                    <span>Create Agenda</span>
+                </button>
+                <div style="flex: 1;"></div>
+                <select id="filter-meeting-type" style="padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit;">
+                    <option value="all">All Meetings</option>
+                    <option value="weekly">Weekly Team</option>
+                    <option value="monthly">Monthly Review</option>
+                    <option value="quarterly">Quarterly Planning</option>
+                    <option value="one-on-one">One-on-One</option>
+                    <option value="client">Client Meeting</option>
+                </select>
+            </div>
+            
+            <!-- Agendas Grid -->
+            <div id="agendas-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                <!-- Sample Agendas -->
+                <div class="agenda-card" data-agenda-id="1" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span style="background: rgba(212, 175, 99, 0.2); color: var(--warm-gold); padding: 4px 12px; border-radius: 20px; font-size: 12px;">Weekly Team</span>
+                        <span style="color: rgba(246, 241, 232, 0.5); font-size: 13px;">Tomorrow</span>
+                    </div>
+                    <h3 style="color: var(--ivory-light); margin-bottom: 8px;">Weekly Team Sync</h3>
+                    <p style="color: rgba(246, 241, 232, 0.6); font-size: 14px; margin-bottom: 16px;">Review weekly progress, discuss blockers, plan next week.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: rgba(46, 124, 131, 0.2); color: var(--sacred-teal); padding: 4px 8px; border-radius: 6px; font-size: 12px;">5 items</span>
+                        <span style="background: rgba(94, 59, 108, 0.2); color: var(--soft-lavender); padding: 4px 8px; border-radius: 6px; font-size: 12px;">30 min</span>
+                    </div>
+                </div>
+                
+                <div class="agenda-card" data-agenda-id="2" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span style="background: rgba(46, 124, 131, 0.2); color: var(--sacred-teal); padding: 4px 12px; border-radius: 20px; font-size: 12px;">Monthly Review</span>
+                        <span style="color: rgba(246, 241, 232, 0.5); font-size: 13px;">Next Week</span>
+                    </div>
+                    <h3 style="color: var(--ivory-light); margin-bottom: 8px;">Monthly Business Review</h3>
+                    <p style="color: rgba(246, 241, 232, 0.6); font-size: 14px; margin-bottom: 16px;">Review KPIs, celebrate wins, adjust quarterly goals.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: rgba(46, 124, 131, 0.2); color: var(--sacred-teal); padding: 4px 8px; border-radius: 6px; font-size: 12px;">8 items</span>
+                        <span style="background: rgba(94, 59, 108, 0.2); color: var(--soft-lavender); padding: 4px 8px; border-radius: 6px; font-size: 12px;">60 min</span>
+                    </div>
+                </div>
+                
+                <div class="agenda-card" data-agenda-id="3" style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; cursor: pointer;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span style="background: rgba(205, 190, 214, 0.2); color: var(--soft-lavender); padding: 4px 12px; border-radius: 20px; font-size: 12px;">One-on-One</span>
+                        <span style="color: rgba(246, 241, 232, 0.5); font-size: 13px;">This Friday</span>
+                    </div>
+                    <h3 style="color: var(--ivory-light); margin-bottom: 8px;">Coaching Session Prep</h3>
+                    <p style="color: rgba(246, 241, 232, 0.6); font-size: 14px; margin-bottom: 16px;">Client progress review, prepare for next coaching call.</p>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span style="background: rgba(46, 124, 131, 0.2); color: var(--sacred-teal); padding: 4px 8px; border-radius: 6px; font-size: 12px;">4 items</span>
+                        <span style="background: rgba(94, 59, 108, 0.2); color: var(--soft-lavender); padding: 4px 8px; border-radius: 6px; font-size: 12px;">45 min</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+    
+    // Event delegation
+    document.getElementById('agendas-container').addEventListener('click', function(e) {
+        const card = e.target.closest('.agenda-card');
+        if (card) {
+            const agendaId = card.dataset.agendaId;
+            viewAgenda(agendaId);
+        }
+        
+        const btn = e.target.closest('[data-action]');
+        if (btn) {
+            const action = btn.dataset.action;
+            handleAgendaAction(action);
+        }
+    });
+}
+
+function handleAgendaAction(action) {
+    switch(action) {
+        case 'create-agenda':
+            createNewAgenda();
+            break;
+        default:
+            console.log('Unknown agenda action:', action);
+    }
+}
+
+function viewAgenda(agendaId) {
+    // Show agenda detail view
+    const html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📅 Meeting Agenda</h1>
+            <p class="welcome-subtitle">View and edit your meeting agenda.</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 30px;">
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; color: var(--warm-gold); margin-bottom: 8px; font-size: 14px;">Meeting Title</label>
+                    <input type="text" value="Weekly Team Sync" style="width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-size: 16px;">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+                    <div>
+                        <label style="display: block; color: var(--warm-gold); margin-bottom: 8px; font-size: 14px;">Date</label>
+                        <input type="date" style="width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light);">
+                    </div>
+                    <div>
+                        <label style="display: block; color: var(--warm-gold); margin-bottom: 8px; font-size: 14px;">Duration</label>
+                        <select style="width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light);">
+                            <option>15 minutes</option>
+                            <option>30 minutes</option>
+                            <option selected>45 minutes</option>
+                            <option>60 minutes</option>
+                            <option>90 minutes</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; color: var(--warm-gold); margin-bottom: 8px; font-size: 14px;">Agenda Items</label>
+                    <div style="background: rgba(31, 49, 91, 0.5); border-radius: 12px; padding: 16px;">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 8px;">
+                            <span style="color: var(--warm-gold); font-weight: 600;">1.</span>
+                            <input type="text" value="Weekly metrics review" style="flex: 1; padding: 8px; background: transparent; border: none; color: var(--ivory-light);">
+                            <span style="color: rgba(246, 241, 232, 0.5);">10 min</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 8px;">
+                            <span style="color: var(--warm-gold); font-weight: 600;">2.</span>
+                            <input type="text" value="Project updates and blockers" style="flex: 1; padding: 8px; background: transparent; border: none; color: var(--ivory-light);">
+                            <span style="color: rgba(246, 241, 232, 0.5);">15 min</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 8px;">
+                            <span style="color: var(--warm-gold); font-weight: 600;">3.</span>
+                            <input type="text" value="Next week priorities" style="flex: 1; padding: 8px; background: transparent; border: none; color: var(--ivory-light);">
+                            <span style="color: rgba(246, 241, 232, 0.5);">10 min</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" style="margin-top: 12px; width: 100%;">+ Add Agenda Item</button>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-primary">💾 Save Agenda</button>
+                    <button class="btn btn-secondary" onclick="showMeetingAgendas()">← Back to Agendas</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function createNewAgenda() {
+    // Show create new agenda form
+    viewAgenda('new');
 }
 
 // ============================================
@@ -6280,8 +7293,377 @@ function showClientJourney() {
     alert('Client Journey Map - Coming soon!');
 }
 
+// Brand Voice Assessment State with iframe integration
+let brandVoiceState = {
+    progress: null,
+    assessments: [],
+    currentView: 'overview'
+};
+
 function showBrandVoice() {
-    window.open('https://lifecharter-brand-voice.vercel.app', '_blank');
+    setActiveNav('brand-voice');
+    showBrandVoiceAssessment();
+}
+
+async function showBrandVoiceAssessment() {
+    await loadBrandVoiceState();
+    
+    if (brandVoiceState.currentView === 'iframe') {
+        renderBrandVoiceIframe();
+    } else if (brandVoiceState.currentView === 'results') {
+        renderBrandVoiceResults();
+    } else {
+        renderBrandVoiceOverview();
+    }
+}
+
+async function loadBrandVoiceState() {
+    const userId = getCurrentUserId();
+    if (!userId) return;
+    
+    try {
+        if (supabaseClient) {
+            const { data, error } = await supabaseClient
+                .from('brand_voice_assessments')
+                .select('*')
+                .eq('user_id', userId)
+                .order('created_at', { ascending: false });
+            
+            if (error) throw error;
+            
+            if (data && data.length > 0) {
+                brandVoiceState.assessments = data;
+                const latest = data[0];
+                brandVoiceState.progress = {
+                    status: latest.status,
+                    progress: latest.progress_percentage || 0,
+                    startedAt: latest.started_at,
+                    completedAt: latest.completed_at,
+                    lastSaved: latest.last_saved
+                };
+            }
+        }
+    } catch (err) {
+        console.error('Error loading brand voice state:', err);
+    }
+}
+
+function renderBrandVoiceOverview() {
+    const hasProgress = brandVoiceState.progress !== null;
+    const isCompleted = hasProgress && brandVoiceState.progress.status === 'completed';
+    const isInProgress = hasProgress && brandVoiceState.progress.status === 'in_progress';
+    const progressPercent = hasProgress ? brandVoiceState.progress.progress : 0;
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎭 Brand Voice Assessment</h1>
+            <p class="welcome-subtitle">Define your brand's unique voice, tone, and messaging framework.</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: ${isCompleted ? 'rgba(76, 175, 80, 0.3)' : isInProgress ? 'rgba(212, 175, 99, 0.3)' : 'rgba(31, 49, 91, 0.5)'}; display: flex; align-items: center; justify-content: center; font-size: 36px;">
+                        ${isCompleted ? '✅' : isInProgress ? '📝' : '🎭'}
+                    </div>
+                    <div>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 4px;">
+                            ${isCompleted ? 'Assessment Complete!' : isInProgress ? 'Assessment in Progress' : 'Start Your Assessment'}
+                        </h3>
+                        <p style="color: rgba(246, 241, 232, 0.7);">
+                            ${isCompleted ? 'Your brand voice guide is ready.' : isInProgress ? `You're ${progressPercent}% through the assessment.` : 'Define your unique brand voice and messaging'}
+                        </p>
+                    </div>
+                </div>
+                
+                ${isInProgress ? `
+                    <div style="margin-bottom: 24px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: rgba(246, 241, 232, 0.7);">Progress</span>
+                            <span style="color: var(--warm-gold); font-weight: 600;">${progressPercent}%</span>
+                        </div>
+                        <div style="height: 8px; background: rgba(31, 49, 91, 0.5); border-radius: 4px; overflow: hidden;">
+                            <div style="height: 100%; width: ${progressPercent}%; background: linear-gradient(90deg, var(--sacred-teal), var(--soft-lavender)); border-radius: 4px; transition: width 0.3s ease;"></div>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    ${isCompleted ? `
+                        <button class="btn btn-primary" onclick="startBrandVoiceAssessment()">🔄 Retake Assessment</button>
+                        <button class="btn btn-secondary" onclick="viewBrandVoiceResults()">📊 View Results</button>
+                    ` : isInProgress ? `
+                        <button class="btn btn-primary" onclick="resumeBrandVoiceAssessment()">▶️ Resume Assessment</button>
+                        <button class="btn btn-secondary" onclick="startBrandVoiceAssessment(true)">🔄 Start Over</button>
+                    ` : `
+                        <button class="btn btn-primary" onclick="startBrandVoiceAssessment()">🚀 Start Assessment</button>
+                    `}
+                </div>
+            </div>
+            
+            <div style="background: rgba(31, 49, 91, 0.2); border: 1px solid rgba(212, 175, 99, 0.1); border-radius: 16px; padding: 30px;">
+                <h4 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--warm-gold); margin-bottom: 16px;">What You'll Create</h4>
+                <ul style="color: rgba(246, 241, 232, 0.8); line-height: 1.8; margin: 0; padding-left: 20px;">
+                    <li>Brand voice attributes and personality</li>
+                    <li>Tone guidelines for different contexts</li>
+                    <li>Messaging framework and key phrases</li>
+                    <li>Content style guide</li>
+                    <li>Brand voice examples and dos/don'ts</li>
+                </ul>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function startBrandVoiceAssessment(restart = false) {
+    if (restart) {
+        brandVoiceState.progress = null;
+    }
+    brandVoiceState.currentView = 'iframe';
+    renderBrandVoiceIframe();
+}
+
+function resumeBrandVoiceAssessment() {
+    brandVoiceState.currentView = 'iframe';
+    renderBrandVoiceIframe();
+}
+
+function renderBrandVoiceIframe() {
+    const userId = getCurrentUserId();
+    const email = currentUser?.email || '';
+    const resumeParam = brandVoiceState.progress?.status === 'in_progress' ? '&resume=true' : '';
+    const iframeUrl = `https://lifecharter-brand-voice.vercel.app/?userId=${userId}&email=${encodeURIComponent(email)}${resumeParam}`;
+    
+    setupBrandVoiceMessageListener();
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎭 Brand Voice Assessment</h1>
+            <p class="welcome-subtitle">Your progress saves automatically. You can return anytime.</p>
+        </div>
+        
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 20px;">
+                <iframe 
+                    id="brand-voice-assessment-iframe"
+                    src="${iframeUrl}" 
+                    style="width: 100%; height: 800px; border: none; border-radius: 12px; background: var(--ivory-light);"
+                    allow="fullscreen"
+                ></iframe>
+            </div>
+            
+            <div style="display: flex; gap: 12px; margin-top: 20px; justify-content: center;">
+                <button class="btn btn-secondary" onclick="exitBrandVoiceAssessment()">← Exit Assessment</button>
+                <button class="btn btn-primary" onclick="saveBrandVoiceProgress()">💾 Save & Continue Later</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function setupBrandVoiceMessageListener() {
+    window.removeEventListener('message', handleBrandVoiceMessage);
+    window.addEventListener('message', handleBrandVoiceMessage);
+}
+
+async function handleBrandVoiceMessage(event) {
+    if (event.origin !== 'https://lifecharter-brand-voice.vercel.app') return;
+    
+    const { type, data } = event.data;
+    
+    switch (type) {
+        case 'brandvoice:save':
+            await saveBrandVoiceProgressToSupabase(data);
+            break;
+        case 'brandvoice:complete':
+            await completeBrandVoiceAssessment(data);
+            break;
+        case 'brandvoice:progress':
+            updateBrandVoiceProgressUI(data);
+            break;
+    }
+}
+
+async function saveBrandVoiceProgressToSupabase(data) {
+    const userId = getCurrentUserId();
+    if (!userId || !supabaseClient) return;
+    
+    try {
+        const progressData = {
+            user_id: userId,
+            status: 'in_progress',
+            progress_percentage: data.progress,
+            answers: data.answers,
+            last_saved: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+        
+        const { data: existing } = await supabaseClient
+            .from('brand_voice_assessments')
+            .select('id')
+            .eq('user_id', userId)
+            .eq('status', 'in_progress')
+            .single();
+        
+        if (existing) {
+            await supabaseClient
+                .from('brand_voice_assessments')
+                .update(progressData)
+                .eq('id', existing.id);
+        } else {
+            progressData.created_at = new Date().toISOString();
+            progressData.started_at = new Date().toISOString();
+            await supabaseClient
+                .from('brand_voice_assessments')
+                .insert([progressData]);
+        }
+        
+        brandVoiceState.progress = {
+            status: 'in_progress',
+            progress: data.progress,
+            lastSaved: progressData.last_saved
+        };
+        
+        updateModuleProgress('brand-voice', data.progress);
+        
+    } catch (err) {
+        console.error('Error saving brand voice progress:', err);
+    }
+}
+
+async function completeBrandVoiceAssessment(data) {
+    const userId = getCurrentUserId();
+    if (!userId || !supabaseClient) return;
+    
+    try {
+        const completionData = {
+            user_id: userId,
+            status: 'completed',
+            progress_percentage: 100,
+            answers: data.answers,
+            completed_at: new Date().toISOString(),
+            last_saved: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+        };
+        
+        const { data: existing } = await supabaseClient
+            .from('brand_voice_assessments')
+            .select('id')
+            .eq('user_id', userId)
+            .eq('status', 'in_progress')
+            .single();
+        
+        if (existing) {
+            await supabaseClient
+                .from('brand_voice_assessments')
+                .update(completionData)
+                .eq('id', existing.id);
+        } else {
+            completionData.created_at = new Date().toISOString();
+            completionData.started_at = new Date().toISOString();
+            await supabaseClient
+                .from('brand_voice_assessments')
+                .insert([completionData]);
+        }
+        
+        brandVoiceState.progress = {
+            status: 'completed',
+            progress: 100,
+            completedAt: completionData.completed_at
+        };
+        
+        updateModuleProgress('brand-voice', 100);
+        
+        showNotification('🎉 Brand Voice assessment completed!', 'success');
+        
+    } catch (err) {
+        console.error('Error completing brand voice assessment:', err);
+    }
+}
+
+function updateBrandVoiceProgressUI(data) {
+    brandVoiceState.progress = {
+        ...brandVoiceState.progress,
+        progress: data.progress
+    };
+}
+
+function saveBrandVoiceProgress() {
+    const iframe = document.getElementById('brand-voice-assessment-iframe');
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'parent:requestSave' }, 'https://lifecharter-brand-voice.vercel.app');
+    }
+    showNotification('💾 Progress saved!', 'success');
+}
+
+function exitBrandVoiceAssessment() {
+    brandVoiceState.currentView = 'overview';
+    showBrandVoiceAssessment();
+}
+
+function viewBrandVoiceResults() {
+    brandVoiceState.currentView = 'results';
+    renderBrandVoiceResults();
+}
+
+function renderBrandVoiceResults() {
+    const latestAssessment = brandVoiceState.assessments[0];
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎭 Brand Voice Assessment Results</h1>
+            <p class="welcome-subtitle">Your brand voice guide and messaging framework.</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px; text-align: center;">
+                <div style="font-size: 64px; margin-bottom: 20px;">✅</div>
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 32px; color: var(--warm-gold); margin-bottom: 12px;">Assessment Complete!</h3>
+                <p style="color: rgba(246, 241, 232, 0.8); margin-bottom: 24px;">Completed on ${new Date(latestAssessment?.completed_at).toLocaleDateString()}</p>
+                <button class="btn btn-primary" onclick="downloadBrandVoiceGuide()">📥 Download Brand Voice Guide</button>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-secondary" onclick="showBrandVoiceAssessment()">← Back to Overview</button>
+                <button class="btn btn-secondary" onclick="startBrandVoiceAssessment(true)">🔄 Retake Assessment</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function downloadBrandVoiceGuide() {
+    const latestAssessment = brandVoiceState.assessments[0];
+    if (!latestAssessment) return;
+    
+    const content = generateBrandVoiceGuide(latestAssessment.answers);
+    const blob = new Blob([content], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'brand-voice-guide.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+function generateBrandVoiceGuide(answers) {
+    return `# Brand Voice Guide
+
+Generated by LifeCharter Command Suite
+
+## Your Brand Voice Profile
+
+${JSON.stringify(answers, null, 2)}
+
+---
+*This guide was generated from your Brand Voice Assessment.*
+`;
 }
 
 // ============================================
@@ -8874,7 +10256,7 @@ function renderFAQContent() {
         filteredFaqs.forEach((faq, index) => {
             html += `
                 <div style="padding: 16px; border-top: 1px solid rgba(212, 175, 99, 0.05);">
-                    <div onclick="toggleFAQAnswer('${key}-${index}')" style="cursor: pointer; color: var(--sacred-teal); font-weight: 500; font-size: 14px; margin-bottom: 8px;">
+                    <div onclick="toggleFAQAnswer('${key}-${index}')" style="cursor: pointer; color: var(--ivory-light); font-weight: 500; font-size: 14px; margin-bottom: 8px;">
                         ${faq.question}
                     </div>
                     <div id="faq-answer-${key}-${index}" style="display: none; color: rgba(246, 241, 232, 0.8); font-size: 13px; line-height: 1.5; padding-left: 12px; border-left: 2px solid rgba(212, 175, 99, 0.3);">
