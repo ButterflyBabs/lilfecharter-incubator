@@ -1,17 +1,21 @@
 // LifeCharter Command Suite - Main Application JavaScript
 
-// Global error handler
+// Global error handler - silent in production/demo mode
 window.onerror = function(msg, url, line, col, error) {
-    alert('JavaScript Error: ' + msg + '\nLine: ' + line);
     console.error('Global error:', msg, url, line, col, error);
+    // Only show alerts in development, not in demo/production
+    if (window.location.hostname === 'localhost' && !AUTO_LOGIN) {
+        alert('JavaScript Error: ' + msg + '\nLine: ' + line);
+    }
     return false;
 };
 
-// DEMO MODE - No backend required
+// DEMO MODE - Auto-login for development
 const DEMO_MODE = true;
+const AUTO_LOGIN = true; // Set to false to re-enable login screen
 
-// Supabase Configuration
-const SUPABASE_URL = 'https://evvudpnqbpjuyeqaapaa.supabase.co';
+// Supabase Configuration - Set via environment variable or localStorage
+const SUPABASE_URL = window.ENV?.SUPABASE_URL || localStorage.getItem('supabase_url') || '';
 let supabaseClient = null;
 
 /*
@@ -66,7 +70,13 @@ IFRAME COMMUNICATION PROTOCOL:
 // Initialize Supabase client
 function initSupabase() {
     if (typeof supabase !== 'undefined' && supabase.createClient) {
-        supabaseClient = supabase.createClient(SUPABASE_URL, null, {
+        // Use environment variable or fallback to demo mode
+        const supabaseUrl = window.ENV?.SUPABASE_URL || localStorage.getItem('supabase_url') || '';
+        if (!supabaseUrl) {
+            console.log('Supabase not configured - running in demo mode');
+            return false;
+        }
+        supabaseClient = supabase.createClient(supabaseUrl, null, {
             auth: {
                 autoRefreshToken: true,
                 persistSession: true
@@ -1002,11 +1012,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Check Authentication
 function checkAuth() {
-    // Always start by showing login page (security first)
-    showLoginPage();
+    // AUTO_LOGIN for development - skip login screen
+    if (AUTO_LOGIN) {
+        // Auto-login as demo user
+        const demoUser = demoUsers[0]; // Use first demo user
+        if (demoUser) {
+            currentUser = demoUser;
+            authToken = 'demo_token_' + Date.now();
+            localStorage.setItem('lccs_token', authToken);
+            localStorage.setItem('lccs_demo_current_email', demoUser.email);
+            showApp();
+            return;
+        }
+    }
     
-    // Then check if we have valid auth
+    // Normal auth flow
     if (!authToken) {
+        showLoginPage();
         return;
     }
 
@@ -1092,7 +1114,10 @@ function handleLogin(e) {
         console.log('loadDashboard completed');
     } catch (err) {
         console.error('Error during login:', err);
-        alert('Login error: ' + err.message);
+        // Silently handle errors in demo mode
+        if (!AUTO_LOGIN) {
+            alert('Login error: ' + err.message);
+        }
     }
     
     btn.classList.remove('loading');
@@ -1177,6 +1202,11 @@ function quickDemoLogin() {
 
 // Logout
 function logout() {
+    if (AUTO_LOGIN) {
+        // In auto-login mode, just reload to re-login
+        window.location.reload();
+        return;
+    }
     localStorage.removeItem('lccs_token');
     localStorage.removeItem('lccs_demo_current_email');
     authToken = null;
@@ -1532,9 +1562,697 @@ function showBrandVoice() {
     `;
 }
 
+// Competitive Positioning Assessment State
+let competitiveCurrentSection = 0;
+const competitiveTotalSections = 8;
+let competitiveFormData = {};
+
+const competitiveAssessmentData = {
+    sections: [
+        {
+            id: 'market_overview',
+            title: 'Market Overview',
+            description: 'Understanding your competitive landscape.',
+            questions: [
+                {
+                    id: 'industry_description',
+                    type: 'textarea',
+                    text: '1. Describe your industry/market',
+                    subtext: 'What market do you operate in? Who are the main players?',
+                    required: true
+                },
+                {
+                    id: 'market_size',
+                    type: 'radio',
+                    text: '2. How would you describe your market size?',
+                    options: [
+                        { value: 'niche', text: 'Niche - very specific, small audience' },
+                        { value: 'emerging', text: 'Emerging - growing, not saturated' },
+                        { value: 'mature', text: 'Mature - established, competitive' },
+                        { value: 'crowded', text: 'Crowded - highly competitive, many players' }
+                    ]
+                },
+                {
+                    id: 'market_trends',
+                    type: 'textarea',
+                    text: '3. What are the current trends in your market?',
+                    subtext: 'What is changing? What is growing or declining?',
+                    required: true
+                },
+                {
+                    id: 'market_gaps',
+                    type: 'textarea',
+                    text: '4. What gaps or opportunities do you see in the market?',
+                    subtext: 'What is missing? What needs are not being met?',
+                    required: true
+                }
+            ]
+        },
+        {
+            id: 'competitor_analysis',
+            title: 'Competitor Analysis',
+            description: 'Who are you competing against?',
+            questions: [
+                {
+                    id: 'direct_competitors',
+                    type: 'textarea',
+                    text: '5. List your top 3-5 direct competitors',
+                    subtext: 'Who offers similar solutions to the same audience?',
+                    required: true
+                },
+                {
+                    id: 'indirect_competitors',
+                    type: 'textarea',
+                    text: '6. List indirect competitors or alternatives',
+                    subtext: 'What else might your ideal client choose instead? (DIY, other solutions, doing nothing)',
+                    required: true
+                },
+                {
+                    id: 'competitor_strengths',
+                    type: 'textarea',
+                    text: '7. What do your competitors do well?',
+                    subtext: 'What are their strengths? Why do clients choose them?',
+                    required: true
+                },
+                {
+                    id: 'competitor_weaknesses',
+                    type: 'textarea',
+                    text: '8. Where do your competitors fall short?',
+                    subtext: 'What are their weaknesses? What do clients complain about?',
+                    required: true
+                }
+            ]
+        },
+        {
+            id: 'differentiation',
+            title: 'Differentiation Factors',
+            description: 'What makes you different and better?',
+            questions: [
+                {
+                    id: 'unique_approach',
+                    type: 'textarea',
+                    text: '9. What is your unique approach or methodology?',
+                    subtext: 'How do you solve problems differently than others?',
+                    required: true
+                },
+                {
+                    id: 'secret_sauce',
+                    type: 'textarea',
+                    text: '10. What is your "secret sauce" or unfair advantage?',
+                    subtext: 'What can you do that competitors cannot easily copy?',
+                    required: true
+                },
+                {
+                    id: 'better_results',
+                    type: 'textarea',
+                    text: '11. How do you deliver better results than alternatives?',
+                    subtext: 'What outcomes do you create that others do not?',
+                    required: true
+                },
+                {
+                    id: 'experience_difference',
+                    type: 'textarea',
+                    text: '12. How is the client experience different with you?',
+                    subtext: 'What does it feel like to work with you vs. competitors?',
+                    required: true
+                }
+            ]
+        },
+        {
+            id: 'positioning',
+            title: 'Strategic Positioning',
+            description: 'Where do you fit in the market?',
+            questions: [
+                {
+                    id: 'price_position',
+                    type: 'radio',
+                    text: '13. How do you want to position on price?',
+                    options: [
+                        { value: 'premium', text: 'Premium - highest price, premium experience' },
+                        { value: 'high', text: 'High-end - above average pricing' },
+                        { value: 'mid', text: 'Mid-market - competitive pricing' },
+                        { value: 'value', text: 'Value - affordable, accessible' },
+                        { value: 'freemium', text: 'Freemium - free entry, paid upgrades' }
+                    ]
+                },
+                {
+                    id: 'quality_position',
+                    type: 'radio',
+                    text: '14. How do you want to position on quality?',
+                    options: [
+                        { value: 'luxury', text: 'Luxury - best of the best' },
+                        { value: 'high', text: 'High quality - above average' },
+                        { value: 'standard', text: 'Standard - meets expectations' },
+                        { value: 'basic', text: 'Basic - good enough' }
+                    ]
+                },
+                {
+                    id: 'service_position',
+                    type: 'radio',
+                    text: '15. How do you want to position on service?',
+                    options: [
+                        { value: 'white_glove', text: 'White glove - concierge level' },
+                        { value: 'personal', text: 'Personal - high touch' },
+                        { value: 'efficient', text: 'Efficient - streamlined' },
+                        { value: 'self_serve', text: 'Self-serve - DIY with support' }
+                    ]
+                },
+                {
+                    id: 'market_position_statement',
+                    type: 'textarea',
+                    text: '16. Write your market position statement',
+                    subtext: 'For [target audience] who [problem/need], [your brand] is the [category] that [key benefit] because [reason to believe]',
+                    required: true
+                }
+            ]
+        },
+        {
+            id: 'messaging',
+            title: 'Messaging Strategy',
+            description: 'How will you communicate your position?',
+            questions: [
+                {
+                    id: 'key_messages',
+                    type: 'textarea',
+                    text: '17. What are your 3 key messages?',
+                    subtext: 'The main points you want every prospect to understand',
+                    required: true
+                },
+                {
+                    id: 'proof_points',
+                    type: 'textarea',
+                    text: '18. What proof points support your claims?',
+                    subtext: 'Testimonials, case studies, credentials, data',
+                    required: true
+                },
+                {
+                    id: 'brand_voice',
+                    type: 'radio',
+                    text: '19. What is your brand voice?',
+                    options: [
+                        { value: 'authoritative', text: 'Authoritative - expert, professional' },
+                        { value: 'friendly', text: 'Friendly - warm, approachable' },
+                        { value: 'edgy', text: 'Edgy - bold, disruptive' },
+                        { value: 'luxury', text: 'Luxury - sophisticated, exclusive' },
+                        { value: 'playful', text: 'Playful - fun, energetic' }
+                    ]
+                },
+                {
+                    id: 'tagline',
+                    type: 'text',
+                    text: '20. What is your tagline or slogan?',
+                    subtext: 'A short, memorable phrase that captures your position',
+                    placeholder: 'e.g., "Just Do It" or "Think Different"'
+                }
+            ]
+        },
+        {
+            id: 'advantage',
+            title: 'Sustainable Competitive Advantage',
+            description: 'What will keep you ahead long-term?',
+            questions: [
+                {
+                    id: 'competitive_moat',
+                    type: 'textarea',
+                    text: '21. What is your competitive moat?',
+                    subtext: 'What protects you from competitors copying you?',
+                    required: true
+                },
+                {
+                    id: 'barriers_entry',
+                    type: 'checkbox',
+                    text: '22. What barriers to entry exist in your market?',
+                    options: [
+                        { value: 'capital', text: 'High capital requirements' },
+                        { value: 'expertise', text: 'Specialized expertise/knowledge' },
+                        { value: 'relationships', text: 'Established relationships' },
+                        { value: 'technology', text: 'Proprietary technology' },
+                        { value: 'brand', text: 'Strong brand recognition' },
+                        { value: 'scale', text: 'Economies of scale' },
+                        { value: 'network', text: 'Network effects' },
+                        { value: 'regulatory', text: 'Regulatory requirements' }
+                    ]
+                },
+                {
+                    id: 'innovation_plan',
+                    type: 'textarea',
+                    text: '23. How will you continue to innovate?',
+                    subtext: 'What is your plan for staying ahead as the market evolves?',
+                    required: true
+                }
+            ]
+        },
+        {
+            id: 'action_plan',
+            title: 'Positioning Action Plan',
+            description: 'What will you do with this positioning?',
+            questions: [
+                {
+                    id: 'immediate_actions',
+                    type: 'textarea',
+                    text: '24. What are your immediate actions?',
+                    subtext: 'What will you do in the next 30 days to implement this positioning?',
+                    required: true
+                },
+                {
+                    id: 'messaging_updates',
+                    type: 'textarea',
+                    text: '25. What messaging needs to change?',
+                    subtext: 'Website copy, sales materials, social media, etc.',
+                    required: true
+                },
+                {
+                    id: 'launch_timeline',
+                    type: 'radio',
+                    text: '26. When do you want to launch this positioning?',
+                    options: [
+                        { value: 'immediate', text: 'Immediately - start today' },
+                        { value: '30days', text: 'Within 30 days' },
+                        { value: '60days', text: 'Within 60 days' },
+                        { value: '90days', text: 'Within 90 days' },
+                        { value: 'planning', text: 'Still in planning phase' }
+                    ]
+                }
+            ]
+        },
+        {
+            id: 'contact',
+            title: 'Your Information',
+            description: 'Save your assessment and get your report.',
+            questions: [
+                {
+                    id: 'full_name',
+                    type: 'text',
+                    text: 'Your Name',
+                    required: true
+                },
+                {
+                    id: 'email',
+                    type: 'email',
+                    text: 'Email Address',
+                    subtext: 'We will send your positioning report here',
+                    required: true
+                },
+                {
+                    id: 'company',
+                    type: 'text',
+                    text: 'Company/Business Name'
+                },
+                {
+                    id: 'website',
+                    type: 'text',
+                    text: 'Website (optional)',
+                    subtext: 'So we can review your current positioning'
+                }
+            ]
+        }
+    ]
+};
+
 function showCompetitivePositioning() {
     setActiveNav('positioning');
-    window.open('https://lifecharter-competitive-positioning.vercel.app', '_blank');
+    renderCompetitivePositioningOverview();
+}
+
+function renderCompetitivePositioningOverview() {
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎯 Competitive Positioning Strategy</h1>
+            <p class="welcome-subtitle">Analyze your market, differentiate from competitors, and claim your unique position.</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <!-- Status Card -->
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 24px;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: rgba(46, 124, 131, 0.3); display: flex; align-items: center; justify-content: center; font-size: 36px;">
+                        🎯
+                    </div>
+                    <div>
+                        <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 4px;">
+                            Start Your Assessment
+                        </h3>
+                        <p style="color: rgba(246, 241, 232, 0.7);">
+                            ⏱️ 8 sections • 26 strategic questions • Save & return anytime
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <button class="btn btn-primary" onclick="startCompetitivePositioning()" style="flex: 1; min-width: 200px;">
+                        🚀 Start Assessment
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Info Card -->
+            <div style="background: rgba(46, 124, 131, 0.1); border: 1px solid rgba(46, 124, 131, 0.2); border-radius: 16px; padding: 24px;">
+                <h4 style="color: var(--sacred-teal); margin-bottom: 12px; font-size: 16px;">⏱️ Time Commitment</h4>
+                <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; margin-bottom: 12px;">This assessment contains 8 sections with 26 strategic questions. You can save your progress and return anytime.</p>
+                <ul style="color: rgba(246, 241, 232, 0.7); font-size: 14px; margin: 0; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>30–45 minutes</strong> — Quick Version</li>
+                    <li><strong>1–2 hours</strong> — Thorough Version</li>
+                    <li><strong>2–3 hours</strong> — Deep/Complete Version</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <button class="btn btn-secondary" onclick="showBusinessCommand()">← Back to Growth Engine</button>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function startCompetitivePositioning() {
+    renderCompetitivePositioningIframe();
+}
+
+function renderCompetitivePositioningIframe() {
+    const userId = getCurrentUserId();
+    const email = currentUser?.email || '';
+    const iframeUrl = `https://lifecharter-competitive-positioning.vercel.app/?userId=${userId}&email=${encodeURIComponent(email)}`;
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎯 Competitive Positioning Strategy</h1>
+            <p class="welcome-subtitle">Analyze your market, differentiate from competitors, and claim your unique position. Your progress saves automatically.</p>
+        </div>
+        
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <!-- Iframe Container -->
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 20px;">
+                <iframe 
+                    id="competitive-positioning-iframe"
+                    src="${iframeUrl}" 
+                    style="width: 100%; height: 800px; border: none; border-radius: 12px; background: var(--ivory-light);"
+                    allow="fullscreen"
+                ></iframe>
+            </div>
+            
+            <div style="display: flex; gap: 12px; margin-top: 20px; justify-content: center;">
+                <button class="btn btn-secondary" onclick="exitCompetitivePositioning()">← Exit Assessment</button>
+                <button class="btn btn-primary" onclick="saveCompetitivePositioningProgress()">💾 Save & Continue Later</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function exitCompetitivePositioning() {
+    showBusinessCommand();
+}
+
+function saveCompetitivePositioningProgress() {
+    // Send message to iframe to trigger save
+    const iframe = document.getElementById('competitive-positioning-iframe');
+    if (iframe && iframe.contentWindow) {
+        iframe.contentWindow.postMessage({ type: 'parent:requestSave' }, '*');
+    }
+    showNotification('Progress saved!', 'success');
+}
+
+function renderCompetitiveSection() {
+    const section = competitiveAssessmentData.sections[competitiveCurrentSection];
+    const progress = ((competitiveCurrentSection + 1) / competitiveTotalSections) * 100;
+    
+    let questionsHtml = '';
+    section.questions.forEach(q => {
+        const savedValue = competitiveFormData[q.id] || '';
+        
+        if (q.type === 'textarea') {
+            questionsHtml += `
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">${q.text}${q.required ? ' *' : ''}</label>
+                    ${q.subtext ? `<p style="margin: 0 0 8px 0; font-size: 13px; color: var(--text-secondary);">${q.subtext}</p>` : ''}
+                    <textarea id="${q.id}" rows="4" style="width: 100%; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: inherit; resize: vertical;" ${q.required ? 'required' : ''}>${savedValue}</textarea>
+                </div>
+            `;
+        } else if (q.type === 'text' || q.type === 'email') {
+            questionsHtml += `
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--text-primary);">${q.text}${q.required ? ' *' : ''}</label>
+                    ${q.subtext ? `<p style="margin: 0 0 8px 0; font-size: 13px; color: var(--text-secondary);">${q.subtext}</p>` : ''}
+                    <input type="${q.type}" id="${q.id}" value="${savedValue}" placeholder="${q.placeholder || ''}" style="width: 100%; padding: 12px; border: 1px solid rgba(0,0,0,0.1); border-radius: 8px; font-family: inherit;" ${q.required ? 'required' : ''}>
+                </div>
+            `;
+        } else if (q.type === 'radio') {
+            questionsHtml += `
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--text-primary);">${q.text}</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${q.options.map(opt => `
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.02); border-radius: 8px; cursor: pointer; transition: background 0.2s;">
+                                <input type="radio" name="${q.id}" value="${opt.value}" ${savedValue === opt.value ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--sacred-teal);">
+                                <span style="color: var(--text-primary);">${opt.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        } else if (q.type === 'checkbox') {
+            const savedArray = savedValue ? savedValue.split(',') : [];
+            questionsHtml += `
+                <div class="form-group" style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 12px; font-weight: 600; color: var(--text-primary);">${q.text}</label>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+                        ${q.options.map(opt => `
+                            <label style="display: flex; align-items: center; gap: 10px; padding: 10px; background: rgba(0,0,0,0.02); border-radius: 8px; cursor: pointer;">
+                                <input type="checkbox" name="${q.id}" value="${opt.value}" ${savedArray.includes(opt.value) ? 'checked' : ''} style="width: 18px; height: 18px; accent-color: var(--sacred-teal);">
+                                <span style="color: var(--text-primary);">${opt.text}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+        }
+    });
+    
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎯 Competitive Positioning Assessment</h1>
+            <p class="welcome-subtitle">Define your market position and differentiation strategy.</p>
+        </div>
+        
+        <!-- Progress Bar -->
+        <div style="margin-bottom: 32px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="font-size: 13px; color: var(--text-secondary);">Section ${competitiveCurrentSection + 1} of ${competitiveTotalSections}</span>
+                <span style="font-size: 13px; color: var(--text-secondary);">${Math.round(progress)}% Complete</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: rgba(0,0,0,0.05); border-radius: 4px; overflow: hidden;">
+                <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, var(--sacred-teal), var(--royal-plum)); border-radius: 4px; transition: width 0.3s ease;"></div>
+            </div>
+        </div>
+        
+        <!-- Section Card -->
+        <div class="workspace-card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <div class="card-icon" style="background: rgba(46, 124, 131, 0.3);">${competitiveCurrentSection + 1}</div>
+                <div>
+                    <h3 class="card-title" style="margin: 0;">${section.title}</h3>
+                    <p style="margin: 4px 0 0 0; font-size: 13px; color: var(--text-secondary);">${section.description}</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 24px;">
+                ${questionsHtml}
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div style="display: flex; justify-content: space-between; gap: 16px;">
+            <button class="btn btn-secondary" onclick="competitivePrevSection()" ${competitiveCurrentSection === 0 ? 'disabled style="opacity: 0.5;"' : ''}>
+                ← Previous
+            </button>
+            
+            ${competitiveCurrentSection < competitiveTotalSections - 1 ? `
+                <button class="btn btn-primary" onclick="competitiveNextSection()">
+                    Next →
+                </button>
+            ` : `
+                <button class="btn btn-primary" onclick="submitCompetitiveAssessment()">
+                    Complete Assessment ✓
+                </button>
+            `}
+        </div>
+        
+        <!-- Save Progress -->
+        <div style="text-align: center; margin-top: 16px;">
+            <button class="btn btn-secondary" style="font-size: 13px; padding: 8px 16px;" onclick="saveCompetitiveProgress()">
+                💾 Save Progress
+            </button>
+        </div>
+    `;
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function competitiveNextSection() {
+    saveCompetitiveSectionData();
+    if (competitiveCurrentSection < competitiveTotalSections - 1) {
+        competitiveCurrentSection++;
+        renderCompetitiveSection();
+    }
+}
+
+function competitivePrevSection() {
+    saveCompetitiveSectionData();
+    if (competitiveCurrentSection > 0) {
+        competitiveCurrentSection--;
+        renderCompetitiveSection();
+    }
+}
+
+function saveCompetitiveSectionData() {
+    const section = competitiveAssessmentData.sections[competitiveCurrentSection];
+    section.questions.forEach(q => {
+        if (q.type === 'radio') {
+            const selected = document.querySelector(`input[name="${q.id}"]:checked`);
+            if (selected) competitiveFormData[q.id] = selected.value;
+        } else if (q.type === 'checkbox') {
+            const checked = document.querySelectorAll(`input[name="${q.id}"]:checked`);
+            competitiveFormData[q.id] = Array.from(checked).map(cb => cb.value).join(',');
+        } else {
+            const el = document.getElementById(q.id);
+            if (el) competitiveFormData[q.id] = el.value;
+        }
+    });
+}
+
+function saveCompetitiveProgress() {
+    saveCompetitiveSectionData();
+    localStorage.setItem('competitivePositioningData', JSON.stringify(competitiveFormData));
+    localStorage.setItem('competitivePositioningSection', competitiveCurrentSection);
+    showNotification('Progress saved!', 'success');
+}
+
+function loadCompetitiveProgress() {
+    const saved = localStorage.getItem('competitivePositioningData');
+    const savedSection = localStorage.getItem('competitivePositioningSection');
+    if (saved) {
+        competitiveFormData = JSON.parse(saved);
+    }
+    if (savedSection) {
+        competitiveCurrentSection = parseInt(savedSection);
+    }
+}
+
+function submitCompetitiveAssessment() {
+    saveCompetitiveSectionData();
+    saveCompetitiveProgress();
+    
+    // Show completion screen
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section" style="text-align: center; padding: 60px 20px;">
+            <div style="font-size: 80px; margin-bottom: 24px;">🎉</div>
+            <h1 class="welcome-title">Assessment Complete!</h1>
+            <p class="welcome-subtitle" style="max-width: 600px; margin: 0 auto 32px;">
+                Thank you for completing the Competitive Positioning Assessment. Your responses have been saved.
+            </p>
+            
+            <div class="workspace-card" style="max-width: 600px; margin: 0 auto 32px; text-align: left;">
+                <h3 style="margin: 0 0 16px 0; color: var(--text-primary);">What happens next?</h3>
+                <ul style="margin: 0; padding-left: 20px; color: var(--text-secondary);">
+                    <li style="margin-bottom: 8px;">Review your positioning strategy in the summary below</li>
+                    <li style="margin-bottom: 8px;">Download your complete assessment report</li>
+                    <li style="margin-bottom: 8px;">Schedule a strategy session to refine your positioning</li>
+                    <li>Implement your new positioning across all touchpoints</li>
+                </ul>
+            </div>
+            
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="viewCompetitiveSummary()">
+                    View Summary
+                </button>
+                <button class="btn btn-secondary" onclick="downloadCompetitiveReport()">
+                    Download Report
+                </button>
+                <button class="btn btn-secondary" onclick="showBusinessCommand()">
+                    Back to Growth Engine
+                </button>
+            </div>
+        </div>
+    `;
+    
+    showNotification('Assessment completed successfully!', 'success');
+}
+
+function viewCompetitiveSummary() {
+    let summaryHtml = '';
+    competitiveAssessmentData.sections.forEach((section, idx) => {
+        if (section.id === 'contact') return;
+        
+        summaryHtml += `
+            <div style="margin-bottom: 24px; padding: 20px; background: rgba(0,0,0,0.02); border-radius: 12px;">
+                <h4 style="margin: 0 0 12px 0; color: var(--sacred-teal);">${idx + 1}. ${section.title}</h4>
+        `;
+        
+        section.questions.forEach(q => {
+            const answer = competitiveFormData[q.id];
+            if (answer) {
+                summaryHtml += `
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-size: 13px; font-weight: 600; color: var(--text-primary);">${q.text}</div>
+                        <div style="font-size: 13px; color: var(--text-secondary); margin-top: 4px;">${answer}</div>
+                    </div>
+                `;
+            }
+        });
+        
+        summaryHtml += `</div>`;
+    });
+    
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📋 Your Positioning Summary</h1>
+            <p class="welcome-subtitle">Review your competitive positioning strategy.</p>
+        </div>
+        
+        <div class="workspace-card" style="margin-bottom: 24px;">
+            ${summaryHtml}
+        </div>
+        
+        <div style="display: flex; gap: 16px; justify-content: center;">
+            <button class="btn btn-secondary" onclick="showCompetitivePositioning()">
+                ← Back to Assessment
+            </button>
+            <button class="btn btn-primary" onclick="downloadCompetitiveReport()">
+                Download Full Report
+            </button>
+        </div>
+    `;
+}
+
+function downloadCompetitiveReport() {
+    let report = '# Competitive Positioning Assessment Report\n\n';
+    report += `Generated: ${new Date().toLocaleDateString()}\n\n`;
+    
+    competitiveAssessmentData.sections.forEach((section, idx) => {
+        report += `## ${idx + 1}. ${section.title}\n\n`;
+        
+        section.questions.forEach(q => {
+            const answer = competitiveFormData[q.id] || 'Not answered';
+            report += `**${q.text}**\n\n${answer}\n\n`;
+        });
+        
+        report += '\n---\n\n';
+    });
+    
+    const blob = new Blob([report], { type: 'text/markdown' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'competitive-positioning-report.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    showNotification('Report downloaded!', 'success');
 }
 
 function showOfferArchitecture() {
@@ -4135,7 +4853,7 @@ function renderCEODashboard() {
     
     let html = `
         <div class="welcome-section">
-            <h1 class="welcome-title">📊 CEO Dashboard</h1>
+            <h1 class="welcome-title">⚡ CEO Dashboard</h1>
             <p class="welcome-subtitle">Your customizable command center.</p>
         </div>
         
@@ -4413,9 +5131,10 @@ function renderFoundationProgressCard() {
     const brainProgress = brainAssessmentState.progress?.progress || 0;
     const soulProgress = soulAssessmentState.progress?.progress || 0;
     const brandProgress = brandVoiceState.progress?.progress || 0;
+    const auditProgress = businessAuditState.progress?.progress || 0;
     
     return `
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
             <div style="text-align: center;">
                 <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 8px;">
                     <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
@@ -4445,6 +5164,16 @@ function renderFoundationProgressCard() {
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 600; color: var(--ivory-light);">${Math.round(brandProgress)}%</div>
                 </div>
                 <div style="font-size: 12px; color: rgba(246, 241, 232, 0.7);">Brand Voice</div>
+            </div>
+            <div style="text-align: center;">
+                <div style="position: relative; width: 70px; height: 70px; margin: 0 auto 8px;">
+                    <svg viewBox="0 0 36 36" style="width: 100%; height: 100%; transform: rotate(-90deg);">
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="rgba(31, 49, 91, 0.5)" stroke-width="3"/>
+                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#CBA488" stroke-width="3" stroke-dasharray="${auditProgress}, 100"/>
+                    </svg>
+                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 14px; font-weight: 600; color: var(--ivory-light);">${Math.round(auditProgress)}%</div>
+                </div>
+                <div style="font-size: 12px; color: rgba(246, 241, 232, 0.7);">Business Audit</div>
             </div>
         </div>
         <button class="btn btn-secondary" style="width: 100%; margin-top: 16px; font-size: 13px;" onclick="showBusinessAssessment()">Continue Assessments →</button>
@@ -4846,6 +5575,127 @@ function showTeamCommunications() {
         </div>
         
         <div id="comms-container" style="padding: 20px;">
+            <!-- Meeting Agendas Section -->
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <h3 style="color: var(--warm-gold); margin: 0; font-size: 18px;">📅 Meeting Agendas</h3>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="showAddAgendaModal()" style="font-size: 13px; padding: 8px 16px;">+ Add New Agenda</button>
+                        <button class="btn btn-secondary" onclick="showMeetingAgendas()" style="font-size: 13px; padding: 8px 16px;">View All</button>
+                    </div>
+                </div>
+                <div id="agendas-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px;">
+                    <div class="agenda-card" style="background: rgba(46, 124, 131, 0.15); border-left: 3px solid var(--sacred-teal); padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Weekly Team Standup</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Every Monday at 9:00 AM</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Wins from last week<br>• Priorities for this week<br>• Blockers & support needed</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(94, 59, 108, 0.15); border-left: 3px solid var(--royal-plum); padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Monthly Strategy Review</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">First Friday of each month</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Progress on goals<br>• Market updates<br>• Strategic adjustments</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(212, 175, 99, 0.15); border-left: 3px solid var(--warm-gold); padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Client Check-ins</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">As scheduled</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Progress review<br>• Feedback collection<br>• Next steps planning</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(205, 190, 214, 0.15); border-left: 3px solid var(--soft-lavender); padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Quarterly Planning</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">First week of each quarter</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Review previous quarter<br>• Set quarterly OKRs<br>• Resource allocation</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(31, 49, 91, 0.3); border-left: 3px solid #4CAF50; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">One-on-One Check-ins</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Bi-weekly</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Individual progress<br>• Career development<br>• Feedback & support</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(255, 152, 0, 0.15); border-left: 3px solid #FF9800; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Sales Pipeline Review</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Every Wednesday</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Pipeline status<br>• Deal progression<br>• Forecast review</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(233, 30, 99, 0.15); border-left: 3px solid #E91E63; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Content Planning Session</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">First Tuesday monthly</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Content calendar review<br>• Campaign planning<br>• Creative brainstorm</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(0, 150, 136, 0.15); border-left: 3px solid #009688; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Project Kickoff</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">As needed</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Project scope<br>• Roles & responsibilities<br>• Timeline & milestones</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(63, 81, 181, 0.15); border-left: 3px solid #3F51B5; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Retrospective</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">End of each sprint/project</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• What went well<br>• What to improve<br>• Action items</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(121, 85, 72, 0.15); border-left: 3px solid #795548; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">All-Hands Meeting</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Monthly</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Company updates<br>• Team highlights<br>• Q&A session</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(156, 39, 176, 0.15); border-left: 3px solid #9C27B0; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Board Meeting</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Quarterly</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Financial review<br>• Strategic initiatives<br>• Governance matters</div>
+                    </div>
+                    <div class="agenda-card" style="background: rgba(255, 87, 34, 0.15); border-left: 3px solid #FF5722; padding: 16px; border-radius: 0 12px 12px 0; position: relative;">
+                        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+                            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+                            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+                        </div>
+                        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">Budget Review</div>
+                        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">Monthly</div>
+                        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">• Expense review<br>• Revenue analysis<br>• Budget adjustments</div>
+                    </div>
+                </div>
+            </div>
+            
             <div style="display: grid; grid-template-columns: 250px 1fr; gap: 20px; height: 600px;">
                 <!-- Channels Sidebar -->
                 <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 20px;">
@@ -4928,6 +5778,164 @@ function handleCommsAction(action) {
 
 function loadChannelMessages(channelName) {
     console.log('Loading messages for channel:', channelName);
+}
+
+// Meeting Agenda Helper Functions
+function showAddAgendaModal() {
+    const name = prompt('Enter agenda name:');
+    if (!name) return;
+    
+    const schedule = prompt('Enter schedule (e.g., "Every Monday at 9 AM"):');
+    if (!schedule) return;
+    
+    const items = prompt('Enter agenda items (separated by commas):');
+    if (!items) return;
+    
+    const agendaList = document.getElementById('agendas-list');
+    if (!agendaList) return;
+    
+    const colors = [
+        { bg: 'rgba(46, 124, 131, 0.15)', border: 'var(--sacred-teal)' },
+        { bg: 'rgba(94, 59, 108, 0.15)', border: 'var(--royal-plum)' },
+        { bg: 'rgba(212, 175, 99, 0.15)', border: 'var(--warm-gold)' },
+        { bg: 'rgba(205, 190, 214, 0.15)', border: 'var(--soft-lavender)' }
+    ];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    
+    const agendaItems = items.split(',').map(item => `• ${item.trim()}`).join('<br>');
+    
+    const newAgenda = document.createElement('div');
+    newAgenda.className = 'agenda-card';
+    newAgenda.style.cssText = `background: ${randomColor.bg}; border-left: 3px solid ${randomColor.border}; padding: 16px; border-radius: 0 12px 12px 0; position: relative;`;
+    newAgenda.innerHTML = `
+        <div style="position: absolute; top: 8px; right: 8px; display: flex; gap: 8px;">
+            <button onclick="editAgenda(this)" style="background: transparent; border: none; color: var(--warm-gold); cursor: pointer; font-size: 14px; opacity: 0.7;" title="Edit">✎</button>
+            <button onclick="deleteAgenda(this)" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; opacity: 0.7;" title="Delete">×</button>
+        </div>
+        <div class="agenda-name" style="font-weight: 600; color: var(--ivory-light); margin-bottom: 4px; padding-right: 50px;">${name}</div>
+        <div class="agenda-schedule" style="font-size: 12px; color: rgba(246, 241, 232, 0.6); margin-bottom: 8px;">${schedule}</div>
+        <div class="agenda-items" style="font-size: 13px; color: rgba(246, 241, 232, 0.7);">${agendaItems}</div>
+    `;
+    
+    agendaList.appendChild(newAgenda);
+    showNotification('Agenda added successfully!', 'success');
+}
+
+function editAgenda(btn) {
+    const agendaCard = btn.closest('.agenda-card');
+    if (!agendaCard) return;
+    
+    const nameEl = agendaCard.querySelector('.agenda-name');
+    const scheduleEl = agendaCard.querySelector('.agenda-schedule');
+    const itemsEl = agendaCard.querySelector('.agenda-items');
+    
+    const currentName = nameEl.textContent;
+    const currentSchedule = scheduleEl.textContent;
+    
+    // Parse current items into array
+    const currentItemsHtml = itemsEl.innerHTML;
+    const itemsArray = currentItemsHtml.split('<br>').filter(item => item.trim()).map(item => {
+        return item.replace(/• /g, '').trim();
+    });
+    
+    // Create modal for editing
+    const modalHtml = `
+        <div id="edit-agenda-modal" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 1000;">
+            <div style="background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.3); border-radius: 20px; padding: 32px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin: 0 0 24px 0;">Edit Agenda</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--ivory-light);">Agenda Name</label>
+                    <input type="text" id="edit-agenda-name" value="${currentName}" style="width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-family: inherit;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--ivory-light);">Schedule</label>
+                    <input type="text" id="edit-agenda-schedule" value="${currentSchedule}" style="width: 100%; padding: 12px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-family: inherit;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: var(--ivory-light);">Agenda Items</label>
+                    <div id="edit-agenda-items-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                        ${itemsArray.map((item, index) => `
+                            <div class="agenda-item-row" style="display: flex; gap: 8px; align-items: center;">
+                                <span style="color: var(--warm-gold);">•</span>
+                                <input type="text" class="agenda-item-input" value="${item}" style="flex: 1; padding: 10px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-family: inherit;">
+                                <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; padding: 4px;">×</button>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button onclick="addEditAgendaItem()" style="background: transparent; border: 1px dashed rgba(212, 175, 99, 0.3); color: var(--warm-gold); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px;">+ Add Item</button>
+                </div>
+                
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button onclick="closeEditAgendaModal()" class="btn btn-secondary">Cancel</button>
+                    <button onclick="saveAgendaEdit('${agendaCard.id || ''}')" class="btn btn-primary">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    const modalContainer = document.createElement('div');
+    modalContainer.innerHTML = modalHtml;
+    document.body.appendChild(modalContainer);
+    
+    // Store reference to agenda card being edited
+    window.currentEditingAgenda = agendaCard;
+}
+
+function addEditAgendaItem() {
+    const itemsList = document.getElementById('edit-agenda-items-list');
+    const newRow = document.createElement('div');
+    newRow.className = 'agenda-item-row';
+    newRow.style.cssText = 'display: flex; gap: 8px; align-items: center;';
+    newRow.innerHTML = `
+        <span style="color: var(--warm-gold);">•</span>
+        <input type="text" class="agenda-item-input" placeholder="Enter agenda item..." style="flex: 1; padding: 10px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); font-family: inherit;">
+        <button onclick="this.parentElement.remove()" style="background: transparent; border: none; color: #e74c3c; cursor: pointer; font-size: 18px; padding: 4px;">×</button>
+    `;
+    itemsList.appendChild(newRow);
+}
+
+function closeEditAgendaModal() {
+    const modal = document.getElementById('edit-agenda-modal');
+    if (modal) {
+        modal.remove();
+    }
+    window.currentEditingAgenda = null;
+}
+
+function saveAgendaEdit() {
+    const agendaCard = window.currentEditingAgenda;
+    if (!agendaCard) return;
+    
+    const newName = document.getElementById('edit-agenda-name').value;
+    const newSchedule = document.getElementById('edit-agenda-schedule').value;
+    
+    // Get all agenda items
+    const itemInputs = document.querySelectorAll('.agenda-item-input');
+    const items = Array.from(itemInputs).map(input => input.value.trim()).filter(item => item);
+    
+    if (!newName) {
+        alert('Agenda name is required');
+        return;
+    }
+    
+    // Update the agenda card
+    agendaCard.querySelector('.agenda-name').textContent = newName;
+    agendaCard.querySelector('.agenda-schedule').textContent = newSchedule;
+    agendaCard.querySelector('.agenda-items').innerHTML = items.map(item => `• ${item}`).join('<br>');
+    
+    closeEditAgendaModal();
+    showNotification('Agenda updated successfully!', 'success');
+}
+
+function deleteAgenda(btn) {
+    if (confirm('Are you sure you want to delete this agenda?')) {
+        btn.closest('.agenda-card').remove();
+        showNotification('Agenda deleted', 'success');
+    }
 }
 
 // Meeting Agendas Module
@@ -5292,6 +6300,27 @@ function viewSOP(sopId) {
 
 function filterSOPs(filter) {
     console.log('Filtering SOPs by:', filter);
+    
+    // Update active button state
+    document.querySelectorAll('[data-filter]').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.filter === filter) {
+            btn.classList.add('active');
+        }
+    });
+    
+    // Filter the SOP cards
+    const sopCards = document.querySelectorAll('.sop-card');
+    sopCards.forEach(card => {
+        const categorySpan = card.querySelector('span');
+        const category = categorySpan.textContent.toLowerCase();
+        
+        if (filter === 'all' || category === filter) {
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
 }
 
 // ============================================
@@ -5651,10 +6680,6 @@ function saveBusinessModelCanvas() {
     
     alert('✅ Business Model Canvas saved!');
     showBusinessAssessment();
-}
-
-function showCompetitivePositioning() {
-    window.open('https://lifecharter-competitive-positioning.vercel.app', '_blank');
 }
 
 // ============================================
@@ -7295,6 +8320,12 @@ function showClientJourney() {
 
 // Brand Voice Assessment State with iframe integration
 let brandVoiceState = {
+    progress: null,
+    assessments: [],
+    currentView: 'overview'
+};
+
+let businessAuditState = {
     progress: null,
     assessments: [],
     currentView: 'overview'
@@ -10435,6 +11466,19 @@ window.showObjectionHandling = showObjectionHandling;
 window.showClientOnboarding = showClientOnboarding;
 window.showProgressTracking = showProgressTracking;
 
+// Expose Auth functions
+window.showApp = showApp;
+window.showLogin = showLogin;
+window.showSignup = showSignup;
+window.quickDemoLogin = quickDemoLogin;
+window.handleLogin = handleLogin;
+window.handleSignup = handleSignup;
+window.logout = logout;
+
+// Expose Market Strategy functions
+window.addCompetitorField = addCompetitorField;
+window.saveMarketStrategy = saveMarketStrategy;
+
 // Expose Operations & Systems modules
 window.showCEODashboard = showCEODashboard;
 window.showTeamCommunications = showTeamCommunications;
@@ -10442,6 +11486,14 @@ window.showMeetingAgendas = showMeetingAgendas;
 window.showSOPLibrary = showSOPLibrary;
 window.showTechStackManager = showTechStackManager;
 window.showDocumentVault = showDocumentVault;
+
+// Expose Meeting Agenda functions
+window.showAddAgendaModal = showAddAgendaModal;
+window.editAgenda = editAgenda;
+window.addEditAgendaItem = addEditAgendaItem;
+window.closeEditAgendaModal = closeEditAgendaModal;
+window.saveAgendaEdit = saveAgendaEdit;
+window.deleteAgenda = deleteAgenda;
 
 // Expose Notifications & Support functions
 window.toggleNotifications = toggleNotifications;
@@ -10453,4 +11505,19 @@ window.searchFAQ = searchFAQ;
 window.switchSupportTab = switchSupportTab;
 window.toggleFAQCategory = toggleFAQCategory;
 window.toggleFAQAnswer = toggleFAQAnswer;
+
+// Expose Competitive Positioning Assessment functions
+window.showCompetitivePositioning = showCompetitivePositioning;
+window.renderCompetitivePositioningOverview = renderCompetitivePositioningOverview;
+window.startCompetitivePositioning = startCompetitivePositioning;
+window.renderCompetitivePositioningIframe = renderCompetitivePositioningIframe;
+window.exitCompetitivePositioning = exitCompetitivePositioning;
+window.saveCompetitivePositioningProgress = saveCompetitivePositioningProgress;
+window.renderCompetitiveSection = renderCompetitiveSection;
+window.competitiveNextSection = competitiveNextSection;
+window.competitivePrevSection = competitivePrevSection;
+window.saveCompetitiveProgress = saveCompetitiveProgress;
+window.submitCompetitiveAssessment = submitCompetitiveAssessment;
+window.viewCompetitiveSummary = viewCompetitiveSummary;
+window.downloadCompetitiveReport = downloadCompetitiveReport;
 
