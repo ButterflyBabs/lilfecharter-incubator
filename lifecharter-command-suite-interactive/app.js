@@ -9598,6 +9598,168 @@ function showOutreachAutomation() {
 }
 
 // ============================================
+// DAILY OUTREACH AUTOMATION SYSTEM
+// ============================================
+
+function showOutreachAutomation() {
+    setActiveNav('growth-outreach');
+    
+    // Initialize queue if not already done
+    if (!window.outreachQueue) {
+        window.outreachQueue = new OutreachQueue();
+    }
+    
+    const queue = window.outreachQueue;
+    const stats = queue.getStats();
+    const todaysQueue = queue.getTodaysQueue();
+    
+    const html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📧 Daily Outreach Command Center</h1>
+            <p class="welcome-subtitle">Automated email outreach with personalized templates and follow-up sequences.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="progress-overview">
+            <div class="progress-card">
+                <div class="progress-number">${stats.sentToday}</div>
+                <div class="progress-label">Sent Today</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.remainingToday}</div>
+                <div class="progress-label">Remaining</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.openRate}%</div>
+                <div class="progress-label">Open Rate</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.replyRate}%</div>
+                <div class="progress-label">Reply Rate</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.pending}</div>
+                <div class="progress-label">In Queue</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.converted}</div>
+                <div class="progress-label">Conversions</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="generateDailyQueue()" style="display: flex; align-items: center; gap: 10px;">
+                <span>🎯</span>
+                <span>Generate Daily Queue</span>
+            </button>
+            <button class="btn btn-secondary" onclick="processFollowUps()" style="display: flex; align-items: center; gap: 10px;">
+                <span>🔄</span>
+                <span>Process Follow-ups</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showEmailComposer()" style="display: flex; align-items: center; gap: 10px;">
+                <span>✉️</span>
+                <span>Compose Email</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showTemplateLibrary()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📚</span>
+                <span>Templates</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showQueueManager()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📋</span>
+                <span>Manage Queue</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showAnalytics()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📊</span>
+                <span>Analytics</span>
+            </button>
+        </div>
+
+        <!-- Today's Queue -->
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2 class="section-title">Today's Queue (${todaysQueue.length})</h2>
+        </div>
+        
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 24px; margin-bottom: 40px;">
+            ${todaysQueue.length === 0 ? `
+                <div style="text-align: center; padding: 60px 40px;">
+                    <div style="font-size: 64px; margin-bottom: 24px;">📭</div>
+                    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 12px;">No emails scheduled for today</h3>
+                    <p style="color: rgba(246, 241, 232, 0.7); margin-bottom: 30px;">Generate a daily queue or add leads manually to get started.</p>
+                    <button class="btn btn-primary" onclick="generateDailyQueue()">Generate Queue →</button>
+                </div>
+            ` : `
+                <div style="display: grid; gap: 12px;">
+                    ${todaysQueue.slice(0, 10).map(item => `
+                        <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(246, 241, 232, 0.05); border-radius: 12px; border: 1px solid rgba(212, 175, 99, 0.1);">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: ${item.priority === 'high' ? '#e74c3c' : item.priority === 'normal' ? '#f39c12' : '#95a5a6'};"></div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--ivory-light);">${item.leadName}</div>
+                                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">${item.leadEmail} • ${EMAIL_TEMPLATES[item.templateId]?.name || item.templateId}</div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="previewEmail('${item.id}')">Preview</button>
+                                <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" onclick="sendEmail('${item.id}')">Send</button>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="skipEmail('${item.id}')">Skip</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${todaysQueue.length > 10 ? `
+                        <div style="text-align: center; padding: 16px; color: rgba(246, 241, 232, 0.6);">
+                            And ${todaysQueue.length - 10} more in queue...
+                        </div>
+                    ` : ''}
+                </div>
+            `}
+        </div>
+
+        <!-- Email Templates -->
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2 class="section-title">Email Templates</h2>
+        </div>
+        
+        <div class="workspace-grid" style="margin-bottom: 40px;">
+            ${Object.values(EMAIL_TEMPLATES).slice(0, 4).map(template => `
+                <div class="workspace-card" style="cursor: pointer;" onclick="showEmailComposer('${template.id}')">
+                    <div class="card-header">
+                        <div class="card-icon" style="font-size: 24px;">📧</div>
+                        <span class="card-status status-locked">${template.category}</span>
+                    </div>
+                    <h3 class="card-title">${template.name}</h3>
+                    <p class="card-description" style="font-size: 13px; font-style: italic;">${template.subject.substring(0, 60)}...</p>
+                </div>
+            `).join('')}
+            <div class="workspace-card" style="cursor: pointer; border: 2px dashed rgba(212, 175, 99, 0.3);" onclick="showTemplateLibrary()">
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                    <h3 class="card-title">View All Templates</h3>
+                    <p class="card-description">Browse the complete template library</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 12px;">Daily Outreach Workflow</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                1. Generate daily queue from your leads<br>
+                2. Preview and personalize each email<br>
+                3. Send with one click<br>
+                4. System automatically tracks opens, clicks, and replies<br>
+                5. Follow-ups are scheduled automatically
+            </p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="showOutreachSettings()">Configure Settings</button>
+                <button class="btn btn-secondary" onclick="showHelpPage('outreach')">Learn More</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+// ============================================
 // LEAD DATABASE - FULL IMPLEMENTATION
 // ============================================
 
