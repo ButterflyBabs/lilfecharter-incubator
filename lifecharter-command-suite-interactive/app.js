@@ -1174,7 +1174,10 @@ function handleSignup(e) {
 
 // Quick demo login
 function quickDemoLogin() {
-    console.log('Quick demo login');
+    console.log('Quick demo login clicked');
+    
+    // Prevent default form submission if called from a form
+    event && event.preventDefault && event.preventDefault();
     
     let user = demoUsers.find(u => u.email === 'demo@lifecharter.com');
     
@@ -1196,8 +1199,16 @@ function quickDemoLogin() {
     localStorage.setItem('lccs_token', authToken);
     localStorage.setItem('lccs_demo_current_email', user.email);
     currentUser = user;
+    
+    console.log('Demo user set:', currentUser);
+    
+    // Force show the app
     showApp();
-    loadDashboard();
+    
+    // Add a notification
+    addNotification('Welcome to LifeCharter Command Suite!', 'You are now logged in as Demo User', { icon: '👋' });
+    
+    return false;
 }
 
 // Logout
@@ -2559,21 +2570,448 @@ function renderSupportPanel() {
     `;
 }
 
-// Placeholder functions for support panel
+// Help Page Router - Called from left sidebar navigation
+function showHelpPage(section) {
+    setActiveNav('help');
+    
+    switch(section) {
+        case 'getting-started':
+            renderGettingStartedPage();
+            break;
+        case 'faq':
+            renderFAQPage();
+            break;
+        case 'tutorials':
+            renderVideoTutorialsPage();
+            break;
+        case 'contact':
+            renderContactSupportPage();
+            break;
+        case 'shortcuts':
+            renderKeyboardShortcutsPage();
+            break;
+        default:
+            renderHelpOverview();
+    }
+}
+
+// Help Overview Page
+function renderHelpOverview() {
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">❓ Help & Support</h1>
+            <p class="welcome-subtitle">Find answers, learn the platform, and get support when you need it.</p>
+        </div>
+        
+        <div class="workspace-grid">
+            <div class="workspace-card" onclick="showHelpPage('getting-started')">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(46, 124, 131, 0.2);">🚀</div>
+                </div>
+                <h3 class="card-title">Getting Started</h3>
+                <p class="card-description">Learn the basics of LifeCharter Command Suite and set up your business foundation.</p>
+            </div>
+            
+            <div class="workspace-card" onclick="showHelpPage('faq')">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(212, 175, 99, 0.2);">❓</div>
+                </div>
+                <h3 class="card-title">FAQ</h3>
+                <p class="card-description">Find answers to commonly asked questions about features, billing, and troubleshooting.</p>
+            </div>
+            
+            <div class="workspace-card" onclick="showHelpPage('tutorials')">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(205, 190, 214, 0.2);">🎥</div>
+                </div>
+                <h3 class="card-title">Video Tutorials</h3>
+                <p class="card-description">Watch step-by-step video guides to master the platform.</p>
+            </div>
+            
+            <div class="workspace-card" onclick="showHelpPage('contact')">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(94, 59, 108, 0.2);">💬</div>
+                </div>
+                <h3 class="card-title">Contact Support</h3>
+                <p class="card-description">Get in touch with our support team for personalized assistance.</p>
+            </div>
+            
+            <div class="workspace-card" onclick="showHelpPage('shortcuts')">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(46, 124, 131, 0.2);">⌨️</div>
+                </div>
+                <h3 class="card-title">Keyboard Shortcuts</h3>
+                <p class="card-description">Speed up your workflow with keyboard commands and shortcuts.</p>
+            </div>
+        </div>
+    `;
+}
+
+// Getting Started Page
+function renderGettingStartedPage() {
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🚀 Getting Started</h1>
+            <p class="welcome-subtitle">Welcome to LifeCharter Command Suite. Let's get you set up for success.</p>
+        </div>
+        
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 24px;">Quick Start Guide</h3>
+                
+                <div style="display: grid; gap: 20px;">
+                    <div style="display: flex; gap: 16px; padding: 20px; background: rgba(46, 124, 131, 0.1); border-radius: 12px; border-left: 4px solid var(--sacred-teal);">
+                        <div style="font-size: 28px;">1️⃣</div>
+                        <div>
+                            <h4 style="color: var(--ivory-light); margin-bottom: 8px;">Complete Your Assessments</h4>
+                            <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; line-height: 1.6;">Start with the Brain.md and Soul.md assessments to build your business and personal foundation. These inform your entire Command Suite experience.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; padding: 20px; background: rgba(212, 175, 99, 0.1); border-radius: 12px; border-left: 4px solid var(--warm-gold);">
+                        <div style="font-size: 28px;">2️⃣</div>
+                        <div>
+                            <h4 style="color: var(--ivory-light); margin-bottom: 8px;">Explore the Command Center</h4>
+                            <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; line-height: 1.6;">Your Command Center shows your next best actions, revenue snapshot, and active deals. Check it daily to stay on track.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; padding: 20px; background: rgba(205, 190, 214, 0.1); border-radius: 12px; border-left: 4px solid var(--soft-lavender);">
+                        <div style="font-size: 28px;">3️⃣</div>
+                        <div>
+                            <h4 style="color: var(--ivory-light); margin-bottom: 8px;">Build Your Foundation</h4>
+                            <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; line-height: 1.6;">Work through the Foundation modules: Business Brain, Founder Soul, Brand Voice, and Competitive Positioning.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 16px; padding: 20px; background: rgba(94, 59, 108, 0.1); border-radius: 12px; border-left: 4px solid var(--royal-plum);">
+                        <div style="font-size: 28px;">4️⃣</div>
+                        <div>
+                            <h4 style="color: var(--ivory-light); margin-bottom: 8px;">Activate Growth Engine</h4>
+                            <p style="color: rgba(246, 241, 232, 0.7); font-size: 14px; line-height: 1.6;">Set up your Market Strategy, Offers, Marketing, and Sales systems to start growing your business.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-secondary" onclick="showHelpPage()">← Back to Help</button>
+            </div>
+        </div>
+    `;
+}
+
+// FAQ Page
+function renderFAQPage() {
+    const categories = {
+        'getting-started': { label: 'Getting Started', icon: '🚀', faqs: [
+            { q: 'What is LifeCharter Command Suite?', a: 'LifeCharter Command Suite is your complete business operating system. It includes tools for assessments, strategy, content, sales, operations, and AI agent management—all designed to help you build a Sacred Kaleidoscope business.' },
+            { q: 'How do I get started?', a: 'Begin by completing the Brain.md and Soul.md assessments in the Foundation section. These establish your business identity and personal alignment, which inform all other tools.' },
+            { q: 'Is my data secure?', a: 'Yes. We use industry-standard encryption and security practices. Your data is stored securely and never shared with third parties without your consent.' }
+        ]},
+        'account': { label: 'Account & Billing', icon: '👤', faqs: [
+            { q: 'How do I update my profile?', a: 'Go to Settings → Profile to update your name, business name, and other details. Email changes require contacting support.' },
+            { q: 'Can I change my password?', a: 'Password management is coming soon. For now, contact support if you need to reset your password.' },
+            { q: 'What payment methods do you accept?', a: 'We accept all major credit cards. Additional payment options will be available soon.' }
+        ]},
+        'features': { label: 'Features & Tools', icon: '🔧', faqs: [
+            { q: 'What assessments are available?', a: 'We offer Brain.md (business identity), Soul.md (personal alignment), Business Command Audit (comprehensive business review), Competitive Positioning, Value Proposition, Offer Architecture, Client Journey Map, and Brand Voice assessments.' },
+            { q: 'Can I create AI agents?', a: 'Yes! Use the AI Team section to create, customize, and deploy AI agents for support, sales, content, and more.' },
+            { q: 'How does the Content Calendar work?', a: 'The Content Calendar helps you plan and schedule content across platforms. You can add content items, set publish dates, and track status.' }
+        ]},
+        'technical': { label: 'Technical Support', icon: '⚙️', faqs: [
+            { q: 'The page isn\'t loading properly. What should I do?', a: 'Try refreshing your browser, clearing your cache, or using a different browser. If issues persist, contact support.' },
+            { q: 'Do you have a mobile app?', a: 'Not yet, but the Command Suite is fully responsive and works great on mobile browsers. A native app is on our roadmap.' },
+            { q: 'Can I export my data?', a: 'Data export features are coming soon. Contact support if you need your data in the meantime.' }
+        ]}
+    };
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">❓ Frequently Asked Questions</h1>
+            <p class="welcome-subtitle">Find answers to common questions about LifeCharter Command Suite.</p>
+        </div>
+        
+        <div style="max-width: 900px; margin: 0 auto;">
+            <div style="margin-bottom: 30px;">
+                <input type="text" id="faq-search-input" placeholder="Search FAQ..." oninput="filterFAQ(this.value)" 
+                    style="width: 100%; padding: 14px 20px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 12px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+            </div>
+            
+            <div id="faq-content">
+    `;
+    
+    for (const [key, category] of Object.entries(categories)) {
+        html += `
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; margin-bottom: 20px;" class="faq-category" data-category="${key}">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--warm-gold); margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+                    <span>${category.icon}</span>
+                    <span>${category.label}</span>
+                </h3>
+                <div style="display: grid; gap: 12px;">
+        `;
+        
+        category.faqs.forEach((faq, idx) => {
+            html += `
+                <div class="faq-item" style="border-bottom: 1px solid rgba(212, 175, 99, 0.1); padding-bottom: 12px;" data-question="${faq.q.toLowerCase()}" data-answer="${faq.a.toLowerCase()}">
+                    <div onclick="toggleFAQItem('${key}-${idx}')" style="cursor: pointer; color: var(--ivory-light); font-weight: 500; display: flex; justify-content: space-between; align-items: center;">
+                        <span>${faq.q}</span>
+                        <span id="faq-toggle-${key}-${idx}">▼</span>
+                    </div>
+                    <div id="faq-answer-${key}-${idx}" style="display: none; color: rgba(246, 241, 232, 0.8); font-size: 14px; line-height: 1.6; margin-top: 12px; padding-left: 16px; border-left: 2px solid rgba(212, 175, 99, 0.3);">
+                        ${faq.a}
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+    }
+    
+    html += `
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="showHelpPage()">← Back to Help</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function toggleFAQItem(id) {
+    const answer = document.getElementById(`faq-answer-${id}`);
+    const toggle = document.getElementById(`faq-toggle-${id}`);
+    if (answer) {
+        const isOpen = answer.style.display === 'block';
+        answer.style.display = isOpen ? 'none' : 'block';
+        if (toggle) toggle.textContent = isOpen ? '▼' : '▲';
+    }
+}
+
+function filterFAQ(query) {
+    const items = document.querySelectorAll('.faq-item');
+    const categories = document.querySelectorAll('.faq-category');
+    const lowerQuery = query.toLowerCase();
+    
+    items.forEach(item => {
+        const question = item.getAttribute('data-question');
+        const answer = item.getAttribute('data-answer');
+        const matches = question.includes(lowerQuery) || answer.includes(lowerQuery);
+        item.style.display = matches ? 'block' : 'none';
+    });
+    
+    // Hide empty categories
+    categories.forEach(cat => {
+        const visibleItems = cat.querySelectorAll('.faq-item[style*="display: block"], .faq-item:not([style*="display: none"])');
+        cat.style.display = visibleItems.length > 0 ? 'block' : 'none';
+    });
+}
+
+// Video Tutorials Page
+function renderVideoTutorialsPage() {
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">🎥 Video Tutorials</h1>
+            <p class="welcome-subtitle">Learn LifeCharter Command Suite with step-by-step video guides.</p>
+        </div>
+        
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 60px 40px; text-align: center;">
+                <div style="font-size: 64px; margin-bottom: 24px;">🎬</div>
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 16px;">Video Tutorials Coming Soon</h3>
+                <p style="color: rgba(246, 241, 232, 0.7); max-width: 500px; margin: 0 auto 30px; line-height: 1.6;">
+                    We're creating comprehensive video tutorials to help you master every aspect of LifeCharter Command Suite. 
+                    Check back soon for guided walkthroughs!
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" onclick="showHelpPage()">← Back to Help</button>
+                    <button class="btn btn-primary" onclick="showHelpPage('contact')">Request a Topic</button>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Contact Support Page
+function renderContactSupportPage() {
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">💬 Contact Support</h1>
+            <p class="welcome-subtitle">Get personalized help from our support team.</p>
+        </div>
+        
+        <div style="max-width: 700px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px;">
+                <form onsubmit="event.preventDefault(); submitHelpTicket();">
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Subject *</label>
+                        <select id="help-subject" style="width: 100%; padding: 14px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;" required>
+                            <option value="">Select a topic...</option>
+                            <option value="technical">Technical Issue</option>
+                            <option value="billing">Billing Question</option>
+                            <option value="feature">Feature Request</option>
+                            <option value="account">Account Help</option>
+                            <option value="training">Training/How-To</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Priority</label>
+                        <select id="help-priority" style="width: 100%; padding: 14px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                            <option value="low">Low - General question</option>
+                            <option value="medium" selected>Medium - Need help soon</option>
+                            <option value="high">High - Important issue</option>
+                            <option value="urgent">Urgent - Critical problem</option>
+                        </select>
+                    </div>
+                    
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Message *</label>
+                        <textarea id="help-message" rows="6" placeholder="Describe your issue or question in detail..." 
+                            style="width: 100%; padding: 14px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px; resize: vertical;" required></textarea>
+                    </div>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Attach Screenshot (optional)</label>
+                        <input type="file" id="help-attachment" accept="image/*" 
+                            style="width: 100%; padding: 14px; background: rgba(246, 241, 232, 0.05); border: 1px dashed rgba(212, 175, 99, 0.3); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 14px;">
+                    </div>
+                    
+                    <div style="display: flex; gap: 12px;">
+                        <button type="button" class="btn btn-secondary" onclick="showHelpPage()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Ticket</button>
+                    </div>
+                </form>
+                
+                <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid rgba(212, 175, 99, 0.1); text-align: center;">
+                    <p style="font-size: 13px; color: rgba(246, 241, 232, 0.5); margin-bottom: 8px;">Prefer email?</p>
+                    <a href="mailto:amilynne@amilynnecarroll.com" style="color: var(--sacred-teal); font-size: 15px; text-decoration: none;">amilynne@amilynnecarroll.com</a>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function submitHelpTicket() {
+    const subject = document.getElementById('help-subject').value;
+    const priority = document.getElementById('help-priority').value;
+    const message = document.getElementById('help-message').value;
+    
+    if (!subject || !message) {
+        alert('Please fill in all required fields');
+        return;
+    }
+    
+    // Create mailto link
+    const emailSubject = `[${priority.toUpperCase()}] ${subject} - LifeCharter Support`;
+    const emailBody = `Priority: ${priority}\n\nMessage:\n${message}`;
+    const mailtoLink = `mailto:amilynne@amilynnecarroll.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+    
+    // Show success message
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">✅ Ticket Submitted</h1>
+            <p class="welcome-subtitle">Thank you for reaching out. We'll get back to you soon.</p>
+        </div>
+        
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 50px 40px;">
+                <div style="font-size: 64px; margin-bottom: 24px;">✅</div>
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 16px;">Support Ticket Created!</h3>
+                <p style="color: rgba(246, 241, 232, 0.7); margin-bottom: 30px; line-height: 1.6;">
+                    Your email client should open with a pre-filled message. If it doesn't open automatically, 
+                    you can email us directly at <strong>amilynne@amilynnecarroll.com</strong>
+                </p>
+                <div style="display: flex; gap: 12px; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="showHelpPage()">Back to Help</button>
+                    <button class="btn btn-primary" onclick="showHelpPage('contact')">Submit Another</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Open email client
+    setTimeout(() => {
+        window.open(mailtoLink, '_blank');
+    }, 500);
+}
+
+// Keyboard Shortcuts Page
+function renderKeyboardShortcutsPage() {
+    document.getElementById('main-content').innerHTML = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">⌨️ Keyboard Shortcuts</h1>
+            <p class="welcome-subtitle">Speed up your workflow with these keyboard commands.</p>
+        </div>
+        
+        <div style="max-width: 800px; margin: 0 auto;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--warm-gold); margin-bottom: 24px;">Navigation</h3>
+                <div style="display: grid; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Search</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ K</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Command Center</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ 1</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Notifications</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ N</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Help</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ /</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; margin-bottom: 30px;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--warm-gold); margin-bottom: 24px;">General</h3>
+                <div style="display: grid; gap: 16px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Save</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ S</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Close Modal/Panel</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">Esc</code>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(246, 241, 232, 0.03); border-radius: 10px;">
+                        <span style="color: var(--ivory-light);">Go Back</span>
+                        <code style="background: rgba(246, 241, 232, 0.1); padding: 6px 12px; border-radius: 6px; font-family: monospace; color: var(--warm-gold);">⌘ ←</code>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <button class="btn btn-secondary" onclick="showHelpPage()">← Back to Help</button>
+            </div>
+        </div>
+    `;
+}
+
+// Placeholder functions for support panel (keep for backward compatibility)
 function showGettingStarted() {
-    alert('Getting Started guide coming soon!');
+    showHelpPage('getting-started');
 }
 
 function showFAQ() {
-    alert('FAQ coming soon!');
+    showHelpPage('faq');
 }
 
 function showVideoTutorials() {
-    alert('Video tutorials coming soon!');
+    showHelpPage('tutorials');
 }
 
 function showContactSupport() {
-    alert('Contact support form coming soon!');
+    showHelpPage('contact');
 }
 
 // Library placeholder
@@ -4463,6 +4901,17 @@ function showSettings() {
                 <p class="card-description">Configure email notifications and alerts.</p>
                 <div class="card-actions">
                     <button class="btn btn-secondary">Coming Soon</button>
+                </div>
+            </div>
+            
+            <div class="workspace-card">
+                <div class="card-header">
+                    <div class="card-icon">📱</div>
+                </div>
+                <h3 class="card-title">Telegram Integration</h3>
+                <p class="card-description">Connect Telegram to receive instant notifications.</p>
+                <div class="card-actions">
+                    <button class="btn btn-primary" onclick="showTelegramSettings()">Configure</button>
                 </div>
             </div>
             
@@ -8987,6 +9436,168 @@ async function saveICP() {
 }
 
 // ============================================
+// DAILY OUTREACH AUTOMATION SYSTEM
+// ============================================
+
+function showOutreachAutomation() {
+    setActiveNav('growth-outreach');
+    
+    // Initialize queue if not already done
+    if (!window.outreachQueue) {
+        window.outreachQueue = new OutreachQueue();
+    }
+    
+    const queue = window.outreachQueue;
+    const stats = queue.getStats();
+    const todaysQueue = queue.getTodaysQueue();
+    
+    const html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📧 Daily Outreach Command Center</h1>
+            <p class="welcome-subtitle">Automated email outreach with personalized templates and follow-up sequences.</p>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="progress-overview">
+            <div class="progress-card">
+                <div class="progress-number">${stats.sentToday}</div>
+                <div class="progress-label">Sent Today</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.remainingToday}</div>
+                <div class="progress-label">Remaining</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.openRate}%</div>
+                <div class="progress-label">Open Rate</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.replyRate}%</div>
+                <div class="progress-label">Reply Rate</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.pending}</div>
+                <div class="progress-label">In Queue</div>
+            </div>
+            <div class="progress-card">
+                <div class="progress-number">${stats.converted}</div>
+                <div class="progress-label">Conversions</div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="generateDailyQueue()" style="display: flex; align-items: center; gap: 10px;">
+                <span>🎯</span>
+                <span>Generate Daily Queue</span>
+            </button>
+            <button class="btn btn-secondary" onclick="processFollowUps()" style="display: flex; align-items: center; gap: 10px;">
+                <span>🔄</span>
+                <span>Process Follow-ups</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showEmailComposer()" style="display: flex; align-items: center; gap: 10px;">
+                <span>✉️</span>
+                <span>Compose Email</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showTemplateLibrary()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📚</span>
+                <span>Templates</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showQueueManager()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📋</span>
+                <span>Manage Queue</span>
+            </button>
+            <button class="btn btn-secondary" onclick="showAnalytics()" style="display: flex; align-items: center; gap: 10px;">
+                <span>📊</span>
+                <span>Analytics</span>
+            </button>
+        </div>
+
+        <!-- Today's Queue -->
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2 class="section-title">Today's Queue (${todaysQueue.length})</h2>
+        </div>
+        
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 24px; margin-bottom: 40px;">
+            ${todaysQueue.length === 0 ? `
+                <div style="text-align: center; padding: 60px 40px;">
+                    <div style="font-size: 64px; margin-bottom: 24px;">📭</div>
+                    <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin-bottom: 12px;">No emails scheduled for today</h3>
+                    <p style="color: rgba(246, 241, 232, 0.7); margin-bottom: 30px;">Generate a daily queue or add leads manually to get started.</p>
+                    <button class="btn btn-primary" onclick="generateDailyQueue()">Generate Queue →</button>
+                </div>
+            ` : `
+                <div style="display: grid; gap: 12px;">
+                    ${todaysQueue.slice(0, 10).map(item => `
+                        <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: rgba(246, 241, 232, 0.05); border-radius: 12px; border: 1px solid rgba(212, 175, 99, 0.1);">
+                            <div style="width: 10px; height: 10px; border-radius: 50%; background: ${item.priority === 'high' ? '#e74c3c' : item.priority === 'normal' ? '#f39c12' : '#95a5a6'};"></div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: var(--ivory-light);">${item.leadName}</div>
+                                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">${item.leadEmail} • ${EMAIL_TEMPLATES[item.templateId]?.name || item.templateId}</div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="previewEmail('${item.id}')">Preview</button>
+                                <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" onclick="sendEmail('${item.id}')">Send</button>
+                                <button class="btn btn-secondary" style="font-size: 12px; padding: 6px 12px;" onclick="skipEmail('${item.id}')">Skip</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                    ${todaysQueue.length > 10 ? `
+                        <div style="text-align: center; padding: 16px; color: rgba(246, 241, 232, 0.6);">
+                            And ${todaysQueue.length - 10} more in queue...
+                        </div>
+                    ` : ''}
+                </div>
+            `}
+        </div>
+
+        <!-- Email Templates -->
+        <div class="section-header" style="margin-bottom: 20px;">
+            <h2 class="section-title">Email Templates</h2>
+        </div>
+        
+        <div class="workspace-grid" style="margin-bottom: 40px;">
+            ${Object.values(EMAIL_TEMPLATES).slice(0, 4).map(template => `
+                <div class="workspace-card" style="cursor: pointer;" onclick="showEmailComposer('${template.id}')">
+                    <div class="card-header">
+                        <div class="card-icon" style="font-size: 24px;">📧</div>
+                        <span class="card-status status-locked">${template.category}</span>
+                    </div>
+                    <h3 class="card-title">${template.name}</h3>
+                    <p class="card-description" style="font-size: 13px; font-style: italic;">${template.subject.substring(0, 60)}...</p>
+                </div>
+            `).join('')}
+            <div class="workspace-card" style="cursor: pointer; border: 2px dashed rgba(212, 175, 99, 0.3);" onclick="showTemplateLibrary()">
+                <div style="text-align: center; padding: 40px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">📚</div>
+                    <h3 class="card-title">View All Templates</h3>
+                    <p class="card-description">Browse the complete template library</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Getting Started -->
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 40px; text-align: center;">
+            <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 12px;">Daily Outreach Workflow</h3>
+            <p style="color: rgba(246, 241, 232, 0.7); margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                1. Generate daily queue from your leads<br>
+                2. Preview and personalize each email<br>
+                3. Send with one click<br>
+                4. System automatically tracks opens, clicks, and replies<br>
+                5. Follow-ups are scheduled automatically
+            </p>
+            <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button class="btn btn-primary" onclick="showOutreachSettings()">Configure Settings</button>
+                <button class="btn btn-secondary" onclick="showHelpPage('outreach')">Learn More</button>
+            </div>
+        </div>
+    `;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+// ============================================
 // LEAD DATABASE - FULL IMPLEMENTATION
 // ============================================
 
@@ -11444,8 +12055,905 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Initialize notifications on load
-document.addEventListener('DOMContentLoaded', initNotifications);
+// ============================================
+// TASK MANAGEMENT SYSTEM WITH NOTIFICATIONS
+// ============================================
+
+const tasksState = {
+    tasks: JSON.parse(localStorage.getItem('lccs_tasks') || '[]'),
+    filter: 'all', // all, active, completed
+    sortBy: 'dueDate' // dueDate, priority, created
+};
+
+// Task priority levels
+const TASK_PRIORITIES = {
+    'low': { label: 'Low', color: '#28a745', icon: '🟢' },
+    'medium': { label: 'Medium', color: '#ffc107', icon: '🟡' },
+    'high': { label: 'High', color: '#ff6b6b', icon: '🔴' },
+    'urgent': { label: 'Urgent', color: '#dc3545', icon: '🔴' }
+};
+
+// Task categories
+const TASK_CATEGORIES = {
+    'assessment': { label: 'Assessment', icon: '📝' },
+    'lead': { label: 'Lead', icon: '👥' },
+    'campaign': { label: 'Campaign', icon: '📧' },
+    'content': { label: 'Content', icon: '✍️' },
+    'meeting': { label: 'Meeting', icon: '📅' },
+    'followup': { label: 'Follow-up', icon: '💬' },
+    'general': { label: 'General', icon: '📋' }
+};
+
+// Create a new task
+function createTask(taskData) {
+    const task = {
+        id: 'task_' + Date.now(),
+        title: taskData.title,
+        description: taskData.description || '',
+        category: taskData.category || 'general',
+        priority: taskData.priority || 'medium',
+        status: 'active',
+        dueDate: taskData.dueDate || null,
+        assignedTo: taskData.assignedTo || null,
+        relatedTo: taskData.relatedTo || null, // e.g., { type: 'lead', id: 'lead_123' }
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        completedAt: null,
+        createdBy: currentUser?.id || 'system'
+    };
+    
+    tasksState.tasks.unshift(task);
+    saveTasks();
+    
+    // Send notification
+    notifyTaskCreated(task);
+    
+    return task;
+}
+
+// Update a task
+function updateTask(taskId, updates) {
+    const taskIndex = tasksState.tasks.findIndex(t => t.id === taskId);
+    if (taskIndex === -1) return null;
+    
+    const oldTask = { ...tasksState.tasks[taskIndex] };
+    const updatedTask = {
+        ...tasksState.tasks[taskIndex],
+        ...updates,
+        updatedAt: new Date().toISOString()
+    };
+    
+    tasksState.tasks[taskIndex] = updatedTask;
+    saveTasks();
+    
+    // Send notification for status changes
+    if (updates.status && updates.status !== oldTask.status) {
+        if (updates.status === 'completed') {
+            notifyTaskCompleted(updatedTask);
+        } else if (updates.status === 'active' && oldTask.status === 'completed') {
+            notifyTaskReopened(updatedTask);
+        } else {
+            notifyTaskUpdated(updatedTask, 'status');
+        }
+    } else {
+        notifyTaskUpdated(updatedTask, 'general');
+    }
+    
+    return updatedTask;
+}
+
+// Complete a task
+function completeTask(taskId) {
+    return updateTask(taskId, {
+        status: 'completed',
+        completedAt: new Date().toISOString()
+    });
+}
+
+// Delete a task
+function deleteTask(taskId) {
+    const task = tasksState.tasks.find(t => t.id === taskId);
+    if (!task) return false;
+    
+    tasksState.tasks = tasksState.tasks.filter(t => t.id !== taskId);
+    saveTasks();
+    
+    notifyTaskDeleted(task);
+    return true;
+}
+
+// Save tasks to localStorage
+function saveTasks() {
+    localStorage.setItem('lccs_tasks', JSON.stringify(tasksState.tasks));
+}
+
+// Notification functions for tasks
+function notifyTaskCreated(task) {
+    const categoryInfo = TASK_CATEGORIES[task.category] || TASK_CATEGORIES.general;
+    const priorityInfo = TASK_PRIORITIES[task.priority];
+    
+    addNotification(
+        'New Task Created',
+        `${categoryInfo.icon} ${task.title} (${priorityInfo.label} priority)`,
+        'task',
+        true
+    );
+    
+    // Also show a toast notification
+    showToast(`Task created: ${task.title}`, 'success');
+}
+
+function notifyTaskUpdated(task, changeType) {
+    const categoryInfo = TASK_CATEGORIES[task.category] || TASK_CATEGORIES.general;
+    
+    let message = `${categoryInfo.icon} ${task.title}`;
+    if (changeType === 'status') {
+        message += ` - Status changed to ${task.status}`;
+    }
+    
+    addNotification(
+        'Task Updated',
+        message,
+        'task',
+        true
+    );
+}
+
+function notifyTaskCompleted(task) {
+    const categoryInfo = TASK_CATEGORIES[task.category] || TASK_CATEGORIES.general;
+    
+    addNotification(
+        '✅ Task Completed',
+        `${categoryInfo.icon} ${task.title}`,
+        'success',
+        true
+    );
+    
+    showToast(`Task completed: ${task.title}`, 'success');
+}
+
+function notifyTaskReopened(task) {
+    const categoryInfo = TASK_CATEGORIES[task.category] || TASK_CATEGORIES.general;
+    
+    addNotification(
+        'Task Reopened',
+        `${categoryInfo.icon} ${task.title}`,
+        'task',
+        true
+    );
+}
+
+function notifyTaskDeleted(task) {
+    showToast(`Task deleted: ${task.title}`, 'info');
+}
+
+// Show toast notification
+function showToast(message, type = 'info') {
+    // Create toast element
+    const toast = document.createElement('div');
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 16px 24px;
+        background: ${type === 'success' ? 'rgba(76, 175, 80, 0.95)' : type === 'error' ? 'rgba(220, 53, 69, 0.95)' : 'rgba(46, 124, 131, 0.95)'};
+        color: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-size: 14px;
+        font-weight: 500;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+        word-wrap: break-word;
+    `;
+    toast.textContent = message;
+    
+    // Add animation styles if not already added
+    if (!document.getElementById('toast-styles')) {
+        const style = document.createElement('style');
+        style.id = 'toast-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(toast);
+    
+    // Remove after 3 seconds
+    setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease forwards';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
+
+// Task Manager UI
+function showTaskManager() {
+    setActiveNav('tasks');
+    renderTaskManager();
+}
+
+function renderTaskManager() {
+    const filteredTasks = getFilteredTasks();
+    const stats = getTaskStats();
+    
+    let html = `
+        <div class="welcome-section">
+            <h1 class="welcome-title">📋 Task Manager</h1>
+            <p class="welcome-subtitle">Track and manage your tasks with automatic notifications.</p>
+        </div>
+        
+        <!-- Stats Overview -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 30px;">
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--warm-gold);">${stats.total}</div>
+                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">Total Tasks</div>
+            </div>
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: var(--sacred-teal);">${stats.active}</div>
+                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">Active</div>
+            </div>
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: #4caf50;">${stats.completed}</div>
+                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">Completed</div>
+            </div>
+            <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 20px; text-align: center;">
+                <div style="font-size: 32px; font-weight: 700; color: #ff6b6b;">${stats.overdue}</div>
+                <div style="font-size: 13px; color: rgba(246, 241, 232, 0.6);">Overdue</div>
+            </div>
+        </div>
+        
+        <!-- Controls -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+            <div style="display: flex; gap: 12px;">
+                <button class="btn btn-primary" onclick="showAddTaskModal()">
+                    ➕ Add Task
+                </button>
+                <select onchange="setTaskFilter(this.value)" style="padding: 10px 16px; background: rgba(31, 49, 91, 0.5); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit;">
+                    <option value="all" ${tasksState.filter === 'all' ? 'selected' : ''}>All Tasks</option>
+                    <option value="active" ${tasksState.filter === 'active' ? 'selected' : ''}>Active</option>
+                    <option value="completed" ${tasksState.filter === 'completed' ? 'selected' : ''}>Completed</option>
+                </select>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button onclick="setTaskSort('dueDate')" style="padding: 8px 16px; background: ${tasksState.sortBy === 'dueDate' ? 'rgba(212, 175, 99, 0.2)' : 'rgba(31, 49, 91, 0.5)'}; border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); cursor: pointer; font-size: 13px;">📅 Due Date</button>
+                <button onclick="setTaskSort('priority')" style="padding: 8px 16px; background: ${tasksState.sortBy === 'priority' ? 'rgba(212, 175, 99, 0.2)' : 'rgba(31, 49, 91, 0.5)'}; border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); cursor: pointer; font-size: 13px;">🔥 Priority</button>
+            </div>
+        </div>
+        
+        <!-- Task List -->
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 20px; padding: 24px;">
+    `;
+    
+    if (filteredTasks.length === 0) {
+        html += `
+            <div style="text-align: center; padding: 60px 20px;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📋</div>
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 8px;">No Tasks Found</h3>
+                <p style="color: rgba(246, 241, 232, 0.6);">Create your first task to get started!</p>
+            </div>
+        `;
+    } else {
+        html += `<div style="display: flex; flex-direction: column; gap: 12px;">`;
+        
+        filteredTasks.forEach(task => {
+            const categoryInfo = TASK_CATEGORIES[task.category] || TASK_CATEGORIES.general;
+            const priorityInfo = TASK_PRIORITIES[task.priority];
+            const isOverdue = task.dueDate && new Date(task.dueDate) < new Date() && task.status !== 'completed';
+            
+            html += `
+                <div style="display: flex; align-items: center; gap: 16px; padding: 16px; background: ${task.status === 'completed' ? 'rgba(76, 175, 80, 0.1)' : isOverdue ? 'rgba(220, 53, 69, 0.1)' : 'rgba(31, 49, 91, 0.5)'}; border: 1px solid ${task.status === 'completed' ? 'rgba(76, 175, 80, 0.3)' : isOverdue ? 'rgba(220, 53, 69, 0.3)' : 'rgba(212, 175, 99, 0.1)'}; border-radius: 12px; transition: all 0.2s;" onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='translateX(0)'">
+                    <button onclick="toggleTaskComplete('${task.id}')" style="width: 24px; height: 24px; border-radius: 50%; border: 2px solid ${task.status === 'completed' ? '#4caf50' : 'rgba(212, 175, 99, 0.5)'}; background: ${task.status === 'completed' ? '#4caf50' : 'transparent'}; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; color: white; flex-shrink: 0;">
+                        ${task.status === 'completed' ? '✓' : ''}
+                    </button>
+                    
+                    <div style="flex: 1; min-width: 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                            <span style="font-size: 16px;">${categoryInfo.icon}</span>
+                            <span style="font-weight: 600; color: ${task.status === 'completed' ? 'rgba(246, 241, 232, 0.5)' : 'var(--ivory-light)'}; text-decoration: ${task.status === 'completed' ? 'line-through' : 'none'}; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${task.title}</span>
+                            <span style="font-size: 11px; padding: 2px 8px; background: ${priorityInfo.color}20; color: ${priorityInfo.color}; border-radius: 12px; flex-shrink: 0;">${priorityInfo.icon} ${priorityInfo.label}</span>
+                            ${isOverdue ? '<span style="font-size: 11px; padding: 2px 8px; background: rgba(220, 53, 69, 0.2); color: #ff6b6b; border-radius: 12px; flex-shrink: 0;">⚠️ Overdue</span>' : ''}
+                        </div>
+                        ${task.description ? `<div style="font-size: 13px; color: rgba(246, 241, 232, 0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${task.description}</div>` : ''}
+                        ${task.dueDate ? `<div style="font-size: 12px; color: ${isOverdue ? '#ff6b6b' : 'rgba(246, 241, 232, 0.5)'}; margin-top: 4px;">📅 Due: ${new Date(task.dueDate).toLocaleDateString()}</div>` : ''}
+                    </div>
+                    
+                    <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                        <button onclick="editTask('${task.id}')" style="padding: 8px 12px; background: rgba(31, 49, 91, 0.6); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 8px; color: var(--ivory-light); cursor: pointer; font-size: 12px;">✏️ Edit</button>
+                        <button onclick="deleteTask('${task.id}')" style="padding: 8px 12px; background: rgba(220, 53, 69, 0.2); border: 1px solid rgba(220, 53, 69, 0.3); border-radius: 8px; color: #ff6b6b; cursor: pointer; font-size: 12px;">🗑️</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `</div>`;
+    }
+    
+    html += `</div>`;
+    
+    document.getElementById('main-content').innerHTML = html;
+}
+
+function getFilteredTasks() {
+    let tasks = [...tasksState.tasks];
+    
+    // Apply filter
+    if (tasksState.filter === 'active') {
+        tasks = tasks.filter(t => t.status === 'active');
+    } else if (tasksState.filter === 'completed') {
+        tasks = tasks.filter(t => t.status === 'completed');
+    }
+    
+    // Apply sort
+    if (tasksState.sortBy === 'dueDate') {
+        tasks.sort((a, b) => {
+            if (!a.dueDate) return 1;
+            if (!b.dueDate) return -1;
+            return new Date(a.dueDate) - new Date(b.dueDate);
+        });
+    } else if (tasksState.sortBy === 'priority') {
+        const priorityOrder = { urgent: 0, high: 1, medium: 2, low: 3 };
+        tasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+    }
+    
+    return tasks;
+}
+
+function getTaskStats() {
+    const now = new Date();
+    return {
+        total: tasksState.tasks.length,
+        active: tasksState.tasks.filter(t => t.status === 'active').length,
+        completed: tasksState.tasks.filter(t => t.status === 'completed').length,
+        overdue: tasksState.tasks.filter(t => 
+            t.status === 'active' && t.dueDate && new Date(t.dueDate) < now
+        ).length
+    };
+}
+
+function setTaskFilter(filter) {
+    tasksState.filter = filter;
+    renderTaskManager();
+}
+
+function setTaskSort(sortBy) {
+    tasksState.sortBy = sortBy;
+    renderTaskManager();
+}
+
+function toggleTaskComplete(taskId) {
+    const task = tasksState.tasks.find(t => t.id === taskId);
+    if (task) {
+        if (task.status === 'completed') {
+            updateTask(taskId, { status: 'active', completedAt: null });
+        } else {
+            completeTask(taskId);
+        }
+        renderTaskManager();
+    }
+}
+
+// Add Task Modal
+function showAddTaskModal() {
+    const modal = document.createElement('div');
+    modal.id = 'task-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+    `;
+    
+    modal.innerHTML = `
+        <div style="background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.3); border-radius: 20px; padding: 32px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 24px;">➕ Add New Task</h3>
+            
+            <form onsubmit="event.preventDefault(); saveNewTask();">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Task Title *</label>
+                    <input type="text" id="new-task-title" required style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;" placeholder="What needs to be done?">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Description</label>
+                    <textarea id="new-task-description" rows="3" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px; resize: vertical;" placeholder="Add details..."></textarea>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Category</label>
+                        <select id="new-task-category" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                            ${Object.entries(TASK_CATEGORIES).map(([key, info]) => `<option value="${key}">${info.icon} ${info.label}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Priority</label>
+                        <select id="new-task-priority" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                            ${Object.entries(TASK_PRIORITIES).map(([key, info]) => `<option value="${key}">${info.icon} ${info.label}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Due Date</label>
+                    <input type="date" id="new-task-due-date" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" onclick="closeTaskModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Create Task</button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeTaskModal();
+    });
+}
+
+function saveNewTask() {
+    const title = document.getElementById('new-task-title').value;
+    const description = document.getElementById('new-task-description').value;
+    const category = document.getElementById('new-task-category').value;
+    const priority = document.getElementById('new-task-priority').value;
+    const dueDate = document.getElementById('new-task-due-date').value;
+    
+    if (!title) return;
+    
+    createTask({
+        title,
+        description,
+        category,
+        priority,
+        dueDate: dueDate || null
+    });
+    
+    closeTaskModal();
+    renderTaskManager();
+}
+
+function closeTaskModal() {
+    const modal = document.getElementById('task-modal');
+    if (modal) modal.remove();
+}
+
+function editTask(taskId) {
+    const task = tasksState.tasks.find(t => t.id === taskId);
+    if (!task) return;
+    
+    const modal = document.createElement('div');
+    modal.id = 'task-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+    `;
+    
+    modal.innerHTML = `
+        <div style="background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.3); border-radius: 20px; padding: 32px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--warm-gold); margin-bottom: 24px;">✏️ Edit Task</h3>
+            
+            <form onsubmit="event.preventDefault(); saveTaskEdit('${taskId}');">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Task Title *</label>
+                    <input type="text" id="edit-task-title" value="${task.title}" required style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Description</label>
+                    <textarea id="edit-task-description" rows="3" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px; resize: vertical;">${task.description || ''}</textarea>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Category</label>
+                        <select id="edit-task-category" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                            ${Object.entries(TASK_CATEGORIES).map(([key, info]) => `<option value="${key}" ${task.category === key ? 'selected' : ''}>${info.icon} ${info.label}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Priority</label>
+                        <select id="edit-task-priority" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                            ${Object.entries(TASK_PRIORITIES).map(([key, info]) => `<option value="${key}" ${task.priority === key ? 'selected' : ''}>${info.icon} ${info.label}</option>`).join('')}
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Due Date</label>
+                    <input type="date" id="edit-task-due-date" value="${task.dueDate || ''}" style="width: 100%; padding: 12px 16px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 10px; color: var(--ivory-light); font-family: inherit; font-size: 15px;">
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button type="button" onclick="closeTaskModal()" class="btn btn-secondary" style="flex: 1;">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeTaskModal();
+    });
+}
+
+function saveTaskEdit(taskId) {
+    const title = document.getElementById('edit-task-title').value;
+    const description = document.getElementById('edit-task-description').value;
+    const category = document.getElementById('edit-task-category').value;
+    const priority = document.getElementById('edit-task-priority').value;
+    const dueDate = document.getElementById('edit-task-due-date').value;
+    
+    if (!title) return;
+    
+    updateTask(taskId, {
+        title,
+        description,
+        category,
+        priority,
+        dueDate: dueDate || null
+    });
+    
+    closeTaskModal();
+    renderTaskManager();
+}
+
+// Auto-create tasks from various actions
+function createTaskFromAction(actionType, data) {
+    switch(actionType) {
+        case 'lead_added':
+            return createTask({
+                title: `Follow up with ${data.leadName}`,
+                description: `New lead from ${data.source}. Follow up within 24 hours.`,
+                category: 'lead',
+                priority: 'high',
+                dueDate: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                relatedTo: { type: 'lead', id: data.leadId }
+            });
+            
+        case 'assessment_completed':
+            return createTask({
+                title: `Review ${data.assessmentType} assessment results`,
+                description: `${data.assessmentType} assessment completed. Review results and take action.`,
+                category: 'assessment',
+                priority: 'medium',
+                dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                relatedTo: { type: 'assessment', id: data.assessmentId }
+            });
+            
+        case 'campaign_launched':
+            return createTask({
+                title: `Monitor ${data.campaignName} campaign`,
+                description: `Campaign launched. Monitor performance and replies.`,
+                category: 'campaign',
+                priority: 'medium',
+                dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                relatedTo: { type: 'campaign', id: data.campaignId }
+            });
+            
+        case 'meeting_scheduled':
+            return createTask({
+                title: `Prepare for ${data.meetingTitle}`,
+                description: `Meeting scheduled for ${data.meetingDate}. Prepare agenda and materials.`,
+                category: 'meeting',
+                priority: 'high',
+                dueDate: data.meetingDate,
+                relatedTo: { type: 'meeting', id: data.meetingId }
+            });
+            
+        default:
+            return null;
+    }
+}
+
+// Check for overdue tasks and send notifications
+function checkOverdueTasks() {
+    const now = new Date();
+    const overdueTasks = tasksState.tasks.filter(t => 
+        t.status === 'active' && 
+        t.dueDate && 
+        new Date(t.dueDate) < now &&
+        !t.overdueNotified
+    );
+    
+    overdueTasks.forEach(task => {
+        addNotification(
+            '⚠️ Task Overdue',
+            `${task.title} was due on ${new Date(task.dueDate).toLocaleDateString()}`,
+            'warning',
+            true
+        );
+        
+        // Mark as notified so we don't spam
+        task.overdueNotified = true;
+    });
+    
+    if (overdueTasks.length > 0) {
+        saveTasks();
+    }
+}
+
+// Run overdue check every hour
+setInterval(checkOverdueTasks, 60 * 60 * 1000);
+
+// ============================================
+// TELEGRAM NOTIFICATION SYSTEM
+// ============================================
+
+const telegramState = {
+    botToken: localStorage.getItem('lccs_telegram_bot_token') || '',
+    chatId: localStorage.getItem('lccs_telegram_chat_id') || '',
+    enabled: localStorage.getItem('lccs_telegram_enabled') === 'true',
+    username: localStorage.getItem('lccs_telegram_username') || ''
+};
+
+// Initialize Telegram settings
+function initTelegramSettings() {
+    // Load saved settings
+    telegramState.botToken = localStorage.getItem('lccs_telegram_bot_token') || '';
+    telegramState.chatId = localStorage.getItem('lccs_telegram_chat_id') || '';
+    telegramState.enabled = localStorage.getItem('lccs_telegram_enabled') === 'true';
+    telegramState.username = localStorage.getItem('lccs_telegram_username') || '';
+}
+
+// Show Telegram settings modal
+function showTelegramSettings() {
+    const modal = document.createElement('div');
+    modal.id = 'telegram-settings-modal';
+    modal.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10000;
+        backdrop-filter: blur(5px);
+    `;
+    
+    const isConnected = telegramState.enabled && telegramState.chatId;
+    
+    modal.innerHTML = `
+        <div style="background: rgba(31, 49, 91, 0.98); border: 1px solid rgba(212, 175, 99, 0.3); border-radius: 20px; padding: 32px; width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 28px; color: var(--warm-gold); margin: 0;">📱 Telegram Notifications</h3>
+                <button onclick="closeTelegramSettings()" style="background: none; border: none; color: rgba(246, 241, 232, 0.6); font-size: 24px; cursor: pointer;">✕</button>
+            </div>
+            
+            ${isConnected ? `
+                <!-- Connected State -->
+                <div style="background: rgba(76, 175, 80, 0.1); border: 1px solid rgba(76, 175, 80, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                        <span style="font-size: 24px;">✅</span>
+                        <span style="color: #4caf50; font-weight: 600;">Connected to Telegram</span>
+                    </div>
+                    <p style="color: rgba(246, 241, 232, 0.7); margin: 0; font-size: 14px;">
+                        Notifications will be sent to: <strong>${telegramState.username || 'Your Telegram'}</strong>
+                    </p>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button onclick="testTelegramNotification()" class="btn btn-secondary" style="flex: 1;">
+                        🧪 Test Notification
+                    </button>
+                    <button onclick="disconnectTelegram()" class="btn btn-primary" style="flex: 1; background: rgba(220, 53, 69, 0.2); border-color: rgba(220, 53, 69, 0.5);">
+                        🔌 Disconnect
+                    </button>
+                </div>
+            ` : `
+                <!-- Setup State -->
+                <div style="margin-bottom: 24px;">
+                    <p style="color: rgba(246, 241, 232, 0.8); line-height: 1.6; margin-bottom: 20px;">
+                        Get instant updates on your tasks, right in Telegram. Perfect for staying in the loop without keeping Command Suite open all day.
+                    </p>
+                    
+                    <div style="background: rgba(46, 124, 131, 0.1); border: 1px solid rgba(46, 124, 131, 0.3); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+                        <h4 style="color: var(--sacred-teal); margin: 0 0 12px 0; font-size: 16px;">📱 How to Connect Your Telegram:</h4>
+                        <ol style="color: rgba(246, 241, 232, 0.8); margin: 0; padding-left: 20px; line-height: 1.8; font-size: 14px;">
+                            <li><strong>Open Telegram</strong> on your phone or desktop</li>
+                            <li><strong>Search for @LifeCharterBot</strong> and tap Start</li>
+                            <li><strong>Type /connect</strong> — the bot will reply with your unique code (e.g., LC-12345678)</li>
+                            <li><strong>Copy that code</strong> and paste it below</li>
+                            <li><strong>Click Connect</strong> — you're all set!</li>
+                        </ol>
+                        <div style="margin-top: 16px; padding: 12px; background: rgba(31, 49, 91, 0.5); border-radius: 8px; font-size: 13px; color: rgba(246, 241, 232, 0.7);">
+                            <strong>💡 Tip:</strong> Your Telegram notifications are private — only YOU will receive alerts for your account. Each user connects individually to their own Telegram.
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Connection Code</label>
+                        <input type="text" id="telegram-connection-code" placeholder="e.g., LC-12345678" style="width: 100%; padding: 14px 18px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 12px; color: var(--ivory-light); font-family: inherit; font-size: 16px; text-transform: uppercase;" maxlength="12">
+                        <p style="font-size: 12px; color: rgba(246, 241, 232, 0.5); margin-top: 8px;">The code from your Telegram bot</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--ivory-light);">Your Telegram Username (Optional)</label>
+                        <input type="text" id="telegram-username" placeholder="@username" style="width: 100%; padding: 14px 18px; background: rgba(246, 241, 232, 0.05); border: 1px solid rgba(212, 175, 99, 0.2); border-radius: 12px; color: var(--ivory-light); font-family: inherit; font-size: 16px;">
+                    </div>
+                </div>
+                
+                <button onclick="connectTelegram()" class="btn btn-primary" style="width: 100%;">
+                    🔗 Connect Telegram
+                </button>
+            `}
+            
+            <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid rgba(212, 175, 99, 0.1);">
+                <h4 style="color: var(--warm-gold); margin: 0 0 12px 0; font-size: 14px;">🔔 What You'll Receive (Just for You):</h4>
+                <ul style="color: rgba(246, 241, 232, 0.6); margin: 0; padding-left: 20px; font-size: 13px; line-height: 1.8;">
+                    <li>📋 Task created notifications</li>
+                    <li>✅ Task completed alerts</li>
+                    <li>⚠️ Task overdue warnings</li>
+                    <li>🔔 Important system updates</li>
+                </ul>
+                <p style="margin-top: 12px; font-size: 12px; color: rgba(246, 241, 232, 0.5); font-style: italic;">
+                    Your notifications are personal — tied only to your account. No one else will receive your alerts.
+                </p>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Close on backdrop click
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeTelegramSettings();
+    });
+}
+
+function closeTelegramSettings() {
+    const modal = document.getElementById('telegram-settings-modal');
+    if (modal) modal.remove();
+}
+
+function connectTelegram() {
+    const codeInput = document.getElementById('telegram-connection-code');
+    const usernameInput = document.getElementById('telegram-username');
+    const code = codeInput.value.trim().toUpperCase();
+    const username = usernameInput.value.trim();
+    
+    if (!code || !code.startsWith('LC-')) {
+        showToast('Please enter a valid connection code from Telegram', 'error');
+        return;
+    }
+    
+    // In a real implementation, this would validate the code with your backend
+    // For demo purposes, we'll simulate a successful connection
+    
+    // Extract chat ID from code (in real implementation, this comes from backend)
+    const chatId = code.replace('LC-', '');
+    
+    // Save settings
+    telegramState.chatId = chatId;
+    telegramState.username = username || 'Telegram User';
+    telegramState.enabled = true;
+    
+    localStorage.setItem('lccs_telegram_chat_id', chatId);
+    localStorage.setItem('lccs_telegram_username', telegramState.username);
+    localStorage.setItem('lccs_telegram_enabled', 'true');
+    
+    showToast('Telegram connected successfully!', 'success');
+    closeTelegramSettings();
+    
+    // Send welcome message
+    sendTelegramNotification('🎉 Welcome to LifeCharter Command Suite!', 
+        'You will now receive notifications here when tasks are created, updated, or completed.');
+}
+
+function disconnectTelegram() {
+    telegramState.chatId = '';
+    telegramState.username = '';
+    telegramState.enabled = false;
+    
+    localStorage.removeItem('lccs_telegram_chat_id');
+    localStorage.removeItem('lccs_telegram_username');
+    localStorage.setItem('lccs_telegram_enabled', 'false');
+    
+    showToast('Telegram disconnected', 'info');
+    closeTelegramSettings();
+}
+
+function testTelegramNotification() {
+    const success = sendTelegramNotification(
+        '🧪 Test Notification',
+        'This is a test message from LifeCharter Command Suite. Your notifications are working! 🎉'
+    );
+    
+    if (success) {
+        showToast('Test notification sent!', 'success');
+    } else {
+        showToast('Failed to send test notification', 'error');
+    }
+}
+
+function sendTelegramNotification(title, message) {
+    if (!telegramState.enabled || !telegramState.chatId) {
+        console.log('Telegram not configured, skipping notification');
+        return false;
+    }
+    
+    // In a real implementation, this would call your backend API
+    // which would then use the Telegram Bot API to send the message
+    
+    // For demo purposes, we'll simulate the API call
+    console.log('Sending Telegram notification:', { title, message, chatId: telegramState.chatId });
+    
+    // Simulate API call
+    const fullMessage = `*${title}*\n\n${message}\n\n_📱 LifeCharter Command Suite_`;
+    
+    // In production, this would be:
+    // fetch('/api/telegram/send', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({
+    //         chat_id: telegramState.chatId,
+    //         text: fullMessage,
+    //         parse_mode: 'Markdown'
+    //     })
+    // });
+    
+    return true;
+}
+
+// Enhanced notification function that also sends to Telegram
+function notifyWithTelegram(title, message, type = 'info') {
+    // Add in-app notification
+    addNotification(title, message, { icon: getNotificationIcon(type) });
+    
+    // Send to Telegram if enabled
+    if (telegramState.enabled) {
+        sendTelegramNotification(title, message);
+    }
+}
+
+function getNotificationIcon(type) {
+    const icons = {
+        'task': '📋',
+        'success': '✅',
+        'warning': '⚠️',
+        'error': '❌',
+        'info': 'ℹ️',
+        'lead': '👥',
+        'campaign': '📧',
+        'system': '🔔'
+    };
+    return icons[type] || '🔔';
+}
+
+// Initialize Telegram on load
+document.addEventListener('DOMContentLoaded', initTelegramSettings);
 
 // Expose critical functions to global scope for onclick handlers
 window.showLeadDatabase = showLeadDatabase;
@@ -11505,6 +13013,7 @@ window.searchFAQ = searchFAQ;
 window.switchSupportTab = switchSupportTab;
 window.toggleFAQCategory = toggleFAQCategory;
 window.toggleFAQAnswer = toggleFAQAnswer;
+window.showHelpPage = showHelpPage;
 
 // Expose Competitive Positioning Assessment functions
 window.showCompetitivePositioning = showCompetitivePositioning;
@@ -11520,4 +13029,43 @@ window.saveCompetitiveProgress = saveCompetitiveProgress;
 window.submitCompetitiveAssessment = submitCompetitiveAssessment;
 window.viewCompetitiveSummary = viewCompetitiveSummary;
 window.downloadCompetitiveReport = downloadCompetitiveReport;
+
+// Expose Task Manager functions
+window.showTaskManager = showTaskManager;
+window.createTask = createTask;
+window.updateTask = updateTask;
+window.completeTask = completeTask;
+window.deleteTask = deleteTask;
+window.showAddTaskModal = showAddTaskModal;
+window.saveNewTask = saveNewTask;
+window.editTask = editTask;
+window.saveTaskEdit = saveTaskEdit;
+window.closeTaskModal = closeTaskModal;
+window.toggleTaskComplete = toggleTaskComplete;
+window.setTaskFilter = setTaskFilter;
+window.setTaskSort = setTaskSort;
+window.createTaskFromAction = createTaskFromAction;
+
+// Expose Telegram functions
+window.showTelegramSettings = showTelegramSettings;
+window.closeTelegramSettings = closeTelegramSettings;
+window.connectTelegram = connectTelegram;
+window.disconnectTelegram = disconnectTelegram;
+window.testTelegramNotification = testTelegramNotification;
+window.sendTelegramNotification = sendTelegramNotification;
+window.notifyWithTelegram = notifyWithTelegram;
+
+// Expose Outreach Automation functions
+window.showOutreachAutomation = showOutreachAutomation;
+window.refreshOutreachDashboard = refreshOutreachDashboard;
+window.generateDailyQueue = generateDailyQueue;
+window.processFollowUps = processFollowUps;
+window.previewEmail = previewEmail;
+window.sendEmail = sendEmail;
+window.skipEmail = skipEmail;
+window.showEmailComposer = showEmailComposer;
+window.showQueueManager = showQueueManager;
+window.showTemplateLibrary = showTemplateLibrary;
+window.showAnalytics = showAnalytics;
+window.showOutreachSettings = showSettings;
 

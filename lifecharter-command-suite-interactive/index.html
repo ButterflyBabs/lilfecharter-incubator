@@ -825,6 +825,11 @@
                             <span>Sales</span>
                             <span class="progress-dot not-started" id="dot-sales"></span>
                         </button>
+                        <button class="sidebar-link" id="nav-outreach" onclick="showOutreachAutomation()">
+                            <span class="sidebar-link-icon">📧</span>
+                            <span>Daily Outreach</span>
+                            <span class="progress-dot not-started" id="dot-outreach"></span>
+                        </button>
                     </div>
                 </div>
 
@@ -899,12 +904,47 @@
                     </button>
                 </div>
 
+                <!-- 9. Task Manager -->
+                <div class="sidebar-section">
+                    <button class="sidebar-link" id="nav-tasks" onclick="showTaskManager()">
+                        <span class="sidebar-link-icon">📋</span>
+                        <span>Tasks</span>
+                        <span id="task-badge" style="display: none; background: var(--sacred-teal); color: white; font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: auto;">0</span>
+                    </button>
+                </div>
+
+                <!-- Help Section -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" id="accordion-help" onclick="toggleAccordion('help')">
+                        <span>❓ Help</span>
+                        <span class="accordion-icon" id="icon-help">▼</span>
+                    </button>
+                    <div class="accordion-content" id="content-help">
+                        <button class="sidebar-link" id="nav-help-getting-started" onclick="showHelpPage('getting-started')">
+                            <span class="sidebar-link-icon">🚀</span>
+                            <span>Getting Started</span>
+                        </button>
+                        <button class="sidebar-link" id="nav-help-faq" onclick="showHelpPage('faq')">
+                            <span class="sidebar-link-icon">❓</span>
+                            <span>FAQ</span>
+                        </button>
+                        <button class="sidebar-link" id="nav-help-tutorials" onclick="showHelpPage('tutorials')">
+                            <span class="sidebar-link-icon">🎥</span>
+                            <span>Video Tutorials</span>
+                        </button>
+                        <button class="sidebar-link" id="nav-help-contact" onclick="showHelpPage('contact')">
+                            <span class="sidebar-link-icon">💬</span>
+                            <span>Contact Support</span>
+                        </button>
+                        <button class="sidebar-link" id="nav-help-shortcuts" onclick="showHelpPage('shortcuts')">
+                            <span class="sidebar-link-icon">⌨️</span>
+                            <span>Keyboard Shortcuts</span>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- Bottom Utility Links -->
                 <div class="sidebar-bottom">
-                    <button class="sidebar-link" id="nav-help" onclick="toggleSupportPanel()">
-                        <span class="sidebar-link-icon">❓</span>
-                        <span>Help</span>
-                    </button>
                     <button class="sidebar-link" id="nav-settings" onclick="showSettings()">
                         <span class="sidebar-link-icon">⚙️</span>
                         <span>Settings</span>
@@ -923,5 +963,6 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="outreach-automation-system.js"></script>
 </body>
 </html>
