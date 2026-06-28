@@ -10,6 +10,50 @@
       "dest": "/app.js"
     },
     {
+      "src": "/wings-out-outreach-system.js",
+      "dest": "/wings-out-outreach-system.js"
+    },
+    {
+      "src": "/outreach-automation-system.js",
+      "dest": "/outreach-automation-system.js"
+    },
+    {
+      "src": "/outreach-command-center.js",
+      "dest": "/outreach-command-center.js"
+    },
+    {
+      "src": "/outreach-leads.js",
+      "dest": "/outreach-leads.js"
+    },
+    {
+      "src": "/outreach-research.js",
+      "dest": "/outreach-research.js"
+    },
+    {
+      "src": "/outreach-campaigns.js",
+      "dest": "/outreach-campaigns.js"
+    },
+    {
+      "src": "/outreach-queue.js",
+      "dest": "/outreach-queue.js"
+    },
+    {
+      "src": "/outreach-pipeline.js",
+      "dest": "/outreach-pipeline.js"
+    },
+    {
+      "src": "/outreach-conversations.js",
+      "dest": "/outreach-conversations.js"
+    },
+    {
+      "src": "/outreach-analytics.js",
+      "dest": "/outreach-analytics.js"
+    },
+    {
+      "src": "/outreach-settings.js",
+      "dest": "/outreach-settings.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }

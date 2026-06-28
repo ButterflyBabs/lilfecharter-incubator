@@ -1,29 +1,6 @@
-const { createClient } = require('@supabase/supabase-js');
-
-// Database configuration - supports multiple backends
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
-const postgresUrl = process.env.POSTGRES_URL || process.env.DATABASE_URL;
-
-// Create Supabase client
 let supabase = null;
-let dbType = 'memory'; // Default fallback
-
-if (supabaseUrl && supabaseKey) {
-  supabase = createClient(supabaseUrl, supabaseKey, {
-    auth: {
-      autoRefreshToken: false,
-      persistSession: false
-    }
-  });
-  dbType = 'supabase';
-  console.log('Using Supabase PostgreSQL');
-} else if (postgresUrl) {
-  dbType = 'postgres';
-  console.log('Using PostgreSQL (Neon/other)');
-} else {
-  console.log('Using in-memory database (data will reset on deployment)');
-}
+let dbType = 'memory';
+let isInitialized = false;
 
 // In-memory storage fallback
 const memoryStore = {
@@ -37,49 +14,50 @@ const memoryStore = {
   content_calendar: new Map()
 };
 
+function initializeDatabase() {
+  if (isInitialized) return;
+  
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    
+    // Trim environment variables to handle any whitespace issues
+    const supabaseUrl = process.env.SUPABASE_URL?.trim();
+    const supabaseKey = (process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY)?.trim();
+
+    if (supabaseUrl && supabaseKey) {
+      supabase = createClient(supabaseUrl, supabaseKey, {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      });
+      dbType = 'supabase';
+      console.log('Using Supabase PostgreSQL');
+    } else {
+      console.log('Using in-memory database (data will reset on deployment)');
+    }
+  } catch (err) {
+    console.error('Database initialization error:', err.message);
+    console.log('Falling back to in-memory database');
+    dbType = 'memory';
+  }
+  
+  isInitialized = true;
+}
+
 // Helper to generate simple ID
 function generateId() {
   return `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }
 
-// Database helper that supports multiple backends
-const dbAsync = {
-  // For INSERT operations - returns { id, changes }
-  run: async (sql, params = []) => {
-    // Use Supabase if available
-    if (dbType === 'supabase' && supabase) {
-      return runSupabase(sql, params);
-    }
-    
-    // Fallback to in-memory
-    return runMemory(sql, params);
-  },
-
-  // For SELECT single row
-  get: async (sql, params = []) => {
-    if (dbType === 'supabase' && supabase) {
-      return getSupabase(sql, params);
-    }
-    
-    return getMemory(sql, params);
-  },
-
-  // For SELECT multiple rows
-  all: async (sql, params = []) => {
-    if (dbType === 'supabase' && supabase) {
-      return allSupabase(sql, params);
-    }
-    
-    return allMemory(sql, params);
-  }
-};
-
 // ==================== SUPABASE IMPLEMENTATION ====================
 
 async function runSupabase(sql, params) {
+  initializeDatabase();
+  if (!supabase) throw new Error('Supabase not initialized');
+  
   const sqlLower = sql.toLowerCase().trim();
   
-  // Handle INSERT with ON CONFLICT (UPSERT)
   if (sqlLower.startsWith('insert')) {
     const table = extractTableName(sql);
     const data = buildDataObject(sql, params);
@@ -105,7 +83,6 @@ async function runSupabase(sql, params) {
     }
   }
   
-  // Handle UPDATE
   if (sqlLower.startsWith('update')) {
     const table = extractTableName(sql);
     const { data: updateData, where } = parseUpdateSql(sql, params);
@@ -122,7 +99,6 @@ async function runSupabase(sql, params) {
     return { changes: 1 };
   }
   
-  // Handle DELETE
   if (sqlLower.startsWith('delete')) {
     const table = extractTableName(sql);
     const conditions = parseWhereConditions(sql, params);
@@ -143,6 +119,9 @@ async function runSupabase(sql, params) {
 }
 
 async function getSupabase(sql, params) {
+  initializeDatabase();
+  if (!supabase) return null;
+  
   const table = extractTableName(sql);
   const conditions = parseWhereConditions(sql, params);
   
@@ -159,56 +138,18 @@ async function getSupabase(sql, params) {
 }
 
 async function allSupabase(sql, params) {
+  initializeDatabase();
+  if (!supabase) return [];
+  
   const sqlLower = sql.toLowerCase();
   const table = extractTableName(sql);
   const conditions = parseWhereConditions(sql, params);
-  
-  // Check if this is a GROUP BY query
-  if (sqlLower.includes('group by')) {
-    const groupCol = extractGroupByColumn(sql);
-    
-    let query = supabase.from(table).select('*');
-    
-    Object.entries(conditions).forEach(([col, val]) => {
-      query = query.eq(col, val);
-    });
-    
-    const { data, error } = await query;
-    
-    if (error) throw error;
-    
-    // Manual grouping
-    const grouped = {};
-    (data || []).forEach(row => {
-      const key = row[groupCol];
-      if (!grouped[key]) grouped[key] = { [groupCol]: key, count: 0 };
-      grouped[key].count++;
-    });
-    
-    return Object.values(grouped);
-  }
   
   let query = supabase.from(table).select('*');
   
   Object.entries(conditions).forEach(([col, val]) => {
     query = query.eq(col, val);
   });
-  
-  // Handle date filtering for activity log queries
-  if (sqlLower.includes('activity_log') && sqlLower.includes('>')) {
-    const { data, error } = await query;
-    if (error) throw error;
-    
-    const daysMatch = sql.match(/-(\d+)\s*days/i);
-    if (daysMatch) {
-      const daysAgo = parseInt(daysMatch[1]);
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
-      
-      return (data || []).filter(row => new Date(row.created_at) > cutoffDate);
-    }
-    return data || [];
-  }
   
   const { data, error } = await query;
   
@@ -226,11 +167,9 @@ function runMemory(sql, params) {
     memoryStore[table] = new Map();
   }
   
-  // Handle INSERT
   if (sqlLower.startsWith('insert')) {
     const data = buildDataObject(sql, params);
     
-    // Check for ON CONFLICT (simple implementation)
     if (sqlLower.includes('on conflict')) {
       const conflictCols = extractConflictColumns(sql);
       const existingKey = findExistingKey(table, data, conflictCols);
@@ -244,13 +183,11 @@ function runMemory(sql, params) {
     return { id: data.id, changes: 1 };
   }
   
-  // Handle UPDATE
   if (sqlLower.startsWith('update')) {
     const { data: updateData, where } = parseUpdateSql(sql, params);
     const keyField = Object.keys(where)[0];
     const keyValue = where[keyField];
     
-    // Find matching record
     for (const [id, record] of memoryStore[table]) {
       if (record[keyField] === keyValue) {
         memoryStore[table].set(id, { ...record, ...updateData, updated_at: new Date().toISOString() });
@@ -260,7 +197,6 @@ function runMemory(sql, params) {
     return { changes: 0 };
   }
   
-  // Handle DELETE
   if (sqlLower.startsWith('delete')) {
     const conditions = parseWhereConditions(sql, params);
     let deleted = 0;
@@ -322,32 +258,6 @@ function allMemory(sql, params) {
       }
     }
     if (matches) results.push(record);
-  }
-  
-  // Handle GROUP BY
-  if (sqlLower.includes('group by')) {
-    const groupCol = extractGroupByColumn(sql);
-    const grouped = {};
-    
-    results.forEach(row => {
-      const key = row[groupCol];
-      if (!grouped[key]) grouped[key] = { [groupCol]: key, count: 0 };
-      grouped[key].count++;
-    });
-    
-    return Object.values(grouped);
-  }
-  
-  // Handle date filtering
-  if (sqlLower.includes('activity_log') && sqlLower.includes('>')) {
-    const daysMatch = sql.match(/-(\d+)\s*days/i);
-    if (daysMatch) {
-      const daysAgo = parseInt(daysMatch[1]);
-      const cutoffDate = new Date();
-      cutoffDate.setDate(cutoffDate.getDate() - daysAgo);
-      
-      return results.filter(row => new Date(row.created_at) > cutoffDate);
-    }
   }
   
   return results;
@@ -469,9 +379,44 @@ function parseWhereConditions(sql, params) {
   return conditions;
 }
 
-function extractGroupByColumn(sql) {
-  const match = sql.match(/GROUP\s+BY\s+(\w+)/i);
-  return match ? match[1] : null;
+// Database helper that supports multiple backends
+const dbAsync = {
+  run: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      return runSupabase(sql, params);
+    }
+    return runMemory(sql, params);
+  },
+
+  get: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      return getSupabase(sql, params);
+    }
+    return getMemory(sql, params);
+  },
+
+  all: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      return allSupabase(sql, params);
+    }
+    return allMemory(sql, params);
+  }
+};
+
+// Initialize on first import
+try {
+  initializeDatabase();
+} catch (err) {
+  console.error('Initial database setup error:', err.message);
 }
 
-module.exports = { supabase, dbAsync, dbType, memoryStore };
+module.exports = { 
+  supabase, 
+  dbAsync, 
+  get dbType() { return dbType; }, 
+  memoryStore, 
+  initializeDatabase 
+};

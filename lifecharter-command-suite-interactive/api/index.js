@@ -1,9 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const path = require('path');
-require('dotenv').config();
-const { dbType } = require('./database');
+const bcrypt = require('bcryptjs');
+const { v4: uuidv4 } = require('uuid');
+const jwt = require('jsonwebtoken');
 
 const app = express();
 
@@ -12,123 +12,250 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-// CORS configuration
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
     ? ['https://lifecharter-command-suite.vercel.app', 'https://*.vercel.app']
-    : ['http://localhost:3000', 'http://localhost:5500', 'http://127.0.0.1:5500'],
+    : ['http://localhost:3000'],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Import routes
-const authRoutes = require('./routes/auth');
-const assessmentRoutes = require('./routes/assessments');
-const moduleRoutes = require('./routes/modules');
-const aiAgentRoutes = require('./routes/ai-agents');
-const contentCalendarRoutes = require('./routes/content-calendar');
-const activityRoutes = require('./routes/activity');
+// JWT functions
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
-// API routes
-app.use('/api/auth', authRoutes);
-app.use('/api/assessments', assessmentRoutes);
-app.use('/api/modules', moduleRoutes);
-app.use('/api/ai-agents', aiAgentRoutes);
-app.use('/api/content-calendar', contentCalendarRoutes);
-app.use('/api/activity', activityRoutes);
+function generateToken(userId) {
+  return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
+}
+
+function verifyToken(token) {
+  try {
+    return jwt.verify(token, JWT_SECRET);
+  } catch (err) {
+    return null;
+  }
+}
+
+// Database setup
+let supabase = null;
+let dbType = 'memory';
+let isInitialized = false;
+
+function initializeDatabase() {
+  if (isInitialized) return;
+  
+  try {
+    const { createClient } = require('@supabase/supabase-js');
+    const supabaseUrl = process.env.SUPABASE_URL?.trim();
+    const supabaseKey = process.env.SUPABASE_SERVICE_KEY?.trim();
+
+    if (supabaseUrl && supabaseKey) {
+      supabase = createClient(supabaseUrl, supabaseKey, {
+        auth: { autoRefreshToken: false, persistSession: false }
+      });
+      dbType = 'supabase';
+    }
+  } catch (err) {
+    console.error('Database init error:', err.message);
+  }
+  
+  isInitialized = true;
+}
+
+// Database helpers
+const dbAsync = {
+  run: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      const table = sql.match(/INTO\s+(\w+)/i)?.[1] || sql.match(/UPDATE\s+(\w+)/i)?.[1];
+      if (sql.toLowerCase().includes('insert')) {
+        const data = {};
+        const colMatch = sql.match(/\(([^)]+)\)\s*VALUES/i);
+        if (colMatch) {
+          const columns = colMatch[1].split(',').map(c => c.trim());
+          columns.forEach((col, i) => { if (i < params.length) data[col] = params[i]; });
+        }
+        const { error } = await supabase.from(table).insert(data);
+        if (error) throw error;
+        return { id: data.id, changes: 1 };
+      }
+      return { changes: 1 };
+    }
+    return { changes: 1 };
+  },
+  
+  get: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      const table = sql.match(/FROM\s+(\w+)/i)?.[1];
+      const column = params[0];
+      const value = params[1];
+      const { data, error } = await supabase.from(table).select('*').eq(column, value).maybeSingle();
+      if (error) throw error;
+      return data;
+    }
+    return null;
+  },
+  
+  all: async (sql, params = []) => {
+    initializeDatabase();
+    if (dbType === 'supabase' && supabase) {
+      const table = sql.match(/FROM\s+(\w+)/i)?.[1];
+      const { data, error } = await supabase.from(table).select('*');
+      if (error) throw error;
+      return data || [];
+    }
+    return [];
+  }
+};
+
+// Auth middleware
+const authenticateToken = async (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  
+  if (!token) {
+    return res.status(401).json({ error: 'Access token required' });
+  }
+
+  const decoded = verifyToken(token);
+  if (!decoded) {
+    return res.status(403).json({ error: 'Invalid or expired token' });
+  }
+
+  req.userId = decoded.userId;
+  next();
+};
 
 // Health check
 app.get('/api/health', (req, res) => {
+  initializeDatabase();
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development',
-    database: {
-      type: dbType,
-      note: dbType === 'memory' ? 'Using in-memory storage (data resets on deployment). Add SUPABASE_URL and SUPABASE_SERVICE_KEY env vars for persistent storage.' : 'Connected'
-    }
+    database: { type: dbType, connected: dbType === 'supabase' }
   });
 });
 
-// Dashboard stats endpoint
-app.get('/api/dashboard/stats', async (req, res) => {
-  const { authenticateToken } = require('./middleware/auth');
-  const { dbAsync } = require('./database');
-  
+// Auth routes
+app.get('/api/auth/register', (req, res) => {
+  res.json({ message: 'Register endpoint - use POST to register' });
+});
+
+app.post('/api/auth/register', async (req, res) => {
   try {
-    // Verify token manually since we're in a non-standard route
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    const { verifyToken } = require('./middleware/auth');
-    const decoded = verifyToken(token || req.cookies?.token);
-    
-    if (!decoded) {
-      return res.status(403).json({ error: 'Invalid token' });
+    const { email, password, firstName, lastName, businessName } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    const userId = decoded.userId;
+    if (password.length < 8) {
+      return res.status(400).json({ error: 'Password must be at least 8 characters' });
+    }
 
-    // Get module stats
-    const moduleStats = await dbAsync.all(
-      `SELECT status, COUNT(*) as count FROM module_progress WHERE user_id = ? GROUP BY status`,
-      [userId]
+    const existingUser = await dbAsync.get('SELECT id FROM users WHERE email = ?', ['email', email.toLowerCase()]);
+    if (existingUser) {
+      return res.status(409).json({ error: 'User already exists with this email' });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const userId = uuidv4();
+    const now = new Date().toISOString();
+    
+    await dbAsync.run(
+      `INSERT INTO users (id, email, password, first_name, last_name, business_name, created_at, updated_at) 
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [userId, email.toLowerCase(), hashedPassword, firstName || null, lastName || null, businessName || null, now, now]
     );
 
-    // Get assessment progress
-    const brainCount = await dbAsync.get(
-      'SELECT COUNT(*) as count FROM brain_assessments WHERE user_id = ? AND completed = 1',
-      [userId]
-    );
+    const token = generateToken(userId);
 
-    const soulCount = await dbAsync.get(
-      'SELECT COUNT(*) as count FROM soul_assessments WHERE user_id = ? AND completed = 1',
-      [userId]
-    );
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
 
-    // Get agent count
-    const agentCount = await dbAsync.get(
-      'SELECT COUNT(*) as count FROM ai_agents WHERE user_id = ?',
-      [userId]
-    );
-
-    // Get recent activity count
-    const activityCount = await dbAsync.get(
-      `SELECT COUNT(*) as count FROM activity_log WHERE user_id = ? AND created_at > datetime('now', '-7 days')`,
-      [userId]
-    );
-
-    res.json({
-      modules: {
-        total: moduleStats.reduce((sum, s) => sum + s.count, 0),
-        byStatus: moduleStats
-      },
-      assessments: {
-        brain: { answered: brainCount.count, total: 15 },
-        soul: { answered: soulCount.count, total: 27 }
-      },
-      aiAgents: agentCount.count,
-      recentActivity: activityCount.count
+    res.status(201).json({
+      message: 'User registered successfully',
+      token,
+      user: { id: userId, email: email.toLowerCase(), firstName, lastName, businessName }
     });
   } catch (err) {
-    console.error('Dashboard stats error:', err);
+    console.error('Registration error:', err);
+    res.status(500).json({ error: 'Server error during registration', message: err.message });
+  }
+});
+
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    const user = await dbAsync.get('SELECT * FROM users WHERE email = ?', ['email', email.toLowerCase()]);
+
+    if (!user) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const token = generateToken(user.id);
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    });
+
+    res.json({
+      message: 'Login successful',
+      token,
+      user: { id: user.id, email: user.email, firstName: user.first_name, lastName: user.last_name }
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Server error during login' });
+  }
+});
+
+// Protected route example
+app.get('/api/user/profile', authenticateToken, async (req, res) => {
+  try {
+    const user = await dbAsync.get('SELECT id, email, first_name, last_name, business_name FROM users WHERE id = ?', ['id', req.userId]);
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ user });
+  } catch (err) {
     res.status(500).json({ error: 'Server error' });
   }
 });
 
-// Error handling
-app.use((err, req, res, next) => {
-  console.error('API Error:', err);
-  res.status(500).json({ error: 'Internal server error' });
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({ error: 'Not found', path: req.path });
 });
 
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+// Global error handler
+app.use((err, req, res, next) => {
+  console.error('Unhandled error:', err);
+  res.status(500).json({ 
+    error: 'Internal server error', 
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Something went wrong'
   });
-}
+});
 
 // Export for Vercel
-module.exports = app;
+module.exports = (req, res) => {
+  return app(req, res);
+};

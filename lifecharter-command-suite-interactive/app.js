@@ -1039,7 +1039,7 @@ function checkAuth() {
         if (user) {
             currentUser = user;
             showApp();
-            loadDashboard();
+            renderCEODashboard();
         }
     } else {
         // Invalid auth state - clear it
@@ -1110,8 +1110,8 @@ function handleLogin(e) {
     try {
         showApp();
         console.log('showApp completed');
-        loadDashboard();
-        console.log('loadDashboard completed');
+        renderCEODashboard();
+        console.log('renderCEODashboard completed');
     } catch (err) {
         console.error('Error during login:', err);
         // Silently handle errors in demo mode
@@ -1168,7 +1168,7 @@ function handleSignup(e) {
     localStorage.setItem('lccs_demo_current_email', newUser.email);
     currentUser = newUser;
     showApp();
-    loadDashboard();
+    renderCEODashboard();
     btn.classList.remove('loading');
 }
 
@@ -13230,4 +13230,75 @@ window.showQueueManager = showQueueManager;
 window.showTemplateLibrary = showTemplateLibrary;
 window.showAnalytics = showAnalytics;
 window.showOutreachSettings = showSettings;
+
+// Expose Outreach Command Center functions
+window.showOutreachCommandCenter = showOutreachCommandCenter;
+window.setPathway = setPathway;
+window.setView = setView;
+window.renderCurrentView = renderCurrentView;
+window.updateSearchFilter = updateSearchFilter;
+window.updateStatusFilter = updateStatusFilter;
+window.updatePriorityFilter = updatePriorityFilter;
+window.showAddLeadModal = showAddLeadModal;
+window.saveNewLead = saveNewLead;
+window.calculateLeadScore = calculateLeadScore;
+window.showLeadDetail = showLeadDetail;
+window.sendEmailToLead = sendEmailToLead;
+window.loadTemplate = loadTemplate;
+window.queueEmail = queueEmail;
+window.sendEmailNow = sendEmailNow;
+window.editLead = editLead;
+window.deleteLead = deleteLead;
+window.exportLeads = exportLeads;
+window.importLeads = importLeads;
+window.startAIResearch = startAIResearch;
+window.performAIResearch = performAIResearch;
+window.addToLeads = addToLeads;
+window.addAllToLeads = addAllToLeads;
+window.viewResearchResults = viewResearchResults;
+window.deleteResearch = deleteResearch;
+window.sendFollowUpWithTemplate = sendFollowUpWithTemplate;
+window.showCreateCampaignModal = showCreateCampaignModal;
+window.renderLeadSelectionList = renderLeadSelectionList;
+window.toggleAllLeads = toggleAllLeads;
+window.updateSelectionCount = updateSelectionCount;
+window.saveCampaign = saveCampaign;
+window.viewCampaign = viewCampaign;
+window.editCampaign = editCampaign;
+window.launchCampaign = launchCampaign;
+window.showTemplateManager = showTemplateManager;
+window.previewTemplate = previewTemplate;
+window.useTemplate = useTemplate;
+window.showQueueTab = showQueueTab;
+window.toggleAllQueueItems = toggleAllQueueItems;
+window.updateQueueActions = updateQueueActions;
+window.getSelectedQueueIds = getSelectedQueueIds;
+window.sendSelected = sendSelected;
+window.scheduleSelected = scheduleSelected;
+window.confirmSchedule = confirmSchedule;
+window.deleteSelected = deleteSelected;
+window.previewQueueEmail = previewQueueEmail;
+window.editQueueEmail = editQueueEmail;
+window.deleteQueueItem = deleteQueueItem;
+window.sendQueueItemNow = sendQueueItemNow;
+window.viewEmailStats = viewEmailStats;
+window.processQueue = processQueue;
+window.dragLead = dragLead;
+window.allowDrop = allowDrop;
+window.dropLead = dropLead;
+window.showConversationTab = showConversationTab;
+window.viewConversation = viewConversation;
+window.replyToConversation = replyToConversation;
+window.sendFollowUp = sendFollowUp;
+window.showLogConversationModal = showLogConversationModal;
+window.saveConversationLog = saveConversationLog;
+window.showSettingsTab = showSettingsTab;
+window.toggleApiKeyVisibility = toggleApiKeyVisibility;
+window.saveOutreachSettings = saveOutreachSettings;
+window.connectGHL = connectGHL;
+window.disconnectGHL = disconnectGHL;
+window.syncWithGHL = syncWithGHL;
+window.renderTemplatesList = renderTemplatesList;
+window.showCreateTemplateModal = showCreateTemplateModal;
+window.editTemplate = editTemplate;
 

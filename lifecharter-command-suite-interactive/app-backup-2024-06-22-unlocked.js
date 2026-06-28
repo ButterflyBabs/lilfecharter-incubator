@@ -1,19 +1,116 @@
 // LifeCharter Command Suite - Main Application JavaScript
 
-// API Configuration
-const API_BASE_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:3000/api' 
-    : '/api';
+// DEMO MODE - No backend required
+const DEMO_MODE = true;
 
 // State Management
 let currentUser = null;
 let authToken = localStorage.getItem('lccs_token');
+let demoUsers = JSON.parse(localStorage.getItem('lccs_demo_users') || '[]');
+let userAgents = JSON.parse(localStorage.getItem('lccs_agents') || '[]');
 let brainQuestions = null;
 let soulQuestions = null;
 let brainAnswers = {};
 let soulAnswers = {};
 let currentBrainSection = 'identity';
 let currentSoulSection = 'values';
+
+// Module Progress Tracking
+const moduleProgress = {
+    brain: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    soul: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    business: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    competitive: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    value: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    offer: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    journey: { status: 'not_started', progress: 0, startedAt: null, completedAt: null },
+    brand: { status: 'not_started', progress: 0, startedAt: null, completedAt: null }
+};
+
+// Get module status badge
+function getModuleStatusBadge(moduleId) {
+    const module = moduleProgress[moduleId];
+    if (!module) return 'New';
+    
+    if (module.status === 'completed') {
+        return 'Complete';
+    } else if (module.status === 'in_progress') {
+        return `${module.progress}%`;
+    } else {
+        // All modules unlocked - no sequential locking
+        return 'New';
+    }
+}
+
+// Get status class for styling
+function getModuleStatusClass(moduleId) {
+    const module = moduleProgress[moduleId];
+    if (!module) return 'status-locked';
+    
+    if (module.status === 'completed') {
+        return 'status-complete';
+    } else if (module.status === 'in_progress') {
+        return 'status-progress';
+    } else {
+        // All modules unlocked - show as available
+        return 'status-locked';
+    }
+}
+
+// Update module progress
+function updateModuleProgress(moduleId, progress) {
+    if (!moduleProgress[moduleId]) return;
+    
+    moduleProgress[moduleId].progress = progress;
+    
+    if (progress === 0) {
+        moduleProgress[moduleId].status = 'not_started';
+    } else if (progress >= 100) {
+        moduleProgress[moduleId].status = 'completed';
+        moduleProgress[moduleId].completedAt = new Date().toISOString();
+    } else {
+        moduleProgress[moduleId].status = 'in_progress';
+        if (!moduleProgress[moduleId].startedAt) {
+            moduleProgress[moduleId].startedAt = new Date().toISOString();
+        }
+    }
+    
+    localStorage.setItem('lccs_module_progress', JSON.stringify(moduleProgress));
+    updateModuleBadges();
+}
+
+// Update all module badges in the UI
+function updateModuleBadges() {
+    const modules = ['brain', 'soul', 'business', 'competitive', 'value', 'offer', 'journey', 'brand'];
+    
+    modules.forEach(moduleId => {
+        const dot = document.getElementById(`${moduleId}-dot`);
+        if (dot) {
+            const module = moduleProgress[moduleId];
+            dot.className = 'progress-dot';
+            if (module.status === 'completed') {
+                dot.classList.add('complete');
+            } else if (module.status === 'in_progress') {
+                dot.classList.add('in-progress');
+            } else {
+                dot.classList.add('not-started');
+            }
+        }
+    });
+}
+
+// Load progress from localStorage
+function loadModuleProgress() {
+    const saved = localStorage.getItem('lccs_module_progress');
+    if (saved) {
+        const savedProgress = JSON.parse(saved);
+        Object.keys(savedProgress).forEach(key => {
+            if (moduleProgress[key]) {
+                moduleProgress[key] = savedProgress[key];
+            }
+        });
+    }
+}
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', () => {
@@ -22,31 +119,28 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Check Authentication
-async function checkAuth() {
+function checkAuth() {
     if (!authToken) {
         showLoginPage();
         return;
     }
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/me`, {
-            headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            currentUser = data.user;
+    // Demo mode: restore user from storage
+    const storedEmail = localStorage.getItem('lccs_demo_current_email');
+    if (storedEmail) {
+        const user = demoUsers.find(u => u.email === storedEmail);
+        if (user) {
+            currentUser = user;
             showApp();
             loadDashboard();
-        } else {
-            localStorage.removeItem('lccs_token');
-            authToken = null;
-            showLoginPage();
+            return;
         }
-    } catch (err) {
-        console.error('Auth check error:', err);
-        showLoginPage();
     }
+    
+    localStorage.removeItem('lccs_token');
+    localStorage.removeItem('lccs_demo_current_email');
+    authToken = null;
+    showLoginPage();
 }
 
 // Setup Event Listeners
@@ -61,15 +155,16 @@ function setupEventListeners() {
     document.addEventListener('click', (e) => {
         const dropdown = document.getElementById('user-dropdown');
         const userMenu = document.querySelector('.user-menu');
-        if (!userMenu.contains(e.target)) {
+        if (dropdown && userMenu && !userMenu.contains(e.target)) {
             dropdown.classList.remove('show');
         }
     });
 }
 
 // Handle Login
-async function handleLogin(e) {
+function handleLogin(e) {
     e.preventDefault();
+    console.log('Login attempt');
     
     const btn = document.getElementById('login-btn');
     const errorDiv = document.getElementById('login-error');
@@ -80,36 +175,28 @@ async function handleLogin(e) {
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            authToken = data.token;
-            localStorage.setItem('lccs_token', authToken);
-            currentUser = data.user;
-            showApp();
-            loadDashboard();
-        } else {
-            errorDiv.textContent = data.error || 'Login failed';
-            errorDiv.classList.add('show');
-        }
-    } catch (err) {
-        errorDiv.textContent = 'Network error. Please try again.';
+    // Demo mode login
+    const user = demoUsers.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        authToken = 'demo_token_' + Date.now();
+        localStorage.setItem('lccs_token', authToken);
+        localStorage.setItem('lccs_demo_current_email', user.email);
+        currentUser = user;
+        showApp();
+        loadDashboard();
+    } else {
+        errorDiv.textContent = 'Invalid email or password';
         errorDiv.classList.add('show');
-    } finally {
-        btn.classList.remove('loading');
     }
+    
+    btn.classList.remove('loading');
 }
 
 // Handle Signup
-async function handleSignup(e) {
+function handleSignup(e) {
     e.preventDefault();
+    console.log('Signup attempt');
     
     const btn = document.getElementById('signup-btn');
     const errorDiv = document.getElementById('signup-error');
@@ -123,45 +210,70 @@ async function handleSignup(e) {
     const businessName = document.getElementById('signup-business').value;
     const password = document.getElementById('signup-password').value;
 
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/register`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ firstName, lastName, email, businessName, password })
-        });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            authToken = data.token;
-            localStorage.setItem('lccs_token', authToken);
-            currentUser = data.user;
-            showApp();
-            loadDashboard();
-        } else {
-            errorDiv.textContent = data.error || 'Registration failed';
-            errorDiv.classList.add('show');
-        }
-    } catch (err) {
-        errorDiv.textContent = 'Network error. Please try again.';
+    // Check if user exists
+    if (demoUsers.find(u => u.email === email)) {
+        errorDiv.textContent = 'Email already registered';
         errorDiv.classList.add('show');
-    } finally {
         btn.classList.remove('loading');
+        return;
     }
+
+    // Create new user
+    const newUser = {
+        id: 'user_' + Date.now(),
+        firstName,
+        lastName,
+        email,
+        businessName,
+        password,
+        createdAt: new Date().toISOString()
+    };
+    
+    demoUsers.push(newUser);
+    localStorage.setItem('lccs_demo_users', JSON.stringify(demoUsers));
+    
+    // Auto login
+    authToken = 'demo_token_' + Date.now();
+    localStorage.setItem('lccs_token', authToken);
+    localStorage.setItem('lccs_demo_current_email', newUser.email);
+    currentUser = newUser;
+    showApp();
+    loadDashboard();
+    btn.classList.remove('loading');
+}
+
+// Quick demo login
+function quickDemoLogin() {
+    console.log('Quick demo login');
+    
+    let user = demoUsers.find(u => u.email === 'demo@lifecharter.com');
+    
+    if (!user) {
+        user = {
+            id: 'user_demo',
+            firstName: 'Demo',
+            lastName: 'User',
+            email: 'demo@lifecharter.com',
+            businessName: 'LifeCharter Demo',
+            password: 'demo',
+            createdAt: new Date().toISOString()
+        };
+        demoUsers.push(user);
+        localStorage.setItem('lccs_demo_users', JSON.stringify(demoUsers));
+    }
+    
+    authToken = 'demo_token_' + Date.now();
+    localStorage.setItem('lccs_token', authToken);
+    localStorage.setItem('lccs_demo_current_email', user.email);
+    currentUser = user;
+    showApp();
+    loadDashboard();
 }
 
 // Logout
-async function logout() {
-    try {
-        await fetch(`${API_BASE_URL}/auth/logout`, {
-            method: 'POST',
-            headers: { 'Authorization': `Bearer ${authToken}` }
-        });
-    } catch (err) {
-        console.error('Logout error:', err);
-    }
-    
+function logout() {
     localStorage.removeItem('lccs_token');
+    localStorage.removeItem('lccs_demo_current_email');
     authToken = null;
     currentUser = null;
     showLoginPage();
@@ -189,7 +301,6 @@ function showApp() {
     document.getElementById('signup-page').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     
-    // Update user info
     if (currentUser) {
         document.getElementById('user-name').textContent = currentUser.firstName || currentUser.email.split('@')[0];
         document.getElementById('user-avatar').textContent = (currentUser.firstName?.[0] || currentUser.email[0]).toUpperCase();
@@ -199,6 +310,20 @@ function showApp() {
 // Toggle User Dropdown
 function toggleUserDropdown() {
     document.getElementById('user-dropdown').classList.toggle('show');
+}
+
+// Accordion Toggle Function
+function toggleAccordion(id) {
+    const content = document.getElementById(id);
+    const icon = document.getElementById(id + '-icon');
+    
+    if (content.style.display === 'none') {
+        content.style.display = 'block';
+        icon.textContent = '▼';
+    } else {
+        content.style.display = 'none';
+        icon.textContent = '▶';
+    }
 }
 
 // Load Dashboard Data
@@ -390,6 +515,14 @@ function setActiveNav(page) {
 }
 
 function getDashboardHTML() {
+    // Load saved progress
+    loadModuleProgress();
+    
+    // Calculate stats
+    const completedModules = Object.values(moduleProgress).filter(m => m.status === 'completed').length;
+    const inProgressModules = Object.values(moduleProgress).filter(m => m.status === 'in_progress').length;
+    const totalModules = Object.keys(moduleProgress).length;
+    
     return `
         <div class="welcome-section">
             <h1 class="welcome-title">Build Your Command Suite</h1>
@@ -398,20 +531,82 @@ function getDashboardHTML() {
 
         <div class="progress-overview">
             <div class="progress-card">
-                <div class="progress-number" id="stat-modules">0/6</div>
-                <div class="progress-label">Modules Started</div>
+                <div class="progress-number" id="stat-modules">${completedModules}/${totalModules}</div>
+                <div class="progress-label">Modules Complete</div>
             </div>
             <div class="progress-card">
-                <div class="progress-number" id="stat-brain">0/15</div>
-                <div class="progress-label">Brain Questions</div>
+                <div class="progress-number" id="stat-active">${inProgressModules}</div>
+                <div class="progress-label">In Progress</div>
             </div>
             <div class="progress-card">
-                <div class="progress-number" id="stat-soul">0/27</div>
-                <div class="progress-label">Soul Questions</div>
+                <div class="progress-number" id="stat-progress">${Math.round((completedModules / totalModules) * 100)}%</div>
+                <div class="progress-label">Overall Progress</div>
             </div>
             <div class="progress-card">
-                <div class="progress-number" id="stat-agents">0</div>
+                <div class="progress-number" id="stat-agents">${userAgents?.length || 0}</div>
                 <div class="progress-label">AI Agents</div>
+            </div>
+        </div>
+
+        <div style="background: rgba(31, 49, 91, 0.3); border: 1px solid rgba(212, 175, 99, 0.15); border-radius: 16px; padding: 24px; margin-bottom: 30px;">
+            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 20px; color: var(--warm-gold); margin-bottom: 16px;">📊 Foundation Modules Overview</h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">🧠</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Brain.md</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">55 Qs • 60 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">✨</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Soul.md</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">27 Qs • 35 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">📊</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Business Audit</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">80 Qs • 75 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">🏆</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Competitive</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">35 Qs • 50 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">💎</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Value Prop</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">30 Qs • 45 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">🎯</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Offer Arch</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">40 Qs • 60 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">🗺️</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Client Journey</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">30 Qs • 40 min</div>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px; padding: 12px; background: rgba(246, 241, 232, 0.05); border-radius: 10px;">
+                    <span style="font-size: 20px;">🎨</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 600; color: var(--ivory-light);">Brand Voice</div>
+                        <div style="font-size: 11px; color: rgba(246, 241, 232, 0.5);">30 Qs • 45 min</div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -420,67 +615,71 @@ function getDashboardHTML() {
         </div>
         
         <div class="workspace-grid">
-            <div class="workspace-card">
+            <div class="workspace-card" onclick="showBrainAssessment()" style="${getModuleStatusClass('brain') === 'status-progress' ? 'border: 2px solid rgba(212, 175, 99, 0.4);' : ''}">
                 <div class="card-header">
                     <div class="card-icon" style="background: rgba(46, 124, 131, 0.2);">🧠</div>
-                    <span class="card-status status-progress">In Progress</span>
+                    <span class="card-status ${getModuleStatusClass('brain')}">${getModuleStatusBadge('brain')}</span>
                 </div>
                 <h3 class="card-title">Brain.md Assessment</h3>
                 <p class="card-description">Define your business identity, model, revenue streams, and strategic foundation.</p>
-                <div class="card-actions">
-                    <button class="btn btn-primary" onclick="showBrainAssessment()">Continue →</button>
-                </div>
             </div>
-
-            <div class="workspace-card">
+            <div class="workspace-card" onclick="showSoulAssessment()">
                 <div class="card-header">
                     <div class="card-icon" style="background: rgba(205, 190, 214, 0.2);">✨</div>
-                    <span class="card-status status-locked">Start Here</span>
+                    <span class="card-status ${getModuleStatusClass('soul')}">${getModuleStatusBadge('soul')}</span>
                 </div>
                 <h3 class="card-title">Soul.md Assessment</h3>
                 <p class="card-description">Connect with your personal values, life vision, and alignment patterns.</p>
-                <div class="card-actions">
-                    <button class="btn btn-primary" onclick="showSoulAssessment()">Start →</button>
-                </div>
             </div>
-
-            <div class="workspace-card">
+            <div class="workspace-card" onclick="showBusinessAssessment()">
                 <div class="card-header">
-                    <div class="card-icon">🤖</div>
-                    <span class="card-status status-locked">Locked</span>
+                    <div class="card-icon" style="background: rgba(212, 175, 99, 0.2);">📊</div>
+                    <span class="card-status ${getModuleStatusClass('business')}">${getModuleStatusBadge('business')}</span>
                 </div>
-                <h3 class="card-title">My AI Support Agents</h3>
-                <p class="card-description">Create up to 5 custom AI agents trained on your voice and methodology.</p>
-                <div class="card-actions">
-                    <button class="btn btn-secondary" disabled>Create Agent</button>
-                </div>
+                <h3 class="card-title">Business Command Audit</h3>
+                <p class="card-description">Comprehensive 8-dimension business assessment with AI-powered analysis and action plan.</p>
             </div>
-
-            <div class="workspace-card">
+            <div class="workspace-card" onclick="showCompetitivePositioning()">
                 <div class="card-header">
-                    <div class="card-icon">📅</div>
-                    <span class="card-status status-locked">Locked</span>
+                    <div class="card-icon" style="background: rgba(46, 124, 131, 0.3);">🏆</div>
+                    <span class="card-status ${getModuleStatusClass('competitive')}">${getModuleStatusBadge('competitive')}</span>
                 </div>
-                <h3 class="card-title">90-Day Content System</h3>
-                <p class="card-description">Build your content calendar and publishing workflow.</p>
-                <div class="card-actions">
-                    <button class="btn btn-secondary" disabled>Start Planning</button>
+                <h3 class="card-title">Competitive Positioning Strategy</h3>
+                <p class="card-description">Analyze your market, differentiate from competitors, and claim your unique position.</p>
+            </div>
+            <div class="workspace-card" onclick="showValueProposition()">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(46, 124, 131, 0.3);">💎</div>
+                    <span class="card-status ${getModuleStatusClass('value')}">${getModuleStatusBadge('value')}</span>
                 </div>
+                <h3 class="card-title">Value Proposition Refinement</h3>
+                <p class="card-description">Clarify your unique value, differentiate from competitors, and craft compelling messaging that resonates.</p>
+            </div>
+            <div class="workspace-card" onclick="showOfferArchitecture()">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(94, 59, 108, 0.3);">🎯</div>
+                    <span class="card-status ${getModuleStatusClass('offer')}">${getModuleStatusBadge('offer')}</span>
+                </div>
+                <h3 class="card-title">Offer Architecture & Positioning</h3>
+                <p class="card-description">Design, price, and position your offers for maximum impact and profitability.</p>
+            </div>
+            <div class="workspace-card" onclick="showClientJourney()">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(212, 175, 99, 0.2);">🗺️</div>
+                    <span class="card-status ${getModuleStatusClass('journey')}">${getModuleStatusBadge('journey')}</span>
+                </div>
+                <h3 class="card-title">Client Journey Map</h3>
+                <p class="card-description">Map your client's complete experience from first discovery to loyal advocacy. 30 questions across 6 journey stages.</p>
+            </div>
+            <div class="workspace-card" onclick="showBrandVoice()">
+                <div class="card-header">
+                    <div class="card-icon" style="background: rgba(205, 190, 214, 0.4);">🎨</div>
+                    <span class="card-status ${getModuleStatusClass('brand')}">${getModuleStatusBadge('brand')}</span>
+                </div>
+                <h3 class="card-title">Brand Voice & Messaging</h3>
+                <p class="card-description">Define your unique brand voice and create consistent messaging across all channels.</p>
             </div>
         </div>
-
-        <section class="activity-section">
-            <div class="section-header">
-                <h2 class="section-title">Recent Activity</h2>
-            </div>
-            <ul class="activity-list" id="activity-list">
-                <li class="activity-item">
-                    <div class="activity-content">
-                        <div class="activity-text">Loading activity...</div>
-                    </div>
-                </li>
-            </ul>
-        </section>
     `;
 }
 
@@ -1177,6 +1376,81 @@ function showHelp() {
     alert('Help center coming soon!');
 }
 
+// Content & Marketing placeholders
+function show90DayContentSystem() {
+    alert('90-Day Content Calendar System - Coming soon!');
+}
+
+function showEmailNurtureSequences() {
+    alert('Email Nurture Sequences - Coming soon!');
+}
+
+function showWeeklyArticleSystem() {
+    alert('Weekly Article Writing System - Coming soon!');
+}
+
+function showSocialMediaSystem() {
+    alert('Social Media Content System - Coming soon!');
+}
+
+function showLeadMagnets() {
+    alert('Lead Magnet Creation Framework - Coming soon!');
+}
+
+function showContentRepurposing() {
+    alert('Content Repurposing Workflows - Coming soon!');
+}
+
+// Sales & Delivery placeholders
+function showSalesScripts() {
+    alert('Sales Call Scripts & Frameworks - Coming soon!');
+}
+
+function showProposals() {
+    alert('Proposals & Contract Systems - Coming soon!');
+}
+
+function showDeliveryFrameworks() {
+    alert('Session & Delivery Frameworks - Coming soon!');
+}
+
+function showObjectionHandling() {
+    alert('Objection Handling Guide - Coming soon!');
+}
+
+function showClientOnboarding() {
+    alert('Client Onboarding System - Coming soon!');
+}
+
+function showProgressTracking() {
+    alert('Client Progress Tracking Tools - Coming soon!');
+}
+
+// Operations & Systems placeholders
+function showCEODashboard() {
+    alert('Weekly CEO Dashboard - Coming soon!');
+}
+
+function showTeamCommunication() {
+    alert('Team Communication Protocols - Coming soon!');
+}
+
+function showMeetingAgendas() {
+    alert('Meeting Agendas & Rhythms - Coming soon!');
+}
+
+function showSOPs() {
+    alert('SOP Library - Coming soon!');
+}
+
+function showTechStack() {
+    alert('Tech Stack Manager - Coming soon!');
+}
+
+function showDocumentVault() {
+    alert('Document Vault - Coming soon!');
+}
+
 // Stub functions for features not yet implemented
 function editAgent(agentId) {
     alert('Edit agent coming soon!');
@@ -1184,4 +1458,29 @@ function editAgent(agentId) {
 
 function editContent(contentId) {
     alert('Edit content coming soon!');
+}
+
+// Assessment placeholder functions
+function showBusinessAssessment() {
+    window.open('https://lifecharter-incubator.vercel.app', '_blank');
+}
+
+function showCompetitivePositioning() {
+    window.open('https://lifecharter-competitive-positioning.vercel.app', '_blank');
+}
+
+function showValueProposition() {
+    alert('Value Proposition Refinement - Coming soon!');
+}
+
+function showOfferArchitecture() {
+    window.open('https://lifecharter-offer-architecture.vercel.app', '_blank');
+}
+
+function showClientJourney() {
+    alert('Client Journey Map - Coming soon!');
+}
+
+function showBrandVoice() {
+    window.open('https://lifecharter-brand-voice.vercel.app', '_blank');
 }

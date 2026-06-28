@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 40px; }
+        .page { display: none; padding: 20px; border: 2px solid #ccc; margin: 10px 0; }
+        .page.active { display: block; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div id="login-page" class="page active">
+        <h2>Login</h2>
+        <form onsubmit="doLogin(event)">
+            <input type="email" id="login-email" placeholder="Email" required>
+            <input type="password" id="login-password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+        <p><button onclick="showPage('signup')">Create Account</button></p>
+        <p><button onclick="quickLogin()">Quick Demo Login</button></p>
+    </div>
+
+    <div id="signup-page" class="page">
+        <h2>Sign Up</h2>
+        <form onsubmit="doSignup(event)">
+            <input type="text" id="signup-name" placeholder="Name" required>
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <button type="submit">Create Account</button>
+        </form>
+        <p><button onclick="showPage('login')">Back to Login</button></p>
+    </div>
+
+    <div id="app-page" class="page">
+        <h2>Welcome to the App!</h2>
+        <p>User: <span id="user-info"></span></p>
+        <button onclick="doLogout()">Logout</button>
+    </div>
+
+    <script>
+        // Simple auth system
+        let users = JSON.parse(localStorage.getItem('test_users') || '[]');
+        let currentUser = null;
+
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + '-page').classList.add('active');
+        }
+
+        function doLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                currentUser = user;
+                document.getElementById('user-info').textContent = user.name;
+                showPage('app');
+            } else {
+                alert('Invalid login');
+            }
+        }
+
+        function doSignup(e) {
+            e.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            if (users.find(u => u.email === email)) {
+                alert('User already exists');
+                return;
+            }
+            
+            users.push({ name, email, password });
+            localStorage.setItem('test_users', JSON.stringify(users));
+            alert('Account created! Please login.');
+            showPage('login');
+        }
+
+        function quickLogin() {
+            currentUser = { name: 'Demo User', email: 'demo@test.com' };
+            document.getElementById('user-info').textContent = currentUser.name;
+            showPage('app');
+        }
+
+        function doLogout() {
+            currentUser = null;
+            showPage('login');
+        }
+    </script>
+</body>
+</html>

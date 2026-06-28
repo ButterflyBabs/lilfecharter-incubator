@@ -310,6 +310,34 @@
         .progress-dot.in-progress { background: var(--warning); }
         .progress-dot.not-started { background: rgba(246, 241, 232, 0.2); }
 
+        /* Accordion Styles */
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 12px 24px;
+            background: rgba(212, 175, 99, 0.05);
+            border: none;
+            border-left: 3px solid var(--warm-gold);
+            color: var(--ivory-light);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .accordion-header:hover { background: rgba(212, 175, 99, 0.1); }
+        .accordion-icon {
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        .accordion-content {
+            padding: 8px 0;
+        }
+
         .main-content {
             flex: 1;
             margin-left: 280px;
@@ -615,7 +643,10 @@
                 </button>
             </form>
             <div class="auth-footer">
-                <p>Don't have an account? <a href="#" onclick="showSignup()">Create one</a></p>
+                <p>Don't have an account? <a href="#" onclick="showSignup(); return false;">Create one</a></p>
+                <p style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(212, 175, 99, 0.1);">
+                    <button type="button" onclick="quickDemoLogin()" style="background: transparent; border: 1px solid rgba(212, 175, 99, 0.3); color: var(--warm-gold); padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px;">⚡ Quick Demo Login</button>
+                </p>
             </div>
         </div>
     </div>
@@ -693,31 +724,194 @@
 
         <div class="app-container">
             <aside class="sidebar">
+                <!-- Foundation Modules -->
                 <div class="sidebar-section">
-                    <h3 class="sidebar-heading">Foundation Assessments</h3>
-                    <button class="sidebar-link" id="nav-brain" onclick="showBrainAssessment()">
-                        <span>🧠</span>
-                        <span>Brain.md Assessment</span>
-                        <span class="progress-dot not-started" id="brain-dot"></span>
+                    <button class="accordion-header" onclick="toggleAccordion('foundation-modules')">
+                        <span>📋 Foundation Modules</span>
+                        <span class="accordion-icon" id="foundation-modules-icon">▼</span>
                     </button>
-                    <button class="sidebar-link" id="nav-soul" onclick="showSoulAssessment()">
-                        <span>✨</span>
-                        <span>Soul.md Assessment</span>
-                        <span class="progress-dot not-started" id="soul-dot"></span>
-                    </button>
+                    <div class="accordion-content" id="foundation-modules" style="display: block;">
+                        <button class="sidebar-link" id="nav-brain" onclick="showBrainAssessment()">
+                            <span>🧠</span>
+                            <span>Brain.md Assessment</span>
+                            <span class="progress-dot not-started" id="brain-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-soul" onclick="showSoulAssessment()">
+                            <span>✨</span>
+                            <span>Soul.md Assessment</span>
+                            <span class="progress-dot not-started" id="soul-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-business" onclick="showBusinessAssessment()">
+                            <span>📊</span>
+                            <span>Business Command Audit</span>
+                            <span class="progress-dot not-started" id="business-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-competitive" onclick="showCompetitivePositioning()">
+                            <span>🏆</span>
+                            <span>Competitive Positioning</span>
+                            <span class="progress-dot not-started" id="competitive-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-value" onclick="showValueProposition()">
+                            <span>💎</span>
+                            <span>Value Proposition</span>
+                            <span class="progress-dot not-started" id="value-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-offer" onclick="showOfferArchitecture()">
+                            <span>🎯</span>
+                            <span>Offer Architecture</span>
+                            <span class="progress-dot not-started" id="offer-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-journey" onclick="showClientJourney()">
+                            <span>🗺️</span>
+                            <span>Client Journey Map</span>
+                            <span class="progress-dot not-started" id="journey-dot"></span>
+                        </button>
+                        <button class="sidebar-link" id="nav-brand" onclick="showBrandVoice()">
+                            <span>🎨</span>
+                            <span>Brand Voice & Messaging</span>
+                            <span class="progress-dot not-started" id="brand-dot"></span>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- AI & Automation -->
                 <div class="sidebar-section">
-                    <h3 class="sidebar-heading">AI & Automation</h3>
-                    <button class="sidebar-link" onclick="showAIAgents()">
-                        <span>🤖</span>
-                        <span>My AI Agents</span>
-                        <span class="progress-dot not-started"></span>
+                    <button class="accordion-header" onclick="toggleAccordion('ai-automation')">
+                        <span>🤖 AI & Automation</span>
+                        <span class="accordion-icon" id="ai-automation-icon">▼</span>
                     </button>
-                    <button class="sidebar-link" onclick="showContentCalendar()">
-                        <span>📅</span>
-                        <span>Content Calendar</span>
-                        <span class="progress-dot not-started"></span>
+                    <div class="accordion-content" id="ai-automation" style="display: block;">
+                        <button class="sidebar-link" onclick="showAIAgents()">
+                            <span>🤖</span>
+                            <span>My AI Agents</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content & Marketing -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" onclick="toggleAccordion('content-marketing')">
+                        <span>📢 Content & Marketing</span>
+                        <span class="accordion-icon" id="content-marketing-icon">▼</span>
                     </button>
+                    <div class="accordion-content" id="content-marketing" style="display: block;">
+                        <button class="sidebar-link" onclick="showContentCalendar()">
+                            <span>📅</span>
+                            <span>Content Calendar</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="show90DayContentSystem()">
+                            <span>📆</span>
+                            <span>90-Day Content System</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showEmailNurtureSequences()">
+                            <span>📧</span>
+                            <span>Email Nurture Sequences</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showWeeklyArticleSystem()">
+                            <span>📝</span>
+                            <span>Weekly Article System</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showSocialMediaSystem()">
+                            <span>📱</span>
+                            <span>Social Media System</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showLeadMagnets()">
+                            <span>🧲</span>
+                            <span>Lead Magnet Framework</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showContentRepurposing()">
+                            <span>🔄</span>
+                            <span>Content Repurposing</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sales & Delivery -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" onclick="toggleAccordion('sales-delivery')">
+                        <span>💼 Sales & Delivery</span>
+                        <span class="accordion-icon" id="sales-delivery-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" id="sales-delivery" style="display: block;">
+                        <button class="sidebar-link" onclick="showSalesScripts()">
+                            <span>📞</span>
+                            <span>Sales Call Scripts</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showProposals()">
+                            <span>📄</span>
+                            <span>Proposals & Contracts</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showDeliveryFrameworks()">
+                            <span>🎯</span>
+                            <span>Delivery Frameworks</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showObjectionHandling()">
+                            <span>🛡️</span>
+                            <span>Objection Handling</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showClientOnboarding()">
+                            <span>🚀</span>
+                            <span>Client Onboarding</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showProgressTracking()">
+                            <span>📊</span>
+                            <span>Progress Tracking</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Operations & Systems -->
+                <div class="sidebar-section">
+                    <button class="accordion-header" onclick="toggleAccordion('operations-systems')">
+                        <span>⚙️ Operations & Systems</span>
+                        <span class="accordion-icon" id="operations-systems-icon">▼</span>
+                    </button>
+                    <div class="accordion-content" id="operations-systems" style="display: block;">
+                        <button class="sidebar-link" onclick="showCEODashboard()">
+                            <span>📈</span>
+                            <span>CEO Dashboard</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showTeamCommunication()">
+                            <span>💬</span>
+                            <span>Team Communication</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showMeetingAgendas()">
+                            <span>📅</span>
+                            <span>Meeting Agendas</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showSOPs()">
+                            <span>📚</span>
+                            <span>SOP Library</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showTechStack()">
+                            <span>🔧</span>
+                            <span>Tech Stack Manager</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                        <button class="sidebar-link" onclick="showDocumentVault()">
+                            <span>📁</span>
+                            <span>Document Vault</span>
+                            <span class="progress-dot not-started"></span>
+                        </button>
+                    </div>
                 </div>
             </aside>
 
